@@ -231,11 +231,12 @@ body {
   gap: 16px;
   min-height: 200px;
 }
-.flash-card:nth-child(1) { background: var(--pink);    color: var(--on-dark); }
-.flash-card:nth-child(2) { background: var(--teal);    color: var(--on-dark); }
-.flash-card:nth-child(3) { background: var(--lavender);color: var(--ink); }
-.flash-card:nth-child(4) { background: var(--peach);   color: var(--ink); }
-.flash-card:nth-child(5) { background: var(--ochre);   color: var(--ink); }
+.flash-card:nth-child(1) { background: var(--pink);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(3) { background: #e8e2f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #fdeede;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
 .flash-card-num {
   font-size: 12px;
   font-weight: 600;
@@ -378,13 +379,13 @@ body {
 
 /* ── 启示卡片 ── */
 .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
-.insight-card { border-radius: 24px; padding: 32px; }
-.insight-card:nth-child(1) { background: var(--pink);         color: #fff; }
-.insight-card:nth-child(2) { background: var(--teal);         color: #fff; }
-.insight-card:nth-child(3) { background: var(--lavender);     color: var(--ink); }
-.insight-card:nth-child(4) { background: var(--peach);        color: var(--ink); }
-.insight-card:nth-child(5) { background: var(--ochre);        color: var(--ink); }
-.insight-card:nth-child(6) { background: var(--surface-strong); color: var(--ink); border: 1.5px solid var(--hairline); }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #fce4ee; }
+.insight-card:nth-child(2) { background: #d4e8e3; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #fdeede; }
+.insight-card:nth-child(5) { background: #faf3d8; }
+.insight-card:nth-child(6) { background: #dde8e5; }
 .in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
 .in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; }
 .in-trigger em { font-style: normal; }
