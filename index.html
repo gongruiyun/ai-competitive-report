@@ -44,13 +44,13 @@ body {
 .hero {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 96px 48px 80px;
+  padding: 56px 48px 40px;
 }
 /* ── Report Selector ── */
 .report-selector {
   position: relative;
   display: inline-block;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 .report-selector__trigger {
   display: inline-flex;
@@ -182,7 +182,7 @@ body {
   line-height: 1;
   color: var(--ink);
   max-width: 720px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 .hero-sub {
   font-size: 15px;
@@ -198,7 +198,7 @@ body {
 }
 
 /* ── Section 标题 ── */
-.section { padding: 80px 0 0; }
+.section { padding: 48px 0 0; }
 .section-label {
   font-size: 12px;
   font-weight: 600;
@@ -214,7 +214,7 @@ body {
   letter-spacing: -1px;
   line-height: 1.1;
   color: var(--ink);
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 /* ── 速览 · 彩色卡片网格 ── */
@@ -335,6 +335,23 @@ body {
 .pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
 .pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
 .pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: rgba(232,185,74,0.10);
+  border-radius: 8px;
+  border-left: 3px solid var(--ochre);
+  font-size: 13px;
+  color: var(--body);
+  line-height: 1.55;
+}
+.pc-ux::before {
+  content: "设计视角 · ";
+  font-weight: 700;
+  color: #b8860b;
+}
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
 
 /* ── 深色 Band ── */
 .color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
@@ -454,38 +471,38 @@ footer {
     <div class="flash-grid">
 
       <div class="flash-card">
-        <span class="flash-card-chip">Anthropic</span>
+        <span class="flash-card-chip">Figma</span>
         <div class="flash-card-num">01</div>
-        <div class="flash-card-body"><strong>Claude Mythos Preview 限量发布</strong>——能自主发现并利用零日漏洞，超过半数利用尝试成功。通过 Project Glasswing 优先向防御方开放，是 AI 能力边界最强警示信号。</div>
-        <div class="flash-card-src">来源：<a href="https://red.anthropic.com/2026/mythos-preview/" target="_blank">red.anthropic.com</a></div>
+        <div class="flash-card-body"><strong>Figma 语音驱动 AI + 4 项内置图像工具</strong>——Make 支持口述直驱生成，Question Cards 引导模糊需求；Vectorize / Erase Object / Expand Image 等内置上线，设计师工作流进入「不出工具」阶段。</div>
+        <div class="flash-card-src">来源：<a href="https://help.figma.com/hc/en-us/articles/40219873508247-Release-notes-roundup-May-2026" target="_blank">figma.com</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">Google</span>
+        <span class="flash-card-chip">Canva</span>
         <div class="flash-card-num">02</div>
-        <div class="flash-card-body"><strong>Google Android Show 2026 发布 Gemini Intelligence</strong>——Android 从手机 OS 升级为跨设备主动式 AI 平台；同期发布 Googlebook 新品类，Acer / Dell / HP / Lenovo 首批跟进。</div>
-        <div class="flash-card-src">来源：<a href="https://blog.google/products-and-platforms/platforms/android/android-show-io-edition-2026/" target="_blank">blog.google</a></div>
+        <div class="flash-card-body"><strong>Canva AI 2.0「持久记忆库 + 品牌智能」</strong>——AI 记住工作习惯与品牌规范，每次生成自动对齐个人风格。大众设计工具中首次实现「越用越懂你」的个性化飞轮，是 AI 辅助创作的重要范式转变。</div>
+        <div class="flash-card-src">来源：<a href="https://www.canva.com/newsroom/news/canva-create-2026-ai/" target="_blank">canva.com</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">AWS</span>
+        <span class="flash-card-chip">ChatGPT</span>
         <div class="flash-card-num">03</div>
-        <div class="flash-card-body"><strong>AWS Bedrock AgentCore 推出 Managed Payments</strong>——AI Agent 可自主完成支付，与 Coinbase 和 Stripe 合作，设置会话级消费上限。Agent「能花钱」正式成为现实。</div>
-        <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-amazon-bedrock-agentcore-payments-agent-toolkit-for-aws-and-more-may-11-2026/" target="_blank">aws.amazon.com</a></div>
-      </div>
-
-      <div class="flash-card">
-        <span class="flash-card-chip">OpenAI</span>
-        <div class="flash-card-num">04</div>
-        <div class="flash-card-body"><strong>GPT-5.5 Instant 成为 ChatGPT 默认模型</strong>——高敏场景幻觉率降低 52.5%，新增 Fast Answers 快速响应机制；OpenAI 同步结束微软独家协议，将模型引入 AWS Bedrock。</div>
+        <div class="flash-card-body"><strong>ChatGPT Memory Sources 透明化</strong>——用户可查看 AI 调用了哪些历史记忆并可删除或纠正。主流 AI 产品首次将「AI 决策依据」做成可检视面板，「AI 黑盒变透明」的 UX 模式正式确立。</div>
         <div class="flash-card-src">来源：<a href="https://openai.com/index/gpt-5-5-instant/" target="_blank">openai.com</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">Microsoft</span>
+        <span class="flash-card-chip">Google</span>
+        <div class="flash-card-num">04</div>
+        <div class="flash-card-body"><strong>Material 3 Expressive + 自然语言自定义 Widget</strong>——Google 新设计语言强化情感化动效与高对比色彩；用户用自然语言生成个性化桌面组件。移动端 UI 的「AI 个性化」正式延伸到视觉层。</div>
+        <div class="flash-card-src">来源：<a href="https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/" target="_blank">blog.google</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">Adobe</span>
         <div class="flash-card-num">05</div>
-        <div class="flash-card-body"><strong>Microsoft 365 E7 + Agent 365 正式 GA（5月1日）</strong>——将 M365 E5、Entra Suite、Copilot、Agent 治理合四为一，企业 AI Agent 管控进入标准化阶段。</div>
-        <div class="flash-card-src">来源：<a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/05/05/copilot-cowork-from-conversation-to-action-across-skills-integrations-and-devices/" target="_blank">microsoft.com</a></div>
+        <div class="flash-card-body"><strong>Adobe Firefly AI Assistant 统一对话入口</strong>——单一对话界面跨 PS / AI / Pr 调用 60+ 专业工具，多工具编排通过 Prompt 完成。「AI 对话作为工具第二界面」的设计范式，正从设计工具向所有创作类产品蔓延。</div>
+        <div class="flash-card-src">来源：<a href="https://blog.adobe.com/en/publish/2026/04/27/firefly-ai-assistant-public-beta" target="_blank">blog.adobe.com</a></div>
       </div>
 
     </div>
@@ -512,13 +529,12 @@ footer {
             <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-13">2026.04–05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Claude Opus 4.7 正式 GA</b>：视觉能力升级（更高分辨率图像），软件工程与长任务表现提升。</li>
-            <li><b>Claude Managed Agents 三项新功能</b>：① 多 Agent 编排——主 Agent 拆解任务并行分派专属子 Agent；② 共享文件系统协同；③ 主 Agent 可在执行中途召回子 Agent 汇报进度。</li>
-            <li><b>Claude Mythos Preview（Project Glasswing）</b>：能自主发现零日漏洞，>50% 利用成功率，优先向防御方和开源社区限量开放，暂未公开发布。</li>
-            <li>Claude Code 桌面版改版：新增会话侧栏、拖放工作区、集成终端、更快 Diff、SSH 支持（Mac）。</li>
-            <li>Pro / Max / Team / Enterprise 速率上限翻倍，取消高峰限流。</li>
+            <li><b>Claude Opus 4.7 正式 GA</b>：视觉能力升级，图像理解分辨率更高，适合读取设计稿/截图生成代码。</li>
+            <li><b>Claude Managed Agents 三项新功能</b>：多 Agent 并行编排 + 共享文件系统 + 中途进度汇报——长任务的「进度可见性」是 AI 产品信任感的关键设计点。</li>
+            <li><b>Claude Code 桌面版界面改版</b>：会话侧栏 + 拖放工作区 + 集成终端，是目前最完整的 AI 原生 IDE UX 探索，侧栏式任务历史管理值得参考。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://9to5mac.com/2026/05/07/anthropic-updates-claude-managed-agents-with-three-new-features/" target="_blank">9to5Mac</a> · <a href="https://red.anthropic.com/2026/mythos-preview/" target="_blank">red.anthropic.com</a></div>
+          <div class="pc-ux">Agent 长任务「中途汇报进度」的交互模式，是解决 AI 执行黑盒感知的直接方案——进度节点可视化 + 可随时打断，比单纯的 loading 状态更可信。</div>
+          <div class="pc-src">来源：<a href="https://9to5mac.com/2026/05/07/anthropic-updates-claude-managed-agents-with-three-new-features/" target="_blank">9to5Mac</a></div>
         </div>
 
         <div class="product-card">
@@ -528,12 +544,11 @@ footer {
             <span class="pc-date" data-date-start="2026-05-05" data-date-end="2026-05-07">2026.05.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>GPT-5.5 Instant 成为默认模型</b>：高敏场景幻觉率降低 52.5%，挑战性对话错误率降低 37.3%，延迟与 5.3 持平。</li>
-            <li><b>Fast Answers</b>：高置信度通用问题跳过复杂推理链，直接给出深度回答，响应速度更快。</li>
-            <li><b>Memory Sources 透明化</b>：用户可查看 AI 调用了哪些历史对话/记忆/文件，并可删除或纠正。</li>
-            <li><b>Trust Contact 安全功能</b>：成人用户可指定信任联系人，在需要支持时主动触达。</li>
-            <li>OpenAI 结束微软独家协议，GPT-5.5 / 5.4 同步上线 AWS Bedrock。</li>
+            <li><b>Memory Sources 透明化面板</b>：用户可查看 AI 调用了哪些历史对话/记忆/文件，并可逐条删除或纠正——把 AI 黑盒决策变成可检视的控制界面。</li>
+            <li><b>Fast Answers</b>：AI 对高置信度问题直接给出深度答案，跳过推理链展示。置信度分级影响响应形式——这是答案质量信号化的 UX 尝试。</li>
+            <li><b>Trust Contact</b>：用户可指定信任联系人，在需要支持时由 AI 主动触达——AI 主动行动场景的权限边界设计。</li>
           </ul>
+          <div class="pc-ux">Memory Sources 的核心 UX 价值：不只是「记住你」，而是「让你看见 AI 记住了什么」。可见 + 可纠正，是比单纯个性化更高级的信任设计。</div>
           <div class="pc-src">来源：<a href="https://openai.com/index/gpt-5-5-instant/" target="_blank">openai.com</a> · <a href="https://techcrunch.com/2026/05/05/openai-releases-gpt-5-5-instant-a-new-default-model-for-chatgpt/" target="_blank">TechCrunch</a></div>
         </div>
 
@@ -544,26 +559,27 @@ footer {
             <span class="pc-date" data-date-start="2026-05-12" data-date-end="2026-05-13">2026.05.12–13</span>
           </div>
           <ul class="pc-list">
-            <li><b>Gemini Intelligence 发布</b>：Android 全平台（手机/手表/汽车/Googlebook）主动式 AI——自动化复杂任务、网页摘要、表单填写，今夏率先在三星和 Google 手机上线。</li>
-            <li><b>Rambler（Gboard 内置）</b>：将语音随意说转化为结构化书面文字，支持多语言混说。</li>
-            <li><b>自定义 Widget</b>：用自然语言生成个性化 Android 桌面组件；Material 3 Expressive 设计语言同期发布。</li>
-            <li><b>Googlebook 新品类</b>：以 Gemini Intelligence 为核心重构笔记本形态，Acer / Asus / Dell / HP / Lenovo 首批跟进，今秋上市。</li>
-            <li>Android Auto 重设计：沉浸式 3D 导航 + 高清视频流，现覆盖超 2.5 亿辆兼容车型。</li>
+            <li><b>Material 3 Expressive 设计语言</b>：更强情感化动效、高对比色彩方案、流体过渡——Google 官方设计语言明确向「情绪化」转向，值得关注的移动端视觉趋势。</li>
+            <li><b>自然语言自定义 Widget</b>：用描述生成个性化桌面组件，UI 配置从「选项点击」升级为「说出来」——对话式界面配置的移动端验证。</li>
+            <li><b>Rambler 语音转结构化文字</b>：随意语音口述 → 整理成书面段落，输入形态的 UX 革新。</li>
+            <li>Android Auto 重设计：沉浸式 3D 导航 + 高清视频流，车载 UI 设计语言大幅升级。</li>
           </ul>
+          <div class="pc-ux">Material 3 Expressive 的核心信号：Google 认为 AI 时代的 UI 需要更强的情感表达，不只是「功能正确」，还要「感觉对」。这对我们的设计语言演进方向有直接参考价值。</div>
           <div class="pc-src">来源：<a href="https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/" target="_blank">blog.google</a> · <a href="https://9to5google.com/2026/05/12/the-android-show-2026/" target="_blank">9to5Google</a></div>
         </div>
 
         <div class="product-card">
           <div class="pc-head">
             <span class="pc-name">Kimi · DeepSeek · MiniMax</span>
-            <span class="pc-sub">中国 AI 头部厂商</span>
+            <span class="pc-sub">中国 AI 产品 UI 观察</span>
             <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-13">2026.04–05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Kimi K2.6</b>：1.5T 参数视觉语言模型，Coding 榜 Elo 1529，与 DeepSeek V4 并列第六，最多 300 个子 Agent 并行，长程规划能力突出。</li>
-            <li><b>DeepSeek V4 Pro / Flash</b>：MIT 开源，1M token 上下文，V4 Pro 1.6T/49B 激活，定价比前沿闭源模型低 11×，已进入 AWS Bedrock。</li>
-            <li><b>MiniMax</b>：M2 API 定价 $0.30/$1.20（输入/输出每百万 token），性价比接近 V4 Pro，聚焦垂直场景落地。</li>
+            <li><b>Kimi</b>：延续「内容优先」极简界面，文档/多文件管理 UX 是差异化——侧重让用户感知「AI 在读懂上下文」，文件引用可视化处理较好。</li>
+            <li><b>DeepSeek</b>：推崇「裸模型直达」哲学——无 onboarding 引导、无推荐功能、无情感化包装，是截然不同的 AI 产品 UX 路线：把能力透明化，让用户自己建立使用模型。</li>
+            <li><b>MiniMax</b>：聚焦角色化和情感化 UI，B 端场景定制化程度高；多模态输入（语音/图像）的交互集成比同类产品更流畅。</li>
           </ul>
+          <div class="pc-ux">DeepSeek 的「零引导」设计是一个反直觉的成功案例——对有自驱力的用户，去掉所有辅助反而建立了更强的信任感。值得思考：我们产品的哪些引导是在帮用户，哪些只是在降低我们的焦虑？</div>
           <div class="pc-src">来源：<a href="https://techcrunch.com/2026/04/24/deepseek-previews-new-ai-model-that-closes-the-gap-with-frontier-models/" target="_blank">TechCrunch</a> · <a href="https://www.deeplearning.ai/the-batch/kimi-k2-6-matches-open-qwen3-6-max-anddeepseek-v4-falls-just-behind-top-closed-models" target="_blank">DeepLearning.AI</a></div>
         </div>
 
@@ -589,15 +605,15 @@ footer {
 
         <div class="product-card">
           <div class="pc-head">
-            <span class="pc-name">Microsoft 365 E7 + Agent 365</span>
-            <span class="pc-sub">Microsoft · GA</span>
+            <span class="pc-name">Microsoft Copilot</span>
+            <span class="pc-sub">Cowork + Agent Mode</span>
             <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-05">2026.05.01</span>
           </div>
           <ul class="pc-list">
-            <li><b>M365 E7 正式 GA</b>：整合 M365 E5、Entra Suite（身份）、M365 Copilot、Agent 365，一个 SKU 涵盖安全生产力 + AI Agent 治理全链路。</li>
-            <li><b>Copilot Cowork 移动端</b>：iOS / Android 上可随时委派任务，下班途中交代、回来即有结果。</li>
-            <li>Copilot Agent Mode 在 Word / Excel / PowerPoint / Outlook / OneNote 内统一上线，支持迭代式协作创建文档。</li>
+            <li><b>Copilot Cowork 移动端</b>：iOS / Android 上随时委派任务，途中交代、回来收结果——AI 异步工作流的移动端完整闭环。</li>
+            <li><b>Copilot Agent Mode</b>：在 Word / Excel / PowerPoint / Outlook / OneNote 内统一上线，支持迭代式协作创建文档，AI 成为每个工具的内嵌协作者。</li>
           </ul>
+          <div class="pc-ux">「委派 → 离开 → 回来收结果」是移动端 AI 异步工作流的标准范式。关键 UX 问题：用户离开时如何维持掌控感？通知设计、进度回执、结果预览是三个值得打磨的触点。</div>
           <div class="pc-src">来源：<a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/05/05/copilot-cowork-from-conversation-to-action-across-skills-integrations-and-devices/" target="_blank">microsoft.com</a></div>
         </div>
 
@@ -608,75 +624,25 @@ footer {
             <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-07">2026.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Workspace Intelligence</b>：基于 Gemini 推理的语义统一层，打破应用信息孤岛，自动识别优先事项并学习用户写作风格。</li>
-            <li>Docs 用企业私有数据生成信息图；Slides 单次 Prompt 生成完整可编辑演示（即将上线）。</li>
-            <li><b>Admin Console AI Control Center</b>：管理员可精细管控 Agent 对 Workspace 数据的访问权限。</li>
+            <li><b>Docs 数据信息图生成</b>：用企业私有数据一键生成可视化信息图，AI 直接产出设计成品而非辅助。</li>
+            <li><b>Slides 单 Prompt 生成完整演示</b>：一句话生成完整可编辑 PPT，降低从零起稿的心理门槛（即将上线）。</li>
+            <li>Workspace Intelligence 自动学习用户写作风格，跨应用统一个人语气——风格记忆延伸至生产力工具。</li>
           </ul>
+          <div class="pc-ux">Docs 信息图和 Slides 生成都在解决同一个问题：让「AI 直接出稿」而不是「AI 辅助你出稿」。这对设计工具的 AI 功能定位有参考：是让用户更快操作，还是直接替代某些操作步骤？</div>
           <div class="pc-src">来源：<a href="https://workspace.google.com/blog/product-announcements/introducing-workspace-intelligence" target="_blank">workspace.google.com</a></div>
         </div>
 
         <div class="product-card wide">
           <div class="pc-head">
-            <span class="pc-name">ChatGPT Enterprise</span>
-            <span class="pc-sub">OpenAI · Workspace Agents</span>
+            <span class="pc-name">ChatGPT Enterprise · Workspace Agents</span>
+            <span class="pc-sub">OpenAI</span>
             <span class="pc-date" data-date-start="2026-05-05" data-date-end="2026-05-05">2026.05.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Workspace Agents 扩展上线</b>：原生连接 Slack、Google Drive、Microsoft 365、Salesforce、Notion，企业数据直接驱动 Agent 工作流，无需中间层集成。</li>
+            <li><b>原生连接 Slack / Google Drive / M365 / Salesforce / Notion</b>：企业数据直接驱动 Agent 工作流，无需中间层集成——AI 真正「进入」用户的工作环境，而不是另开一个窗口。</li>
           </ul>
+          <div class="pc-ux">「AI 在你的工具里」vs「你去 AI 工具里」——两种截然不同的集成哲学。前者对用户的习惯侵入最小，是企业级 AI 产品更易接受的落地路径。</div>
           <div class="pc-src">来源：<a href="https://callsphere.ai/blog/vw1b-chatgpt-agent-mode-workspace-2026" target="_blank">callsphere.ai</a></div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="track">
-      <div class="track-label">
-        <span class="track-pill">云厂商 AI 平台</span>
-        <div class="track-label-line"></div>
-      </div>
-      <div class="product-grid">
-
-        <div class="product-card">
-          <div class="pc-head">
-            <span class="pc-name">AWS Bedrock</span>
-            <span class="pc-sub">Amazon</span>
-            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-13">2026.04–05</span>
-          </div>
-          <ul class="pc-list">
-            <li><b>OpenAI 模型（GPT-5.5 / 5.4）登陆 Bedrock</b>：OpenAI 结束微软独家协议，AWS 成第二大发行渠道，Codex on Bedrock 同步上线。</li>
-            <li><b>AgentCore Managed Payments（5月11日）</b>：AI Agent 可自主访问并支付 API / MCP 服务器 / 其他 Agent；与 Coinbase CDP 和 Stripe Privy 合作，设置会话级消费上限。</li>
-            <li><b>Amazon WorkSpaces for AI Agents</b>：Agent 可通过托管 WorkSpaces 安全操作桌面应用，企业级合规治理。</li>
-          </ul>
-          <div class="pc-src">来源：<a href="https://aws.amazon.com/about-aws/whats-new/2026/04/bedrock-openai-models-codex-managed-agents/" target="_blank">aws.amazon.com</a> · <a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-amazon-bedrock-agentcore-payments-agent-toolkit-for-aws-and-more-may-11-2026/" target="_blank">AWS Blog</a></div>
-        </div>
-
-        <div class="product-card">
-          <div class="pc-head">
-            <span class="pc-name">Google Cloud</span>
-            <span class="pc-sub">Cloud Next 2026</span>
-            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-07">2026.05</span>
-          </div>
-          <ul class="pc-list">
-            <li><b>Gemini Enterprise Agent Platform</b>：端到端 Agent 构建、治理、规模化平台，75% Google Cloud 客户已在使用 AI 产品。</li>
-            <li><b>Agentic Data Cloud</b>：跨云数据湖仓，数据无需迁移即可被 Agent 实时查询（含 AWS 上的数据）。</li>
-            <li><b>第八代 TPU（TPU 8t / 8i）</b>：8t 面向高吞吐 AI 负载，性能比上代提升 3×；8i 面向低延迟 Agentic 工作流，性价比提升 80%。</li>
-          </ul>
-          <div class="pc-src">来源：<a href="https://cloud.google.com/blog/topics/google-cloud-next/google-cloud-next-2026-wrap-up" target="_blank">cloud.google.com</a></div>
-        </div>
-
-        <div class="product-card wide">
-          <div class="pc-head">
-            <span class="pc-name">Azure AI / Microsoft</span>
-            <span class="pc-sub">Microsoft</span>
-            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-05">2026.05</span>
-          </div>
-          <ul class="pc-list">
-            <li><b>Intelligent Purview</b>：实时对 AI Prompt 和响应执行 DLP 检测，数据合规管控下沉至 AI 交互层。</li>
-            <li><b>Azure Confidential AI</b>：AMD SEV-SNP 机密计算，满足金融/医疗等高安全等级推理合规需求。</li>
-            <li>Copilot Studio Wave 1（2026）：新增 Agent 治理、智能工作流和连接应用体验。</li>
-          </ul>
-          <div class="pc-src">来源：<a href="https://azure.microsoft.com/en-us/blog/" target="_blank">azure.microsoft.com</a> · <a href="https://www.microsoft.com/en-us/microsoft-copilot/blog/copilot-studio/new-and-improved-agent-governance-intelligent-workflows-and-connected-app-experiences/" target="_blank">Copilot Studio Blog</a></div>
         </div>
 
       </div>
@@ -705,12 +671,12 @@ footer {
             <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Make 语音输入 + Question Cards</b>：口述需求直驱 AI 生成；结构化选项引导降低模糊指令迭代成本。</li>
-            <li><b>Draw 更新</b>：绘图模式支持 Auto Layout，新增路径文字、更丰富笔刷纹理，图层面板显示组件/实例/文本类型标签。</li>
-            <li><b>AI 图像编辑工具</b>：新增 Vectorize、Remove Background、Erase Object、Expand Image 四项内置 AI 能力。</li>
-            <li><b>Zapier 连接器</b>：9000+ 外部应用（Google Drive / M365 / Zoom）可为 Make 提供上下文。</li>
-            <li>桌面 App 改版：跨文件无缝切换，后台预加载，近期文件快速搜索。</li>
+            <li><b>Make 语音输入 + Question Cards</b>：口述需求直驱 AI 生成；Question Cards 用结构化选项引导模糊指令，降低反复迭代成本。</li>
+            <li><b>AI 图像编辑工具</b>：Vectorize、Remove Background、Erase Object、Expand Image 四项内置——不再需要切出去 Photoshop。</li>
+            <li><b>Draw 更新</b>：Auto Layout 支持、路径文字、图层面板类型标签，手绘与组件化进一步融合。</li>
+            <li><b>Zapier 连接器</b>：9000+ 外部应用可为 Make 提供上下文，设计稿直接连接真实业务数据。</li>
           </ul>
+          <div class="pc-ux">Question Cards 是一个值得拆解的 UX 模式：不是让用户写更好的 Prompt，而是把「好 Prompt 的结构」拆成可点选的引导项。适合我们在 AI 功能冷启动阶段降低用户表达门槛。</div>
           <div class="pc-src">来源：<a href="https://help.figma.com/hc/en-us/articles/40219873508247-Release-notes-roundup-May-2026" target="_blank">figma.com</a></div>
         </div>
 
@@ -721,10 +687,11 @@ footer {
             <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-13">2026.04–05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Firefly AI Assistant 公开 Beta</b>：统一对话界面跨 PS / AI / Pr 编排多步工作流，单条 Prompt 可调用 60+ 专业工具（Auto Tone / Generative Fill / Remove Background 等）。</li>
-            <li><b>Workflow Builder</b>：可视化构建自动化创意序列，输入/处理/输出节点组合，与 Figma 等工具集成。</li>
-            <li>新增 AI 配音翻译、语音降噪/混响调整；引入 Kling 3.0 等第三方视频模型至 Firefly 库。</li>
+            <li><b>Firefly AI Assistant 公开 Beta</b>：统一对话界面跨 PS / AI / Pr 编排多步工作流，单条 Prompt 可调用 60+ 专业工具——三个独立工具共享一个 AI 入口。</li>
+            <li><b>Workflow Builder</b>：可视化节点式构建自动化创意序列，输入→处理→输出，与 Figma 等工具集成。</li>
+            <li>AI 配音翻译 + 语音降噪；引入 Kling 3.0 等第三方视频模型，生态扩展思路值得关注。</li>
           </ul>
+          <div class="pc-ux">Workflow Builder 的节点编辑器是「低代码 + 创意工作流」的融合尝试。对设计师来说，能否把重复性的多步操作封装成可复用流程，是提效的真正杠杆——比单次 AI 生成更有价值。</div>
           <div class="pc-src">来源：<a href="https://blog.adobe.com/en/publish/2026/04/27/firefly-ai-assistant-public-beta" target="_blank">blog.adobe.com</a></div>
         </div>
 
@@ -749,6 +716,7 @@ footer {
             <li><b>设计系统对接</b>：读取代码库和 Figma 文件，自动提取并应用 Design Token，维持品牌一致。</li>
             <li><b>一键交付 Claude Code</b>：目前唯一完整打通「设计→生产」的 AI 原生工具链，无需中间转译。</li>
           </ul>
+          <div class="pc-ux">「读 Figma → 提取 Token → 生成代码」的链路，本质上是把设计系统变成了 AI 的约束条件。这意味着设计系统维护得越好，AI 输出质量越高——设计系统的价值第一次对工程侧变得直接可见。</div>
           <div class="pc-src">来源：<a href="https://aurora-designs.ca/blog/claude-design-anthropic-labs/" target="_blank">aurora-designs.ca</a></div>
         </div>
 
@@ -759,9 +727,11 @@ footer {
             <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-13">2026.04–05</span>
           </div>
           <ul class="pc-list">
-            <li><b>多屏生成</b>：单次 Prompt 最多生成 5 个关联屏幕，AI 原生无限画布。</li>
-            <li><b>Voice Canvas</b>：语音命令直驱画布；<b>DESIGN.md</b> 从现有网站提取设计规则保存为可移植文件。</li>
+            <li><b>多屏生成</b>：单次 Prompt 最多生成 5 个关联屏幕，保持页面间的导航逻辑和视觉一致性——AI 原生无限画布。</li>
+            <li><b>DESIGN.md</b>：从现有网站自动提取设计规则保存为可移植文件，让设计系统「随身携带」。</li>
+            <li><b>Voice Canvas</b>：语音命令实时驱动画布操作，输入形态从键盘扩展到语音。</li>
           </ul>
+          <div class="pc-ux">DESIGN.md 格式（从网站提取设计规则 → 保存为可移植文件）和 Claude Design 读取 Figma Token 是同一思路的两种实现：让 AI 生成时有「设计约束」可依，而不是每次从零开始。值得关注这个规范是否会成为 AI 设计工具的标准接口。</div>
           <div class="pc-src">来源：<a href="https://muz.li/blog/vibe-design-in-2026-what-ai-generated-ui-means-for-your-work/" target="_blank">muz.li</a></div>
         </div>
 
@@ -772,8 +742,9 @@ footer {
             <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-13">2026.04–05</span>
           </div>
           <ul class="pc-list">
-            <li>从组件生成器进化为全栈工具：Git 集成、VS Code 风格编辑器、数据库连接（Snowflake / AWS）、Agentic 工作流。React UI 生成速度与质量仍是同类最优。</li>
+            <li>从组件生成器进化为全栈工具：Git 集成、VS Code 风格编辑器、数据库连接、Agentic 工作流。React UI 生成速度与质量仍是同类最优。</li>
           </ul>
+          <div class="pc-ux">v0 的演进路径揭示了 AI 原生工具的扩张逻辑：先在一个高频痛点（UI 生成）做到最好，再以此为锚点向上下游延伸。对我们来说：AI 功能的切入点应该足够小且具体，深度优先于广度。</div>
           <div class="pc-src">来源：<a href="https://weavai.app/blog/en/2026/04/28/v0-by-vercel-2026-review-ui-quality-pricing-verdict/" target="_blank">weavai.app</a></div>
         </div>
 
@@ -794,11 +765,12 @@ footer {
             <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-13">2026.04–05</span>
           </div>
           <ul class="pc-list">
-            <li><b>持久记忆库</b>：AI 记住工作习惯，每次输出自动贴近个人风格，越用越准。</li>
-            <li><b>品牌智能</b>：连接品牌模板后，从第一稿起自动应用字体/颜色/风格，批量更新历史作品。</li>
-            <li><b>Canva Code 2.0</b>：对话生成完整响应式交互 H5，支持导入任意 HTML 二次编辑，无需重建。</li>
-            <li><b>连接器</b>：接入 Slack / Gmail / Zoom / HubSpot 等，会议记录一键生成品牌视觉输出。</li>
+            <li><b>持久记忆库</b>：AI 记住工作习惯与偏好，每次输出自动贴近个人风格——使用越多，校正越少。</li>
+            <li><b>品牌智能</b>：连接品牌模板后，从第一稿起自动应用字体/颜色/风格，并可批量更新历史作品。</li>
+            <li><b>Canva Code 2.0</b>：对话生成完整响应式 H5，支持导入任意 HTML 二次编辑，无需重建。</li>
+            <li><b>连接器</b>：接入 Slack / Gmail / Zoom / HubSpot，会议记录一键生成品牌视觉输出。</li>
           </ul>
+          <div class="pc-ux">Canva 的「品牌智能」和「持久记忆」组合，是 AI 工具中少见的双轨个性化：一轨是品牌规范（客观约束），一轨是个人习惯（主观偏好）。两者叠加后，AI 输出的「符合度」会大幅提升，减少用户需要手动纠正的次数。</div>
           <div class="pc-src">来源：<a href="https://www.canva.com/newsroom/news/canva-create-2026-ai/" target="_blank">canva.com</a></div>
         </div>
 
@@ -810,8 +782,9 @@ footer {
           </div>
           <ul class="pc-list">
             <li><b>Interactive Canvas</b>：AI 直接生成包含表格、图表、自定义界面的交互式画布，持久化 Side Panel Artifacts，适合数据看板类产品快速原型。</li>
-            <li>被评为「专业开发者综合最优」：代码库理解深度、模型灵活性和团队协作功能均领先。</li>
+            <li>代码库理解深度、模型灵活性和团队协作功能均领先，是设计师与工程师协作时最值得推荐的 AI 编码工具。</li>
           </ul>
+          <div class="pc-ux">Interactive Canvas 的核心价值：让数据可视化和界面原型的产出从「写代码」变成「描述需求」。设计师可以用它快速验证数据展示方案，不依赖工程师排期——是设计提案阶段的高效工具。</div>
           <div class="pc-src">来源：<a href="https://amitray.com/ai-coding-tools-2026-comparison/" target="_blank">amitray.com</a></div>
         </div>
 
@@ -831,23 +804,44 @@ footer {
 
       <div class="insight-card">
         <div class="in-num">启示 01</div>
-        <div class="in-trigger"><em>Canva AI 2.0</em> 记忆 + <em>ChatGPT</em> Memory Sources</div>
+        <div class="in-trigger"><em>Canva AI 2.0</em> 记忆库 + <em>ChatGPT</em> Memory Sources</div>
         <div class="in-title">做 AI 个性化，必须同时做「可见性」</div>
-        <div class="in-body">Canva 把记忆做成使用飞轮，ChatGPT 把记忆做成透明面板——两者相辅相成。我们在 AI 功能中引入用户行为沉淀时，应同步提供「AI 为什么这样做」的折叠入口。偏好累积 + 可纠正，是用户真正信任 AI 的前提。</div>
+        <div class="in-body">Canva 把记忆做成使用飞轮（越用越懂你），ChatGPT 把记忆做成透明面板（让你看见 AI 记住了什么）——两种策略相辅相成。我们在 AI 功能中引入行为沉淀时，应同步提供「AI 为什么这样做」的折叠入口。偏好累积 + 可纠正，是用户真正信任 AI 的前提，缺一不可。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 02</div>
-        <div class="in-trigger"><em>AWS AgentCore</em> Managed Payments</div>
-        <div class="in-title">AI Agent「能花钱」了，产品侧需提前设计审批机制</div>
-        <div class="in-body">Agent 自主支付意味着 AI 决策链路延伸到了资金层面。我们的产品若涉及 Agent 代用户执行操作（下单、预约、发送），需在 UI 层设计清晰的「授权范围确认」和「操作回执」流程，避免用户感知失控。</div>
+        <div class="in-trigger"><em>对话入口</em>：Figma Make · Adobe Firefly · Canva</div>
+        <div class="in-title">AI 对话正在成为每个工具的「第二界面」</div>
+        <div class="in-body">Figma、Adobe、Canva 都在主工具之上叠加了一层自然语言入口。这不是替代原界面，而是给有明确目标的用户提供捷径。我们的 AI 功能入口设计面临同样的选择：是嵌入现有流程，还是独立一层？两者的用户门槛和场景覆盖截然不同。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 03</div>
         <div class="in-trigger"><em>Claude Design</em> + <em>Figma</em> AI 图像编辑</div>
-        <div class="in-title">AI 生成功能中强制注入 Design Token，防止品牌漂移</div>
-        <div class="in-body">Claude Design 读取 Figma 文件提取设计系统，Figma 内置 AI 图像工具都支持上传参考图。我们在 AI 生成界面或内容时，应优先从产品已有的 Design Token / 样式规范取值，哪怕只是颜色和字体的强制对齐，也能大幅提升输出置信度。</div>
+        <div class="in-title">AI 生成功能应强制注入 Design Token，防止品牌漂移</div>
+        <div class="in-body">Claude Design 读取 Figma 文件提取设计系统，Figma 内置 AI 工具均支持上传参考图锁定风格。我们在 AI 生成界面或内容时，应优先从产品已有的 Design Token / 样式规范取值——哪怕只是颜色和字体的强制对齐，也能大幅提升输出置信度，避免每次生成都要手动校正。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 04</div>
+        <div class="in-trigger"><em>Google</em> Material 3 Expressive</div>
+        <div class="in-title">AI 时代的设计语言需要更强的「情感表达」</div>
+        <div class="in-body">Google 用 Material 3 Expressive 明确表态：功能正确已不够，UI 还要「感觉对」。情感化动效、高对比色彩、流体过渡——这些在理性主义设计浪潮中被压制的元素正在回归。当 AI 让功能实现越来越低成本，体验质感和情感共鸣将成为产品真正的差异点。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 05</div>
+        <div class="in-trigger"><em>Microsoft Copilot</em> Cowork 移动端</div>
+        <div class="in-title">移动端 AI 异步委派需要专门的掌控感设计</div>
+        <div class="in-body">「途中委派 → AI 执行 → 回来收结果」是移动端 AI 的标准使用场景，但用户离开后极易产生失控感。三个关键触点需要打磨：① 委派时的授权范围确认；② 执行中的进度通知（不能只是 loading）；③ 结果回来时的预览摘要，让用户快速判断是否需要介入。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 06</div>
+        <div class="in-trigger"><em>DeepSeek</em> 零引导哲学 + <em>Figma</em> Question Cards</div>
+        <div class="in-title">引导设计是帮用户，还是在降低我们自己的焦虑？</div>
+        <div class="in-body">DeepSeek 用「零引导 + 裸模型直达」建立了强信任；Figma 用 Question Cards 将模糊需求结构化——两种截然相反的策略都在各自场景中奏效。这提示我们：引导的价值取决于用户是否真的需要它。定期审查产品中的引导流程，区分「降低用户认知负担」和「掩盖产品复杂度」，是两件不同的事。</div>
       </div>
 
     </div>
