@@ -810,7 +810,7 @@ footer {
 </footer>
 
 <script>
-  (function () {
+  document.addEventListener('DOMContentLoaded', function () {
     const spans = document.querySelectorAll('[data-date-start]');
     let min = null, max = null;
     spans.forEach(el => {
@@ -820,10 +820,10 @@ footer {
       if (!max || e > max) max = e;
     });
     if (min && max) {
-      const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
       document.getElementById('coverage-window').textContent = '覆盖窗口：' + fmt(min) + ' ~ ' + fmt(max);
     }
-  })();
+  });
 </script>
 </body>
 </html>
