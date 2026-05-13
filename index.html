@@ -379,9 +379,12 @@ body {
 /* ── 启示卡片 ── */
 .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
 .insight-card { border-radius: 24px; padding: 32px; }
-.insight-card:nth-child(1) { background: var(--teal);    color: var(--on-dark); }
-.insight-card:nth-child(2) { background: var(--peach);   color: var(--ink); }
-.insight-card:nth-child(3) { background: var(--lavender);color: var(--ink); }
+.insight-card:nth-child(1) { background: var(--pink);         color: #fff; }
+.insight-card:nth-child(2) { background: var(--teal);         color: #fff; }
+.insight-card:nth-child(3) { background: var(--lavender);     color: var(--ink); }
+.insight-card:nth-child(4) { background: var(--peach);        color: var(--ink); }
+.insight-card:nth-child(5) { background: var(--ochre);        color: var(--ink); }
+.insight-card:nth-child(6) { background: var(--surface-strong); color: var(--ink); border: 1.5px solid var(--hairline); }
 .in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
 .in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; }
 .in-trigger em { font-style: normal; }
@@ -647,6 +650,58 @@ footer {
 
       </div>
     </div>
+
+    <div class="track">
+      <div class="track-label">
+        <span class="track-pill">云平台 · 设计视角</span>
+        <div class="track-label-line"></div>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">AWS Bedrock AgentCore</span>
+            <span class="pc-sub">Amazon · Managed Payments</span>
+            <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Managed Payments</b>：Agent 可自主支付 API / MCP 服务器 / 其他 Agent 的费用，与 Coinbase 和 Stripe 合作，设置会话级消费上限。</li>
+            <li><b>WorkSpaces for AI Agents</b>：Agent 可通过托管桌面安全操作 GUI 应用，实现对界面的自主控制。</li>
+          </ul>
+          <div class="pc-ux">AI「行动能力」首次延伸到花钱和操作桌面，UI 需要建立 3 层结构：① 授权确认（给 Agent 多大权限）→ ② 执行监控（Agent 在做什么）→ ③ 行为回溯（做了什么、花了多少）。缺少任意一层，用户感知就会失控。</div>
+          <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-amazon-bedrock-agentcore-payments-agent-toolkit-for-aws-and-more-may-11-2026/" target="_blank">aws.amazon.com</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Google Cloud · Agentic Data Cloud</span>
+            <span class="pc-sub">Cloud Next 2026</span>
+            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-07">2026.05</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Agentic Data Cloud</b>：Agent 可跨云实时查询数据（含 AWS 上的数据），无需迁移，数据来源跨越多个平台。</li>
+            <li><b>Admin Console AI Control Center</b>：管理员可精细管控 Agent 对 Workspace 各应用数据的访问权限边界。</li>
+          </ul>
+          <div class="pc-ux">当 AI 能跨云访问多个数据源，用户越来越难感知「这次回答用了哪些数据、从哪里来」。数据溯源 UI（来源标注 + 访问日志入口）将成为企业 AI 产品可信度设计的标配——不只是 IT 后台，而应该出现在用户侧。</div>
+          <div class="pc-src">来源：<a href="https://cloud.google.com/blog/topics/google-cloud-next/google-cloud-next-2026-wrap-up" target="_blank">cloud.google.com</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Azure Intelligent Purview</span>
+            <span class="pc-sub">Microsoft · Copilot Studio Wave 1</span>
+            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-05">2026.05</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Intelligent Purview</b>：实时对 AI Prompt 和响应执行 DLP 检测，合规管控下沉至每次 AI 对话层。</li>
+            <li><b>Confidential AI</b>：机密计算满足金融/医疗等高安全场景推理需求，隐私保护从基础设施层延伸至 AI 推理层。</li>
+          </ul>
+          <div class="pc-ux">合规功能「隐性化」是云 AI 产品的核心 UX 挑战——用户需要感知到受保护，但不能被频繁的合规提示打断工作流。两种方案：① 状态常驻（角落徽章「合规保护中」，建立长期信任）② 仅在触发时出现（内容被拦截时给出轻量解释）。选择哪种取决于用户的安全意识与产品场景。</div>
+          <div class="pc-src">来源：<a href="https://azure.microsoft.com/en-us/blog/" target="_blank">azure.microsoft.com</a></div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>
 
@@ -842,6 +897,13 @@ footer {
         <div class="in-trigger"><em>DeepSeek</em> 零引导哲学 + <em>Figma</em> Question Cards</div>
         <div class="in-title">引导设计是帮用户，还是在降低我们自己的焦虑？</div>
         <div class="in-body">DeepSeek 用「零引导 + 裸模型直达」建立了强信任；Figma 用 Question Cards 将模糊需求结构化——两种截然相反的策略都在各自场景中奏效。这提示我们：引导的价值取决于用户是否真的需要它。定期审查产品中的引导流程，区分「降低用户认知负担」和「掩盖产品复杂度」，是两件不同的事。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 07</div>
+        <div class="in-trigger"><em>AWS AgentCore</em> + <em>GCP Admin Console</em> + <em>Azure Purview</em></div>
+        <div class="in-title">云平台正在把「AI 权限与行为」变成产品 UI 的核心命题</div>
+        <div class="in-body">三大云厂商同时在做一件事：让 AI 的行动边界变得可管控——Agent 花多少钱、访问哪些数据、对话是否合规，全部下沉到平台能力层。这对我们的产品意味着：权限配置、数据溯源、操作回溯这三类 UI，将从「后台管理功能」升格为「用户侧可信度基础设施」。云基础能力越强，我们越需要在产品前台把这些能力的边界讲清楚——否则 Agent 能力越强，用户反而越不敢用。</div>
       </div>
 
     </div>
