@@ -46,7 +46,13 @@ body {
   margin: 0 auto;
   padding: 96px 48px 80px;
 }
-.hero-label {
+/* ── Report Selector ── */
+.report-selector {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 40px;
+}
+.report-selector__trigger {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -57,8 +63,116 @@ body {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   border-radius: 9999px;
-  padding: 6px 16px;
-  margin-bottom: 40px;
+  padding: 6px 14px 6px 16px;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+}
+.report-selector__trigger:hover {
+  background: var(--surface-strong);
+  color: var(--body);
+}
+.report-selector__trigger.open {
+  background: var(--surface-strong);
+  color: var(--body-strong);
+}
+.report-selector__chevron {
+  width: 14px;
+  height: 14px;
+  opacity: 0.5;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.report-selector__trigger.open .report-selector__chevron {
+  transform: rotate(180deg);
+  opacity: 0.8;
+}
+.report-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 300px;
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.report-dropdown__section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+  padding: 6px 10px 4px;
+}
+.report-dropdown__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--body);
+  transition: background 0.12s;
+}
+.report-dropdown__item:hover {
+  background: var(--surface-soft);
+}
+.report-dropdown__item--active {
+  background: var(--surface-card);
+  color: var(--body-strong);
+}
+.report-dropdown__item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.report-dropdown__item-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+.report-dropdown__item-period {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.report-dropdown__badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  background: var(--teal);
+  color: #fff;
+  border-radius: 9999px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+}
+.report-dropdown__add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--hairline);
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted-soft);
+  font-style: italic;
 }
 .hero h1 {
   font-family: var(--font-display);
@@ -307,7 +421,25 @@ footer {
 
 <!-- ── Hero ── -->
 <div class="hero">
-  <div class="hero-label">云基础 &amp; VnE 团队 · 竞品研究报告 · 2026.05</div>
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span id="triggerLabel">云基础 &amp; VnE 团队 · 竞品研究报告 · 2026.05</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">历史双周报告</div>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" data-report-id="2026-05-w1" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+        <span class="report-dropdown__badge">当前</span>
+      </a>
+      <div class="report-dropdown__add">更多期次将在下次更新后出现</div>
+    </div>
+  </div>
   <h1>竞品研究报告</h1>
   <p class="hero-sub"><span id="coverage-window">覆盖窗口：计算中…</span>｜阅读时长：约 5 分钟｜范围：产品动态、企业级 AI 产品 &amp; 云平台、设计工具动态、对我们的启示</p>
 </div>
@@ -741,8 +873,9 @@ footer {
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const spans = document.querySelectorAll('[data-date-start]');
-    let min = null, max = null;
+    // ── 日期范围自动计算 ──
+    var spans = document.querySelectorAll('[data-date-start]');
+    var min = null, max = null;
     spans.forEach(function(el) {
       var s = new Date(el.dataset.dateStart);
       var e = new Date(el.dataset.dateEnd);
@@ -755,6 +888,51 @@ footer {
       };
       document.getElementById('coverage-window').textContent = '覆盖窗口：' + fmt(min) + ' ~ ' + fmt(max);
     }
+
+    // ── 报告版本下拉选择器 ──
+    var trigger = document.getElementById('reportTrigger');
+    var dropdown = document.getElementById('reportDropdown');
+    var selector = document.getElementById('reportSelector');
+
+    function openDropdown() {
+      trigger.classList.add('open');
+      dropdown.classList.add('open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+    function closeDropdown() {
+      trigger.classList.remove('open');
+      dropdown.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdown.classList.contains('open') ? closeDropdown() : openDropdown();
+    });
+
+    // 点击条目
+    dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        var href = item.getAttribute('data-report-href');
+        if (href) {
+          window.location.href = href;
+        } else {
+          // 当前报告，仅关闭
+          closeDropdown();
+        }
+      });
+    });
+
+    // 点击外部关闭
+    document.addEventListener('click', function(e) {
+      if (!selector.contains(e.target)) closeDropdown();
+    });
+
+    // ESC 关闭
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeDropdown();
+    });
   });
 </script>
 </body>
