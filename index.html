@@ -27,7 +27,6 @@ html { scroll-behavior: smooth; }
   --lavender:      #b8a4ed;
   --peach:         #ffb084;
   --ochre:         #e8b94a;
-  --mint:          #a4d4c5;
   --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
   --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
 }
@@ -118,11 +117,11 @@ body {
   gap: 16px;
   min-height: 200px;
 }
-.flash-card:nth-child(1) { background: var(--pink); color: var(--on-dark); }
-.flash-card:nth-child(2) { background: var(--teal); color: var(--on-dark); }
-.flash-card:nth-child(3) { background: var(--lavender); color: var(--ink); }
-.flash-card:nth-child(4) { background: var(--peach); color: var(--ink); grid-column: span 1; }
-.flash-card:nth-child(5) { background: var(--ochre); color: var(--ink); }
+.flash-card:nth-child(1) { background: var(--pink);    color: var(--on-dark); }
+.flash-card:nth-child(2) { background: var(--teal);    color: var(--on-dark); }
+.flash-card:nth-child(3) { background: var(--lavender);color: var(--ink); }
+.flash-card:nth-child(4) { background: var(--peach);   color: var(--ink); }
+.flash-card:nth-child(5) { background: var(--ochre);   color: var(--ink); }
 .flash-card-num {
   font-size: 12px;
   font-weight: 600;
@@ -130,16 +129,9 @@ body {
   text-transform: uppercase;
   opacity: 0.5;
 }
-.flash-card-body {
-  font-size: 15px;
-  line-height: 1.6;
-  flex: 1;
-}
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
 .flash-card-body strong { font-weight: 600; }
-.flash-card-src {
-  font-size: 12px;
-  opacity: 0.5;
-}
+.flash-card-src { font-size: 12px; opacity: 0.5; }
 .flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
 .flash-card-chip {
   display: inline-flex;
@@ -172,6 +164,7 @@ body {
   padding: 6px 16px;
   background: var(--surface-card);
   color: var(--muted);
+  white-space: nowrap;
 }
 .track-label-line { flex: 1; height: 1px; background: var(--hairline); }
 
@@ -197,19 +190,8 @@ body {
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
-.pc-name {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-  color: var(--ink);
-}
-.pc-sub {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted-soft);
-}
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
 .pc-date {
   margin-left: auto;
   font-size: 12px;
@@ -217,13 +199,9 @@ body {
   background: var(--surface-card);
   border-radius: 9999px;
   padding: 3px 12px;
+  white-space: nowrap;
 }
-.pc-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .pc-list li {
   font-size: 14px;
   color: var(--body);
@@ -240,88 +218,44 @@ body {
   line-height: 1.3;
 }
 .pc-list b { color: var(--body-strong); font-weight: 600; }
-.pc-src {
-  margin-top: 14px;
-  font-size: 12px;
-  color: var(--muted-soft);
-}
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
 .pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
 .pc-src a:hover { color: var(--ink); border-color: var(--ink); }
 
-/* ── 彩色 Band · 企业与云 ── */
-.color-band {
-  margin: 80px 0 0;
-  padding: 64px 48px;
-  border-radius: 24px;
-}
-.band-teal { background: var(--teal); }
+/* ── 深色 Band ── */
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
 .band-teal .section-label { color: rgba(255,255,255,0.4); }
 .band-teal .section-title { color: var(--on-dark); }
 .band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
 .band-teal .track-label-line { background: rgba(255,255,255,0.1); }
 .band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
 .band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-.band-teal .pc-name { color: var(--on-dark); }
-.band-teal .pc-sub { color: rgba(255,255,255,0.35); }
-.band-teal .pc-date { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub,
+.band-teal .pc-date  { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
 .band-teal .pc-list li { color: rgba(255,255,255,0.6); }
-.band-teal .pc-list b { color: rgba(255,255,255,0.9); }
-.band-teal .pc-src { color: rgba(255,255,255,0.3); }
-.band-teal .pc-src a { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
 .band-teal .pc-src a:hover { color: var(--on-dark); }
 
 /* ── 设计工具 Band ── */
-.band-surface {
-  background: var(--surface-soft);
-  border-radius: 24px;
-  margin: 80px 0 0;
-  padding: 64px 48px;
-}
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
 .band-surface .product-card { background: var(--canvas); }
 
 /* ── 启示卡片 ── */
-.insight-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 40px;
-}
-.insight-card {
-  border-radius: 24px;
-  padding: 32px;
-}
-.insight-card:nth-child(1) { background: var(--teal); color: var(--on-dark); }
-.insight-card:nth-child(2) { background: var(--peach); color: var(--ink); }
-.insight-card:nth-child(3) { background: var(--lavender); color: var(--ink); }
-.in-num {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  opacity: 0.45;
-  margin-bottom: 20px;
-}
-.in-trigger {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  opacity: 0.5;
-  margin-bottom: 12px;
-}
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; }
+.insight-card:nth-child(1) { background: var(--teal);    color: var(--on-dark); }
+.insight-card:nth-child(2) { background: var(--peach);   color: var(--ink); }
+.insight-card:nth-child(3) { background: var(--lavender);color: var(--ink); }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; }
 .in-trigger em { font-style: normal; }
-.in-title {
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-  line-height: 1.3;
-  margin-bottom: 14px;
-}
-.in-body {
-  font-size: 13px;
-  line-height: 1.7;
-  opacity: 0.7;
-}
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
 
 /* ── CTA Band ── */
 .cta-band {
@@ -335,21 +269,9 @@ body {
   gap: 40px;
   flex-wrap: wrap;
 }
-.cta-band-text h2 {
-  font-size: 40px;
-  font-weight: 500;
-  letter-spacing: -1px;
-  line-height: 1.1;
-  max-width: 480px;
-  margin-bottom: 12px;
-}
-.cta-band-text p { font-size: 16px; color: var(--muted); }
-.cta-band-meta {
-  text-align: right;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.8;
-}
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
 
 /* ── 页脚 ── */
 footer {
@@ -400,45 +322,45 @@ footer {
     <div class="flash-grid">
 
       <div class="flash-card">
-        <span class="flash-card-chip">Claude</span>
+        <span class="flash-card-chip">Anthropic</span>
         <div class="flash-card-num">01</div>
-        <div class="flash-card-body"><strong>Claude Design 发布</strong>——首个能直接读取 Figma 文件提取设计系统的 AI 设计生成工具，生成物一键交付 Claude Code 进入生产，打通「设计→生产」全链路。</div>
-        <div class="flash-card-src">来源：<a href="https://aurora-designs.ca/blog/claude-design-anthropic-labs/" target="_blank">aurora-designs.ca</a></div>
+        <div class="flash-card-body"><strong>Claude Mythos Preview 限量发布</strong>——能自主发现并利用零日漏洞，超过半数利用尝试成功。通过 Project Glasswing 优先向防御方开放，是 AI 能力边界最强警示信号。</div>
+        <div class="flash-card-src">来源：<a href="https://red.anthropic.com/2026/mythos-preview/" target="_blank">red.anthropic.com</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">ChatGPT</span>
+        <span class="flash-card-chip">Google</span>
         <div class="flash-card-num">02</div>
-        <div class="flash-card-body"><strong>GPT-5.5 Instant 替换 ChatGPT 默认模型</strong>——高敏场景幻觉率降低 52.5%，同步上线记忆溯源面板，用户可查看并管理 AI 所用上下文。</div>
+        <div class="flash-card-body"><strong>Google Android Show 2026 发布 Gemini Intelligence</strong>——Android 从手机 OS 升级为跨设备主动式 AI 平台；同期发布 Googlebook 新品类，Acer / Dell / HP / Lenovo 首批跟进。</div>
+        <div class="flash-card-src">来源：<a href="https://blog.google/products-and-platforms/platforms/android/android-show-io-edition-2026/" target="_blank">blog.google</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">AWS</span>
+        <div class="flash-card-num">03</div>
+        <div class="flash-card-body"><strong>AWS Bedrock AgentCore 推出 Managed Payments</strong>——AI Agent 可自主完成支付，与 Coinbase 和 Stripe 合作，设置会话级消费上限。Agent「能花钱」正式成为现实。</div>
+        <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-amazon-bedrock-agentcore-payments-agent-toolkit-for-aws-and-more-may-11-2026/" target="_blank">aws.amazon.com</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">OpenAI</span>
+        <div class="flash-card-num">04</div>
+        <div class="flash-card-body"><strong>GPT-5.5 Instant 成为 ChatGPT 默认模型</strong>——高敏场景幻觉率降低 52.5%，新增 Fast Answers 快速响应机制；OpenAI 同步结束微软独家协议，将模型引入 AWS Bedrock。</div>
         <div class="flash-card-src">来源：<a href="https://openai.com/index/gpt-5-5-instant/" target="_blank">openai.com</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">Figma</span>
-        <div class="flash-card-num">03</div>
-        <div class="flash-card-body"><strong>Figma Make 接入语音输入与 9000+ 外部应用</strong>——设计流程正式纳入 Agentic 工作流，可口述意图直驱生成。</div>
-        <div class="flash-card-src">来源：<a href="https://help.figma.com/hc/en-us/articles/40219873508247-Release-notes-roundup-May-2026" target="_blank">figma.com</a></div>
-      </div>
-
-      <div class="flash-card">
-        <span class="flash-card-chip">Canva</span>
-        <div class="flash-card-num">04</div>
-        <div class="flash-card-body"><strong>Canva AI 2.0 升级为「创意操作系统」</strong>——持久记忆、品牌智能自动对齐、Canva Code 2.0 及 10+ 服务连接器同期上线。</div>
-        <div class="flash-card-src">来源：<a href="https://www.canva.com/newsroom/news/canva-create-2026-ai/" target="_blank">canva.com</a></div>
-      </div>
-
-      <div class="flash-card">
-        <span class="flash-card-chip">Enterprise</span>
+        <span class="flash-card-chip">Microsoft</span>
         <div class="flash-card-num">05</div>
-        <div class="flash-card-body"><strong>Google Workspace Intelligence 上线，AWS Bedrock 开放 OpenAI 模型</strong>——企业 AI 平台进入多模型统一管控阶段。</div>
-        <div class="flash-card-src">来源：<a href="https://workspace.google.com/blog/product-announcements/introducing-workspace-intelligence" target="_blank">workspace.google.com</a></div>
+        <div class="flash-card-body"><strong>Microsoft 365 E7 + Agent 365 正式 GA（5月1日）</strong>——将 M365 E5、Entra Suite、Copilot、Agent 治理合四为一，企业 AI Agent 管控进入标准化阶段。</div>
+        <div class="flash-card-src">来源：<a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/05/05/copilot-cowork-from-conversation-to-action-across-skills-integrations-and-devices/" target="_blank">microsoft.com</a></div>
       </div>
 
     </div>
   </section>
 
 
-  <!-- ── 02 消费级产品 ── -->
+  <!-- ── 02 产品动态 · 消费级 ── -->
   <section class="section" id="s2">
     <div class="section-label">Section 02</div>
     <div class="section-title">产品动态</div>
@@ -454,30 +376,31 @@ footer {
         <div class="product-card">
           <div class="pc-head">
             <span class="pc-name">Claude</span>
-            <span class="pc-sub">Anthropic · Opus 4.7</span>
-            <span class="pc-date" data-date-start="2026-04-17" data-date-end="2026-05-07">2026.04–05</span>
+            <span class="pc-sub">Anthropic</span>
+            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-13">2026.04–05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Opus 4.7 正式发布</b>，视觉能力升级（支持更高分辨率图像），软件工程与长任务表现提升。</li>
-            <li><b>Claude Design 上线</b>（4.17）：读取 Figma 文件和代码库提取设计系统，从 Prompt 生成原型/Slides/Landing Page，一键交付 Claude Code 完成生产。</li>
-            <li><b>Claude Code 桌面版大改版</b>：会话侧栏、拖放工作区、集成终端/文件编辑器、更快 Diff、SSH 支持。</li>
-            <li><b>多 Agent 编排</b>：主 Agent 拆解任务并行分派给专属子 Agent，共享文件系统协同工作。</li>
+            <li><b>Claude Opus 4.7 正式 GA</b>：视觉能力升级（更高分辨率图像），软件工程与长任务表现提升。</li>
+            <li><b>Claude Managed Agents 三项新功能</b>：① 多 Agent 编排——主 Agent 拆解任务并行分派专属子 Agent；② 共享文件系统协同；③ 主 Agent 可在执行中途召回子 Agent 汇报进度。</li>
+            <li><b>Claude Mythos Preview（Project Glasswing）</b>：能自主发现零日漏洞，>50% 利用成功率，优先向防御方和开源社区限量开放，暂未公开发布。</li>
+            <li>Claude Code 桌面版改版：新增会话侧栏、拖放工作区、集成终端、更快 Diff、SSH 支持（Mac）。</li>
             <li>Pro / Max / Team / Enterprise 速率上限翻倍，取消高峰限流。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://9to5mac.com/2026/05/07/anthropic-updates-claude-managed-agents-with-three-new-features/" target="_blank">9to5Mac</a> · <a href="https://beginnersinai.org/whats-new-claude-2026/" target="_blank">BeginnersInAI</a></div>
+          <div class="pc-src">来源：<a href="https://9to5mac.com/2026/05/07/anthropic-updates-claude-managed-agents-with-three-new-features/" target="_blank">9to5Mac</a> · <a href="https://red.anthropic.com/2026/mythos-preview/" target="_blank">red.anthropic.com</a></div>
         </div>
 
         <div class="product-card">
           <div class="pc-head">
             <span class="pc-name">ChatGPT</span>
             <span class="pc-sub">OpenAI · GPT-5.5 Instant</span>
-            <span class="pc-date" data-date-start="2026-05-05" data-date-end="2026-05-05">2026.05.05</span>
+            <span class="pc-date" data-date-start="2026-05-05" data-date-end="2026-05-07">2026.05.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>GPT-5.5 Instant 成为默认模型</b>，高敏场景幻觉率降低 52.5%，延迟与上代持平。</li>
-            <li><b>记忆溯源（Memory Sources）</b>：用户可查看 AI 调用了哪些历史对话与存储记忆，并可删除或纠正。</li>
-            <li><b>CarPlay 语音访问</b>：iOS 26.4 及以上可免提使用 ChatGPT。</li>
-            <li><b>Excel / Google Sheets 侧边栏</b>全球开放（Business），表格内对话式构建/清洗/解释工作簿。</li>
+            <li><b>GPT-5.5 Instant 成为默认模型</b>：高敏场景幻觉率降低 52.5%，挑战性对话错误率降低 37.3%，延迟与 5.3 持平。</li>
+            <li><b>Fast Answers</b>：高置信度通用问题跳过复杂推理链，直接给出深度回答，响应速度更快。</li>
+            <li><b>Memory Sources 透明化</b>：用户可查看 AI 调用了哪些历史对话/记忆/文件，并可删除或纠正。</li>
+            <li><b>Trust Contact 安全功能</b>：成人用户可指定信任联系人，在需要支持时主动触达。</li>
+            <li>OpenAI 结束微软独家协议，GPT-5.5 / 5.4 同步上线 AWS Bedrock。</li>
           </ul>
           <div class="pc-src">来源：<a href="https://openai.com/index/gpt-5-5-instant/" target="_blank">openai.com</a> · <a href="https://techcrunch.com/2026/05/05/openai-releases-gpt-5-5-instant-a-new-default-model-for-chatgpt/" target="_blank">TechCrunch</a></div>
         </div>
@@ -485,38 +408,41 @@ footer {
         <div class="product-card">
           <div class="pc-head">
             <span class="pc-name">Gemini</span>
-            <span class="pc-sub">Google · 3.1</span>
-            <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
+            <span class="pc-sub">Google · Android Show 2026</span>
+            <span class="pc-date" data-date-start="2026-05-12" data-date-end="2026-05-13">2026.05.12–13</span>
           </div>
           <ul class="pc-list">
-            <li><b>Gemini 3.1</b>：支持复杂多步语音指令，早期用户已获灰度。</li>
-            <li><b>Gemini Intelligence 登陆 Android</b>：自动化任务、网页摘要、表单填写；全面取代 Google Assistant 成为默认助手。</li>
-            <li>Google Home 语音指令响应提速，新增家庭成员名字识别的个性化查询。</li>
+            <li><b>Gemini Intelligence 发布</b>：Android 全平台（手机/手表/汽车/Googlebook）主动式 AI——自动化复杂任务、网页摘要、表单填写，今夏率先在三星和 Google 手机上线。</li>
+            <li><b>Rambler（Gboard 内置）</b>：将语音随意说转化为结构化书面文字，支持多语言混说。</li>
+            <li><b>自定义 Widget</b>：用自然语言生成个性化 Android 桌面组件；Material 3 Expressive 设计语言同期发布。</li>
+            <li><b>Googlebook 新品类</b>：以 Gemini Intelligence 为核心重构笔记本形态，Acer / Asus / Dell / HP / Lenovo 首批跟进，今秋上市。</li>
+            <li>Android Auto 重设计：沉浸式 3D 导航 + 高清视频流，现覆盖超 2.5 亿辆兼容车型。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/" target="_blank">blog.google</a></div>
+          <div class="pc-src">来源：<a href="https://blog.google/products-and-platforms/platforms/android/gemini-intelligence/" target="_blank">blog.google</a> · <a href="https://9to5google.com/2026/05/12/the-android-show-2026/" target="_blank">9to5Google</a></div>
         </div>
 
         <div class="product-card">
           <div class="pc-head">
             <span class="pc-name">Kimi · DeepSeek · MiniMax</span>
-            <span class="pc-date" data-date-start="2026-04-16" data-date-end="2026-04-24">2026.04</span>
+            <span class="pc-sub">中国 AI 头部厂商</span>
+            <span class="pc-date" data-date-start="2026-04-21" data-date-end="2026-04-27">2026.04</span>
           </div>
           <ul class="pc-list">
-            <li><b>Kimi K2.6</b> 以 58.6% 短暂领跑 SWE-Bench Pro 开源榜，千亿参数，最多支持 300 个子 Agent 并行。</li>
-            <li><b>DeepSeek V4 Pro</b>：MoE 架构，1.6T 总参数 / 49B 激活，1M token 上下文，TechCrunch 评为「弥合与前沿差距」的里程碑；V4 Flash 同期发布；V4.1 计划 6 月发布。</li>
-            <li><b>MiniMax M2.7</b> 聚焦客服、教育、创意内容等垂直场景，任务性能优先于通用 Benchmark。</li>
+            <li><b>Kimi K2.6</b>：1.5T 参数视觉语言模型，Coding 榜 Elo 1529，与 DeepSeek V4 并列第六，最多 300 个子 Agent 并行，长程规划能力突出。</li>
+            <li><b>DeepSeek V4 Pro / Flash</b>：MIT 开源，1M token 上下文，V4 Pro 1.6T/49B 激活，定价比前沿闭源模型低 11×，已进入 AWS Bedrock。</li>
+            <li><b>MiniMax</b>：M2 API 定价 $0.30/$1.20（输入/输出每百万 token），性价比接近 V4 Pro，聚焦垂直场景落地。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://techcrunch.com/2026/04/24/deepseek-previews-new-ai-model-that-closes-the-gap-with-frontier-models/" target="_blank">TechCrunch</a> · <a href="https://akitaonrails.com/en/2026/04/24/llm-benchmarks-parte-3-deepseek-kimi-mimo/" target="_blank">akitaonrails.com</a></div>
+          <div class="pc-src">来源：<a href="https://techcrunch.com/2026/04/24/deepseek-previews-new-ai-model-that-closes-the-gap-with-frontier-models/" target="_blank">TechCrunch</a> · <a href="https://www.deeplearning.ai/the-batch/kimi-k2-6-matches-open-qwen3-6-max-anddeepseek-v4-falls-just-behind-top-closed-models" target="_blank">DeepLearning.AI</a></div>
         </div>
 
       </div>
     </div>
   </section>
 
-</div><!-- /wrap -->
+</div>
 
 
-<!-- ── 企业级 · 深绿 Band ── -->
+<!-- ── 企业级 + 云平台 · 深色 Band ── -->
 <div class="wrap">
   <div class="color-band band-teal" id="s2b">
     <div class="section-label">Section 02 · B</div>
@@ -531,40 +457,42 @@ footer {
 
         <div class="product-card">
           <div class="pc-head">
-            <span class="pc-name">ChatGPT Enterprise</span>
-            <span class="pc-sub">Workspace Agents</span>
-            <span class="pc-date" data-date-start="2026-05-05" data-date-end="2026-05-05">2026.05.05</span>
+            <span class="pc-name">Microsoft 365 E7 + Agent 365</span>
+            <span class="pc-sub">Microsoft · GA</span>
+            <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-05">2026.05.01</span>
           </div>
           <ul class="pc-list">
-            <li><b>Workspace Agents 扩展上线</b>：原生连接 Slack、Google Drive、Microsoft 365、Salesforce、Notion，企业数据可直接驱动 Agent 工作流。</li>
+            <li><b>M365 E7 正式 GA</b>：整合 M365 E5、Entra Suite（身份）、M365 Copilot、Agent 365，一个 SKU 涵盖安全生产力 + AI Agent 治理全链路。</li>
+            <li><b>Copilot Cowork 移动端</b>：iOS / Android 上可随时委派任务，下班途中交代、回来即有结果。</li>
+            <li>Copilot Agent Mode 在 Word / Excel / PowerPoint / Outlook / OneNote 内统一上线，支持迭代式协作创建文档。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://callsphere.ai/blog/vw1b-chatgpt-agent-mode-workspace-2026" target="_blank">callsphere.ai</a></div>
+          <div class="pc-src">来源：<a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/05/05/copilot-cowork-from-conversation-to-action-across-skills-integrations-and-devices/" target="_blank">microsoft.com</a></div>
         </div>
 
         <div class="product-card">
           <div class="pc-head">
             <span class="pc-name">Gemini for Workspace</span>
-            <span class="pc-sub">Workspace Intelligence</span>
-            <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
+            <span class="pc-sub">Google · Workspace Intelligence</span>
+            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-07">2026.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Workspace Intelligence 上线</b>：基于 Gemini 推理的语义统一层，打破应用信息孤岛，自动识别优先事项并学习用户写作风格。</li>
-            <li>Docs 用企业数据生成信息图；Slides 单次 Prompt 生成完整可编辑演示文稿（即将上线）。</li>
-            <li><b>Admin Console 新增 AI Control Center</b>，管理员可精细化管控 Agent 数据访问权限。</li>
+            <li><b>Workspace Intelligence</b>：基于 Gemini 推理的语义统一层，打破应用信息孤岛，自动识别优先事项并学习用户写作风格。</li>
+            <li>Docs 用企业私有数据生成信息图；Slides 单次 Prompt 生成完整可编辑演示（即将上线）。</li>
+            <li><b>Admin Console AI Control Center</b>：管理员可精细管控 Agent 对 Workspace 数据的访问权限。</li>
           </ul>
           <div class="pc-src">来源：<a href="https://workspace.google.com/blog/product-announcements/introducing-workspace-intelligence" target="_blank">workspace.google.com</a></div>
         </div>
 
         <div class="product-card wide">
           <div class="pc-head">
-            <span class="pc-name">Claude Enterprise</span>
-            <span class="pc-sub">Claude Platform on AWS</span>
-            <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
+            <span class="pc-name">ChatGPT Enterprise</span>
+            <span class="pc-sub">OpenAI · Workspace Agents</span>
+            <span class="pc-date" data-date-start="2026-05-05" data-date-end="2026-05-05">2026.05.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Claude Platform on AWS 上线</b>：通过 AWS 统一认证和账单访问完整 Claude API 功能集，含 Managed Agents、代码执行、Prompt 缓存。</li>
+            <li><b>Workspace Agents 扩展上线</b>：原生连接 Slack、Google Drive、Microsoft 365、Salesforce、Notion，企业数据直接驱动 Agent 工作流，无需中间层集成。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://www.mindstudio.ai/blog/code-with-claude-2026-new-agent-features" target="_blank">mindstudio.ai</a></div>
+          <div class="pc-src">来源：<a href="https://callsphere.ai/blog/vw1b-chatgpt-agent-mode-workspace-2026" target="_blank">callsphere.ai</a></div>
         </div>
 
       </div>
@@ -579,42 +507,44 @@ footer {
 
         <div class="product-card">
           <div class="pc-head">
-            <span class="pc-name">Google Cloud</span>
-            <span class="pc-sub">Cloud Next 2026</span>
-            <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
+            <span class="pc-name">AWS Bedrock</span>
+            <span class="pc-sub">Amazon</span>
+            <span class="pc-date" data-date-start="2026-04-28" data-date-end="2026-05-11">2026.04–05</span>
           </div>
           <ul class="pc-list">
-            <li><b>A2A 协议</b>已在 150 家组织部署，Agent 间互操作标准初步成形。</li>
-            <li><b>Workspace Studio</b>：企业可在 Workspace 内构建并部署自定义 AI Agent。</li>
-            <li>Vibe Coding 在 Cloud 控制台 GA。</li>
+            <li><b>OpenAI 模型（GPT-5.5 / 5.4）登陆 Bedrock</b>：OpenAI 结束微软独家协议，AWS 成第二大发行渠道，Codex on Bedrock 同步上线。</li>
+            <li><b>AgentCore Managed Payments（5月11日）</b>：AI Agent 可自主访问并支付 API / MCP 服务器 / 其他 Agent；与 Coinbase CDP 和 Stripe Privy 合作，设置会话级消费上限。</li>
+            <li><b>Amazon WorkSpaces for AI Agents</b>：Agent 可通过托管 WorkSpaces 安全操作桌面应用，企业级合规治理。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://cloud.google.com/blog/topics/google-cloud-next/google-cloud-next-2026-wrap-up" target="_blank">cloud.google.com</a></div>
+          <div class="pc-src">来源：<a href="https://aws.amazon.com/about-aws/whats-new/2026/04/bedrock-openai-models-codex-managed-agents/" target="_blank">aws.amazon.com</a> · <a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-amazon-bedrock-agentcore-payments-agent-toolkit-for-aws-and-more-may-11-2026/" target="_blank">AWS Blog</a></div>
         </div>
 
         <div class="product-card">
           <div class="pc-head">
-            <span class="pc-name">Azure AI</span>
-            <span class="pc-sub">Microsoft</span>
-            <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
+            <span class="pc-name">Google Cloud</span>
+            <span class="pc-sub">Cloud Next 2026</span>
+            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-07">2026.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Intelligent Purview 发布</b>：实时对 AI Prompt 和响应执行 DLP 检测，合规管控下沉至 AI 交互层。</li>
-            <li><b>Azure Confidential AI</b>：AMD SEV-SNP 机密计算，满足金融/医疗推理合规需求。</li>
+            <li><b>Gemini Enterprise Agent Platform</b>：端到端 Agent 构建、治理、规模化平台，75% Google Cloud 客户已在使用 AI 产品。</li>
+            <li><b>Agentic Data Cloud</b>：跨云数据湖仓，数据无需迁移即可被 Agent 实时查询（含 AWS 上的数据）。</li>
+            <li><b>第八代 TPU（TPU 8t / 8i）</b>：8t 面向高吞吐 AI 负载，性能比上代提升 3×；8i 面向低延迟 Agentic 工作流，性价比提升 80%。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://azure.microsoft.com/en-us/blog/" target="_blank">azure.microsoft.com</a></div>
+          <div class="pc-src">来源：<a href="https://cloud.google.com/blog/topics/google-cloud-next/google-cloud-next-2026-wrap-up" target="_blank">cloud.google.com</a></div>
         </div>
 
         <div class="product-card wide">
           <div class="pc-head">
-            <span class="pc-name">AWS Bedrock</span>
-            <span class="pc-sub">Amazon</span>
-            <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
+            <span class="pc-name">Azure AI / Microsoft</span>
+            <span class="pc-sub">Microsoft</span>
+            <span class="pc-date" data-date-start="2026-04-29" data-date-end="2026-05-05">2026.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>OpenAI 模型正式登陆 Bedrock</b>：统一 AWS 接口访问 GPT 系列与 Anthropic Claude，降低多模型切换成本。</li>
-            <li><b>Titan Ultra 2</b>：2M token 上下文，与 Amazon Q 深度集成。</li>
+            <li><b>Intelligent Purview</b>：实时对 AI Prompt 和响应执行 DLP 检测，数据合规管控下沉至 AI 交互层。</li>
+            <li><b>Azure Confidential AI</b>：AMD SEV-SNP 机密计算，满足金融/医疗等高安全等级推理合规需求。</li>
+            <li>Copilot Studio Wave 1（2026）：新增 Agent 治理、智能工作流和连接应用体验。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://aws.amazon.com/bedrock/" target="_blank">aws.amazon.com</a></div>
+          <div class="pc-src">来源：<a href="https://azure.microsoft.com/en-us/blog/" target="_blank">azure.microsoft.com</a> · <a href="https://www.microsoft.com/en-us/microsoft-copilot/blog/copilot-studio/new-and-improved-agent-governance-intelligent-workflows-and-connected-app-experiences/" target="_blank">Copilot Studio Blog</a></div>
         </div>
 
       </div>
@@ -623,7 +553,7 @@ footer {
 </div>
 
 
-<!-- ── 设计工具 · 奶油 Band ── -->
+<!-- ── 设计工具 Band ── -->
 <div class="wrap">
   <div class="band-surface" id="s3">
     <div class="section-label">Section 03</div>
@@ -643,10 +573,11 @@ footer {
             <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Make 语音输入</b>：口述需求直驱 AI 生成；Question Cards 引导结构化选择，减少模糊指令迭代成本。</li>
-            <li><b>Zapier 连接器</b>：9000+ 应用可为 Make 提供外部上下文。</li>
-            <li><b>Draw 更新</b>：绘图模式直接支持 Auto Layout，新增路径文字和更丰富的笔刷纹理。</li>
-            <li>Release Notes 专题讲解 Agents、MCP、Write to Canvas 等 Agentic 概念。</li>
+            <li><b>Make 语音输入 + Question Cards</b>：口述需求直驱 AI 生成；结构化选项引导降低模糊指令迭代成本。</li>
+            <li><b>Draw 更新</b>：绘图模式支持 Auto Layout，新增路径文字、更丰富笔刷纹理，图层面板显示组件/实例/文本类型标签。</li>
+            <li><b>AI 图像编辑工具</b>：新增 Vectorize、Remove Background、Erase Object、Expand Image 四项内置 AI 能力。</li>
+            <li><b>Zapier 连接器</b>：9000+ 外部应用（Google Drive / M365 / Zoom）可为 Make 提供上下文。</li>
+            <li>桌面 App 改版：跨文件无缝切换，后台预加载，近期文件快速搜索。</li>
           </ul>
           <div class="pc-src">来源：<a href="https://help.figma.com/hc/en-us/articles/40219873508247-Release-notes-roundup-May-2026" target="_blank">figma.com</a></div>
         </div>
@@ -658,8 +589,9 @@ footer {
             <span class="pc-date" data-date-start="2026-04-27" data-date-end="2026-04-27">2026.04.27</span>
           </div>
           <ul class="pc-list">
-            <li><b>Firefly AI Assistant 公开 Beta</b>：统一对话界面跨 PS / AI / Pr 编排多步工作流，单条 Prompt 可调用 60+ 专业工具。</li>
-            <li>新增 AI 配音翻译、语音降噪/混响调整；引入 Kling 3.0 等第三方视频模型。</li>
+            <li><b>Firefly AI Assistant 公开 Beta</b>：统一对话界面跨 PS / AI / Pr 编排多步工作流，单条 Prompt 可调用 60+ 专业工具（Auto Tone / Generative Fill / Remove Background 等）。</li>
+            <li><b>Workflow Builder</b>：可视化构建自动化创意序列，输入/处理/输出节点组合，与 Figma 等工具集成。</li>
+            <li>新增 AI 配音翻译、语音降噪/混响调整；引入 Kling 3.0 等第三方视频模型至 Firefly 库。</li>
           </ul>
           <div class="pc-src">来源：<a href="https://blog.adobe.com/en/publish/2026/04/27/firefly-ai-assistant-public-beta" target="_blank">blog.adobe.com</a></div>
         </div>
@@ -682,36 +614,35 @@ footer {
           </div>
           <ul class="pc-list">
             <li>从 Prompt / 图片 / 现有文件生成原型、Slides、Landing Page、Pitch Deck。</li>
-            <li><b>设计系统对接</b>：读取代码库和 Figma 文件，自动提取并应用 Design Token。</li>
-            <li><b>一键交付 Claude Code</b>：目前唯一完整打通「设计→生产」的 AI 原生工具链。</li>
+            <li><b>设计系统对接</b>：读取代码库和 Figma 文件，自动提取并应用 Design Token，维持品牌一致。</li>
+            <li><b>一键交付 Claude Code</b>：目前唯一完整打通「设计→生产」的 AI 原生工具链，无需中间转译。</li>
           </ul>
           <div class="pc-src">来源：<a href="https://aurora-designs.ca/blog/claude-design-anthropic-labs/" target="_blank">aurora-designs.ca</a></div>
         </div>
 
         <div class="product-card">
           <div class="pc-head">
-            <span class="pc-name">v0 by Vercel</span>
-            <span class="pc-sub">Full-Stack Builder</span>
-            <span class="pc-date" data-date-start="2026-02-01" data-date-end="2026-05-13">2026.02–05</span>
-          </div>
-          <ul class="pc-list">
-            <li>从组件生成器进化为全栈工具：Git 集成、VS Code 风格编辑器、数据库连接（Snowflake、AWS）、Agentic 工作流。</li>
-            <li>React UI 生成速度与质量仍是同类最优。</li>
-          </ul>
-          <div class="pc-src">来源：<a href="https://weavai.app/blog/en/2026/04/28/v0-by-vercel-2026-review-ui-quality-pricing-verdict/" target="_blank">weavai.app</a></div>
-        </div>
-
-        <div class="product-card wide">
-          <div class="pc-head">
             <span class="pc-name">Google Stitch</span>
-            <span class="pc-sub">原 Galileo AI（Google 收购整合）</span>
+            <span class="pc-sub">原 Galileo AI</span>
             <span class="pc-date" data-date-start="2026-03-01" data-date-end="2026-03-31">2026.03</span>
           </div>
           <ul class="pc-list">
             <li><b>多屏生成</b>：单次 Prompt 最多生成 5 个关联屏幕，AI 原生无限画布。</li>
-            <li><b>Voice Canvas</b>：语音命令直驱画布操作；<b>DESIGN.md</b> 从现有网站提取设计规则保存为可移植文件。</li>
+            <li><b>Voice Canvas</b>：语音命令直驱画布；<b>DESIGN.md</b> 从现有网站提取设计规则保存为可移植文件。</li>
           </ul>
           <div class="pc-src">来源：<a href="https://muz.li/blog/vibe-design-in-2026-what-ai-generated-ui-means-for-your-work/" target="_blank">muz.li</a></div>
+        </div>
+
+        <div class="product-card wide">
+          <div class="pc-head">
+            <span class="pc-name">v0 by Vercel</span>
+            <span class="pc-sub">Full-Stack Builder</span>
+            <span class="pc-date" data-date-start="2026-02-01" data-date-end="2026-05-01">2026.02–05</span>
+          </div>
+          <ul class="pc-list">
+            <li>从组件生成器进化为全栈工具：Git 集成、VS Code 风格编辑器、数据库连接（Snowflake / AWS）、Agentic 工作流。React UI 生成速度与质量仍是同类最优。</li>
+          </ul>
+          <div class="pc-src">来源：<a href="https://weavai.app/blog/en/2026/04/28/v0-by-vercel-2026-review-ui-quality-pricing-verdict/" target="_blank">weavai.app</a></div>
         </div>
 
       </div>
@@ -731,12 +662,12 @@ footer {
             <span class="pc-date" data-date-start="2026-04-16" data-date-end="2026-04-16">2026.04.16</span>
           </div>
           <ul class="pc-list">
-            <li><b>持久记忆库</b>：AI 记住用户工作习惯，每次输出自动贴近个人风格。</li>
-            <li><b>品牌智能</b>：从第一稿起自动应用字体/颜色/风格，批量更新历史作品。</li>
-            <li><b>Canva Code 2.0</b>：对话生成完整响应式交互 H5，支持 HTML 导入二次编辑。</li>
-            <li><b>连接器</b>：接入 Slack、Gmail、Zoom、HubSpot 等，从会议记录一键生成品牌视觉输出。</li>
+            <li><b>持久记忆库</b>：AI 记住工作习惯，每次输出自动贴近个人风格，越用越准。</li>
+            <li><b>品牌智能</b>：连接品牌模板后，从第一稿起自动应用字体/颜色/风格，批量更新历史作品。</li>
+            <li><b>Canva Code 2.0</b>：对话生成完整响应式交互 H5，支持导入任意 HTML 二次编辑，无需重建。</li>
+            <li><b>连接器</b>：接入 Slack / Gmail / Zoom / HubSpot 等，会议记录一键生成品牌视觉输出。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://www.canva.com/newsroom/news/canva-create-2026-ai/" target="_blank">canva.com</a> · <a href="https://techcrunch.com/2026/04/16/canvas-ai-assistant-can-now-call-various-tools-to-make-designs-for-you/" target="_blank">TechCrunch</a></div>
+          <div class="pc-src">来源：<a href="https://www.canva.com/newsroom/news/canva-create-2026-ai/" target="_blank">canva.com</a></div>
         </div>
 
         <div class="product-card">
@@ -746,9 +677,10 @@ footer {
             <span class="pc-date" data-date-start="2026-05-01" data-date-end="2026-05-13">2026.05</span>
           </div>
           <ul class="pc-list">
-            <li><b>Interactive Canvas</b>：AI 可直接生成包含表格、图表、自定义界面的交互式画布，适合数据看板类产品快速原型。</li>
+            <li><b>Interactive Canvas</b>：AI 直接生成包含表格、图表、自定义界面的交互式画布，持久化 Side Panel Artifacts，适合数据看板类产品快速原型。</li>
+            <li>被评为「专业开发者综合最优」：代码库理解深度、模型灵活性和团队协作功能均领先。</li>
           </ul>
-          <div class="pc-src">来源：<a href="https://releasebot.io/updates/cursor" target="_blank">releasebot.io</a></div>
+          <div class="pc-src">来源：<a href="https://amitray.com/ai-coding-tools-2026-comparison/" target="_blank">amitray.com</a></div>
         </div>
 
       </div>
@@ -767,41 +699,39 @@ footer {
 
       <div class="insight-card">
         <div class="in-num">启示 01</div>
-        <div class="in-trigger"><em>Claude Design</em> → Figma 文件提取设计系统</div>
-        <div class="in-title">在 AI 生成功能中强制注入 Design Token，防止品牌漂移</div>
-        <div class="in-body">AI 生成界面或内容时，优先从产品已有的 Design Token / 样式规范中取值。可在 Prompt 层注入当前页面的 CSS Variables 或 Figma Variable 快照作为约束，大幅提升输出置信度并降低设计师校验成本。</div>
+        <div class="in-trigger"><em>Canva AI 2.0</em> 记忆 + <em>ChatGPT</em> Memory Sources</div>
+        <div class="in-title">做 AI 个性化，必须同时做「可见性」</div>
+        <div class="in-body">Canva 把记忆做成使用飞轮，ChatGPT 把记忆做成透明面板——两者相辅相成。我们在 AI 功能中引入用户行为沉淀时，应同步提供「AI 为什么这样做」的折叠入口。偏好累积 + 可纠正，是用户真正信任 AI 的前提。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 02</div>
-        <div class="in-trigger"><em>Canva AI 2.0</em> → 持久记忆工作习惯</div>
-        <div class="in-title">把用户的每次修改行为沉淀为下一次生成的隐性约束</div>
-        <div class="in-body">当用户对 AI 输出进行修改或点赞时，将 diff 信息轻量存储为「偏好信号」，在下次生成时作为 soft constraint 注入 Prompt。不需要复杂个性化模型，仅靠规则累积即可实现明显的差异感。</div>
+        <div class="in-trigger"><em>AWS AgentCore</em> Managed Payments</div>
+        <div class="in-title">AI Agent「能花钱」了，产品侧需提前设计审批机制</div>
+        <div class="in-body">Agent 自主支付意味着 AI 决策链路延伸到了资金层面。我们的产品若涉及 Agent 代用户执行操作（下单、预约、发送），需在 UI 层设计清晰的「授权范围确认」和「操作回执」流程，避免用户感知失控。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 03</div>
-        <div class="in-trigger"><em>ChatGPT</em> → Memory Sources 透明面板</div>
-        <div class="in-title">为个性化 AI 功能增加「AI 为什么这样做」的可见性入口</div>
-        <div class="in-body">在 AI 生成结果旁提供折叠式「依据」面板，说明 AI 引用了哪些用户历史行为或偏好设置。既满足合规透明要求，也帮助用户建立对 AI 能力边界的准确心智模型。</div>
+        <div class="in-trigger"><em>Claude Design</em> + <em>Figma</em> AI 图像编辑</div>
+        <div class="in-title">AI 生成功能中强制注入 Design Token，防止品牌漂移</div>
+        <div class="in-body">Claude Design 读取 Figma 文件提取设计系统，Figma 内置 AI 图像工具都支持上传参考图。我们在 AI 生成界面或内容时，应优先从产品已有的 Design Token / 样式规范取值，哪怕只是颜色和字体的强制对齐，也能大幅提升输出置信度。</div>
       </div>
 
     </div>
   </section>
 
-  <!-- CTA Band -->
   <div class="cta-band">
-    <div class="cta-band-text">
+    <div>
       <h2>下一期同步<br>持续关注</h2>
       <p>每两周更新，覆盖全产品线最新动态。</p>
     </div>
     <div class="cta-band-meta">
       云基础 &amp; VnE 团队<br>
       数据来源：各产品官方 Changelog<br>
-      TechCrunch · The Verge
+      TechCrunch · The Verge · 9to5Google · Engadget
     </div>
   </div>
-
 </div>
 
 <footer>
@@ -813,14 +743,16 @@ footer {
   document.addEventListener('DOMContentLoaded', function () {
     const spans = document.querySelectorAll('[data-date-start]');
     let min = null, max = null;
-    spans.forEach(el => {
-      const s = new Date(el.dataset.dateStart);
-      const e = new Date(el.dataset.dateEnd);
+    spans.forEach(function(el) {
+      var s = new Date(el.dataset.dateStart);
+      var e = new Date(el.dataset.dateEnd);
       if (!min || s < min) min = s;
       if (!max || e > max) max = e;
     });
     if (min && max) {
-      const fmt = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      var fmt = function(d) {
+        return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      };
       document.getElementById('coverage-window').textContent = '覆盖窗口：' + fmt(min) + ' ~ ' + fmt(max);
     }
   });
