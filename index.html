@@ -971,8 +971,8 @@ footer {
     dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
       item.addEventListener('click', function(e) {
         e.preventDefault();
-        var href = item.getAttribute('data-report-href');
-        if (href) {
+        var href = item.getAttribute('href');
+        if (href && href !== '#') {
           window.location.href = href;
         } else {
           // 当前报告，仅关闭
