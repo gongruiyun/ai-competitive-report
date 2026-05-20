@@ -444,21 +444,26 @@ footer {
 <div class="hero">
   <div class="report-selector" id="reportSelector">
     <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
-      <span id="triggerLabel">云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.05</span>
+      <span id="triggerLabel">云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.05 第二期</span>
       <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
     <div class="report-dropdown" id="reportDropdown" role="listbox">
       <div class="report-dropdown__section-title">历史双周报告</div>
-      <a class="report-dropdown__item report-dropdown__item--active" href="#" data-report-id="2026-05-w1" role="option" aria-selected="true">
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" data-report-id="2026-05-w2" data-period-start="2026-05-14" data-period-end="2026-05-20" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+        <span class="report-dropdown__badge">当前</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" data-report-id="2026-05-w1" data-period-start="2026-04-29" data-period-end="2026-05-13" role="option" aria-selected="false">
         <div class="report-dropdown__item-left">
           <span class="report-dropdown__item-label">2026.05 第一期</span>
           <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
         </div>
-        <span class="report-dropdown__badge">当前</span>
       </a>
-      <div class="report-dropdown__add">更多期次将在下次更新后出现</div>
     </div>
   </div>
   <h1>AI 产品 UX 观察报告</h1>
@@ -930,20 +935,11 @@ footer {
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // ── 日期范围自动计算 ──
-    var spans = document.querySelectorAll('[data-date-start]');
-    var min = null, max = null;
-    spans.forEach(function(el) {
-      var s = new Date(el.dataset.dateStart);
-      var e = new Date(el.dataset.dateEnd);
-      if (!min || s < min) min = s;
-      if (!max || e > max) max = e;
-    });
-    if (min && max) {
-      var fmt = function(d) {
-        return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-      };
-      document.getElementById('coverage-window').textContent = '覆盖窗口：' + fmt(min) + ' ~ ' + fmt(max);
+    // ── 覆盖窗口：从当前选中的报告条目读取 ──
+    var activeItem = document.querySelector('.report-dropdown__item--active[data-period-start]');
+    if (activeItem) {
+      document.getElementById('coverage-window').textContent =
+        '覆盖窗口：' + activeItem.dataset.periodStart + ' ~ ' + activeItem.dataset.periodEnd;
     }
 
     // ── 报告版本下拉选择器 ──
