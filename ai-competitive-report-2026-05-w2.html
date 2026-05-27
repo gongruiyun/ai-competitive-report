@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.05 第二期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --primary:       #0a0a0a;
+  --on-primary:    #ffffff;
+  --on-dark:       #ffffff;
+  --pink:          #ff4d8b;
+  --teal:          #1a3a3a;
+  --lavender:      #b8a4ed;
+  --peach:         #ffb084;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero ── */
+.hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 48px 40px;
+}
+/* ── Report Selector ── */
+.report-selector {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.report-selector__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-card);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 6px 14px 6px 16px;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+}
+.report-selector__trigger:hover {
+  background: var(--surface-strong);
+  color: var(--body);
+}
+.report-selector__trigger.open {
+  background: var(--surface-strong);
+  color: var(--body-strong);
+}
+.report-selector__chevron {
+  width: 14px;
+  height: 14px;
+  opacity: 0.5;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.report-selector__trigger.open .report-selector__chevron {
+  transform: rotate(180deg);
+  opacity: 0.8;
+}
+.report-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 300px;
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.report-dropdown__section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+  padding: 6px 10px 4px;
+}
+.report-dropdown__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--body);
+  transition: background 0.12s;
+}
+.report-dropdown__item:hover {
+  background: var(--surface-soft);
+}
+.report-dropdown__item--active {
+  background: var(--surface-card);
+  color: var(--body-strong);
+}
+.report-dropdown__item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.report-dropdown__item-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+.report-dropdown__item-period {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.report-dropdown__badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  background: var(--teal);
+  color: #fff;
+  border-radius: 9999px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+}
+.report-dropdown__badge--viewing {
+  background: var(--surface-strong);
+  color: var(--muted);
+}
+.report-dropdown__add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--hairline);
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted-soft);
+  font-style: italic;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 7vw, 80px);
+  font-weight: 500;
+  letter-spacing: -2.5px;
+  line-height: 1;
+  color: var(--ink);
+  max-width: 720px;
+  margin-bottom: 16px;
+}
+.hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+/* ── 通用容器 ── */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* ── Section 标题 ── */
+.section { padding: 48px 0 0; }
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+/* ── 速览 · 彩色卡片网格 ── */
+.flash-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.flash-card {
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 200px;
+}
+.flash-card:nth-child(1) { background: var(--pink);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(3) { background: #e8e2f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #fdeede;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255,255,255,0.2);
+  color: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  align-self: flex-start;
+}
+
+/* ── 轨道标签 ── */
+.track { margin-top: 52px; }
+.track-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.track-pill {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 6px 16px;
+  background: var(--surface-card);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+
+/* ── 产品卡片 ── */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.product-card {
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 28px;
+  transition: box-shadow 0.15s;
+}
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.pc-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted-soft);
+  background: var(--surface-card);
+  border-radius: 9999px;
+  padding: 3px 12px;
+  white-space: nowrap;
+}
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li {
+  font-size: 14px;
+  color: var(--body);
+  line-height: 1.6;
+  padding-left: 18px;
+  position: relative;
+}
+.pc-list li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--muted-soft);
+  font-size: 18px;
+  line-height: 1.3;
+}
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: rgba(232,185,74,0.10);
+  border-radius: 8px;
+  border-left: 3px solid var(--ochre);
+  font-size: 13px;
+  color: var(--body);
+  line-height: 1.55;
+}
+.pc-ux::before {
+  content: "设计视角 · ";
+  font-weight: 700;
+  color: #b8860b;
+}
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+
+/* ── 深色 Band ── */
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub,
+.band-teal .pc-date  { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+
+/* ── 设计工具 Band ── */
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+/* ── 启示卡片 ── */
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #fce4ee; }
+.insight-card:nth-child(2) { background: #d4e8e3; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #fdeede; }
+.insight-card:nth-child(5) { background: #faf3d8; }
+.insight-card:nth-child(6) { background: #dde8e5; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; }
+.in-trigger em { font-style: normal; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+
+/* ── CTA Band ── */
+.cta-band {
+  background: var(--surface-soft);
+  border-radius: 24px;
+  margin: 80px 0;
+  padding: 80px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+/* ── 页脚 ── */
+footer {
+  background: var(--surface-soft);
+  padding: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .flash-card:nth-child(5) { grid-column: span 2; }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .flash-card:nth-child(5) { grid-column: span 1; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer { padding: 40px 24px; }
+  .cta-band { padding: 48px 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span id="triggerLabel">云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.05 第二期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" data-report-id="2026-05-w3" data-period-start="2026-05-21" data-period-end="2026-05-27" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" data-report-id="2026-05-w2" data-period-start="2026-05-14" data-period-end="2026-05-20" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+        <span class="report-dropdown__badge report-dropdown__badge--viewing">查看中</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" data-report-id="2026-05-w1" data-period-start="2026-04-29" data-period-end="2026-05-13" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub"><span id="coverage-window">覆盖窗口：计算中…</span>｜阅读时长：约 5 分钟｜范围：产品动态、企业级 AI 产品 &amp; 云平台、设计工具动态、对我们的启示</p>
+</div>
+
+<div class="wrap">
+
+  <!-- ── 01 本期速览 ── -->
+  <section class="section" id="s1">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">本期速览</div>
+
+    <div class="flash-grid">
+
+      <div class="flash-card">
+        <span class="flash-card-chip">Google I/O</span>
+        <div class="flash-card-num">01</div>
+        <div class="flash-card-body"><strong>Google I/O 2026：Neural Expressive 设计语言 + Gemini App 全面重设计</strong>——流体动效、触觉反馈、鲜艳色彩；药丸形输入框、全屏导航抽屉转内联体验。AI 原生应用的视觉语言正在建立自己的设计体系，与传统 App 分道扬镳。</div>
+        <div class="flash-card-src">来源：<a href="https://9to5google.com/2026/05/19/google-io-2026-news/" target="_blank">9to5google.com</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">Google I/O</span>
+        <div class="flash-card-num">02</div>
+        <div class="flash-card-body"><strong>Gemini Spark 个人 Agent 发布</strong>——从「回答问题」升级为「主动代为行动」，在数字生活中独立导航完成任务。AI 产品从助手模式切换为 Agent 模式的关键里程碑，也是对「AI 应该有多主动」这个产品命题最直接的回答。</div>
+        <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/05/19/google-updates-its-gemini-app-to-take-on-chatgpt-and-claude-at-io-2026/" target="_blank">techcrunch.com</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">ChatGPT</span>
+        <div class="flash-card-num">03</div>
+        <div class="flash-card-body"><strong>ChatGPT Codex Mobile 上线（iOS/Android 全计划）</strong>——手机上直接审批操作、查看 Diff、截图、测试结果。移动端 AI 开发工作流第一次形成完整闭环，「手机委派 → 代码执行 → 手机收结果」的异步体验正式成立。</div>
+        <div class="flash-card-src">来源：<a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">ChatGPT</span>
+        <div class="flash-card-num">04</div>
+        <div class="flash-card-body"><strong>ChatGPT Personal Finance Dashboard（Pro）</strong>——安全连接账户、统一资金看板、支出/净值/投资一览、自然语言财务问答。AI 正式进入高敏感数据场景，信任建立 → 数据连接 → 能力激活的 UX 三步范式被首次完整呈现。</div>
+        <div class="flash-card-src">来源：<a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">Microsoft</span>
+        <div class="flash-card-num">05</div>
+        <div class="flash-card-body"><strong>M365 Copilot Researcher 新增 Critique + Council</strong>——让 GPT 和 Claude 互相评审对方答案、并排对比两个模型结果。Multi-model 对比界面首次在企业产品中成为标配，「AI 不只一种答案」的 UX 范式正在被引入主流工具。</div>
+        <div class="flash-card-src">来源：<a href="https://thewincentral.com/microsoft-365-copilot-may-2026-update-gpt-5-5/" target="_blank">thewincentral.com</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">Figma</span>
+        <div class="flash-card-num">06</div>
+        <div class="flash-card-body"><strong>Figma Make Skills 上线</strong>——用 Markdown 定义团队 AI 工作规范（命名约定、组件协议、设计流程），通过 /指令 随时调用。设计团队使用 AI 的方式从「临时对话」升级为「可积累的约定体系」，设计知识开始真正可被 AI 消费。</div>
+        <div class="flash-card-src">来源：<a href="https://help.figma.com/hc/en-us/articles/40219873508247-Release-notes-roundup-May-2026" target="_blank">figma.com</a></div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ── 02 产品动态 · 消费级 ── -->
+  <section class="section" id="s2">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">产品动态</div>
+
+    <div class="track">
+      <div class="track-label">
+        <span class="track-pill">AI 消费级产品</span>
+        <div class="track-label-line"></div>
+      </div>
+
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Claude</span>
+            <span class="pc-sub">Anthropic · Managed Agents</span>
+            <span class="pc-date" data-date-start="2026-05-14" data-date-end="2026-05-20">2026.05.14–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>MCP Tunnels（Managed Agents 新功能）</b>：Agent 可通过私有网络隐秘访问内部 MCP 服务器，无需暴露到公网——企业级 Agent 合规落地的关键能力。</li>
+            <li><b>两项隐私与安全增强</b>：Managed Agents 新增数据隔离与审计追踪，进一步满足金融/医疗等高合规场景需求。</li>
+            <li><b>Opus 4.7 Fast Mode（研究预览）</b>：通过 <code>speed: "fast"</code> 参数启用，在保持 Opus 质量的同时大幅降低延迟。</li>
+            <li>Claude for Small Business 发布：接入 QuickBooks / PayPal / HubSpot / Canva / DocuSign，现成工作流即开即用。</li>
+          </ul>
+          <div class="pc-ux">MCP Tunnels 的「私有网络穿透」对产品 UX 意味着：AI 功能可以在不暴露内部架构的情况下连接企业数据。用户感知是「AI 更懂我们的系统」，而不需要经历复杂的数据授权流程——降低的不只是技术门槛，更是用户的信任摩擦。</div>
+          <div class="pc-src">来源：<a href="https://9to5mac.com/2026/05/19/anthropic-enhances-claude-managed-agents-with-two-new-privacy-and-security-features/" target="_blank">9to5Mac</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">ChatGPT</span>
+            <span class="pc-sub">OpenAI · Codex Mobile + Finance</span>
+            <span class="pc-date" data-date-start="2026-05-14" data-date-end="2026-05-20">2026.05.14–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Codex Mobile（iOS/Android，覆盖所有计划包括 Free）</b>：在手机上管理代码任务——审批操作、查看 Diff、截图、测试结果，Codex 在 Mac 上跑，手机上实时监控。</li>
+            <li><b>Personal Finance Dashboard（Pro，美国）</b>：安全连接银行/投资账户，统一看板展示支出/账单/净值/订阅，支持直接用自然语言提问。</li>
+            <li>File Library 扩展至 Free / Go 用户，新增跨计划存储管理与删除控制。</li>
+            <li>Apps Directory 正式移除 Beta 标签，AI 应用生态从实验转向常规。</li>
+          </ul>
+          <div class="pc-ux">Personal Finance 的 UX 设计给高敏感数据场景提供了范式参考：①先展示「连接了哪些账户」建立可见性；②统一看板让数据先变得可理解；③再激活自然语言问答能力。这个「可见性 → 理解 → 对话」三步走，是 AI 进入敏感场景的标准信任建立路径。</div>
+          <div class="pc-src">来源：<a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Gemini</span>
+            <span class="pc-sub">Google · I/O 2026</span>
+            <span class="pc-date" data-date-start="2026-05-19" data-date-end="2026-05-20">2026.05.19–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Gemini 3.5 Flash 发布</b>：超越 3.1 Pro 的 coding/agentic/multimodal 能力，输出速度 4× 快于同级前沿模型；Gemini Omni 同期发布，支持任意输入→任意输出（含视频生成）。</li>
+            <li><b>Neural Expressive 设计语言</b>：Gemini 专属视觉体系——流体动效、触觉反馈、高饱和色彩、全新字体。与 Material 3 Expressive 并行，标志 Google 为 AI 应用建立独立于 OS 的设计语言。</li>
+            <li><b>Gemini App 全面重设计</b>：药丸形输入框 + 单一「+」菜单；导航抽屉升级为全屏界面；Gemini Live 从全屏模式改为内联体验，无需切换上下文。</li>
+            <li><b>Gemini Spark 个人 Agent</b>：主动代用户行动（预订、购物、信息追踪），Gemini 正式从「助手」转型为「代理人」。</li>
+            <li>AI Search 生成式 UI：根据用户意图动态调整结果展示形式，支持内联图片、叙述视频、时间轴与交互可视化。</li>
+          </ul>
+          <div class="pc-ux">Neural Expressive 是 Google 对「AI 原生应用该长什么样」的官方回答——与 Material Design 不同，它是专门为 AI 交互设计的语言：流动而非静态、情感化而非中性。Gemini Live 从全屏到内联的转变更值得关注：AI 对话从「占据整个屏幕」走向「嵌入当前上下文」，是 AI 交互从独占模式到协作模式的重要信号。</div>
+          <div class="pc-src">来源：<a href="https://9to5google.com/2026/05/19/google-io-2026-news/" target="_blank">9to5google.com</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Kimi</span>
+            <span class="pc-sub">Moonshot AI · WebBridge</span>
+            <span class="pc-date" data-date-start="2026-05-15" data-date-end="2026-05-15">2026.05.15</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Kimi WebBridge 发布</b>：浏览器扩展让 AI Agent 直接操控网页——点击、输入、跨页面跳转，使用用户当前的登录会话，无需重新授权。</li>
+            <li>Kimi Code 与 Claude Code 均可通过 WebBridge 执行复杂的多步 Web 工作流：跨平台数据采集、量化金融回测、重复性网页操作自动化。</li>
+          </ul>
+          <div class="pc-ux">WebBridge 代表的「Agent 借用用户身份操作界面」模式，是 AI 与 Web 交互的新范式——不需要 API，直接复用用户已有的账户权限。这对产品设计提出了新命题：当 AI 可以代替人操作你的产品界面时，面向人设计的 UI 是否还够用？哪些流程需要为 Agent 专门优化（更少步骤、更机器友好的交互路径）？</div>
+          <div class="pc-src">来源：<a href="https://cntechpost.com/2026/05/15/chinese-ai-startup-moonshot-launches-kimi-webbridge-automate-complex-web-tasks/" target="_blank">cntechpost.com</a></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ── 企业级 + 云平台 · 深色 Band ── -->
+<div class="wrap">
+  <div class="color-band band-teal" id="s2b">
+    <div class="section-label">Section 02 · B</div>
+    <div class="section-title">企业级 AI 产品 &amp; 云平台</div>
+
+    <div class="track">
+      <div class="track-label">
+        <span class="track-pill">企业级 AI</span>
+        <div class="track-label-line"></div>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Microsoft 365 Copilot</span>
+            <span class="pc-sub">Researcher Critique + Council · Multi-model</span>
+            <span class="pc-date" data-date-start="2026-05-14" data-date-end="2026-05-20">2026.05.14–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>GPT-5.5 正式进入 M365 Copilot</b>，Claude 模型同步在 Word / Excel / PowerPoint 默认开启——微软首次将多模型并存作为生产力工具的默认体验。</li>
+            <li><b>Researcher Critique + Council</b>：Critique 让 GPT 评审 Claude 的回答（反之亦然）；Council 并排展示两个模型的不同结论，由用户决策采纳哪个。Multi-model 对比 UI 首次成为企业产品标配。</li>
+            <li>SharePoint Copilot 驱动页面创建：描述需求即出完整草稿，AI 从「辅助编辑」升级为「起稿主力」。</li>
+          </ul>
+          <div class="pc-ux">Critique + Council 的「双模型对比界面」是今年最值得关注的 AI UX 创新之一——它打破了「AI 只给一个答案」的范式，让用户看见不同 AI 的不同理解，并主动参与决策。设计挑战在于：如何呈现差异（高亮冲突点 vs 并排全文）、如何帮用户快速判断（差异摘要）、以及何时该展示单一答案而非多个选项。</div>
+          <div class="pc-src">来源：<a href="https://thewincentral.com/microsoft-365-copilot-may-2026-update-gpt-5-5/" target="_blank">thewincentral.com</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Google Workspace</span>
+            <span class="pc-sub">May 15 Weekly Rollout · I/O 2026</span>
+            <span class="pc-date" data-date-start="2026-05-15" data-date-end="2026-05-20">2026.05.15–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>NotebookLM 接入自动化工作流</b>：新增「Ask NotebookLM」自动化步骤，在 Workspace 自动化流程中直接调用 NotebookLM 的知识库检索能力。</li>
+            <li><b>Google Vids + AI 视频头像</b>：将 Slides 一键转换为 AI 配音视频；可添加 AI 生成的发言人头像，脚本和语音均由 Gemini 生成，无需真人出镜。</li>
+            <li><b>Gmail Live + Docs Live（I/O 2026 宣布）</b>：Gmail 支持语音提问收件箱；Docs 支持语音驱动起草——生产力工具输入方式向语音延伸。</li>
+          </ul>
+          <div class="pc-ux">Google Vids 的「Slides → AI 配音视频」是个值得关注的 UX 跳跃：文档不再只是文档，AI 可以把静态内容自动转化为更高传播效率的媒介形式。对我们设计报告、方案、文档类产品时的启示：输出格式的转换能力本身就是用户价值——帮用户「把东西做出来」之后，还可以帮他们「把它更好地传出去」。</div>
+          <div class="pc-src">来源：<a href="https://workspaceupdates.googleblog.com/2026/05/workspace-updates-weekly-recap-may-15-2026.html" target="_blank">workspace.google.com</a> · <a href="https://winbuzzer.com/2026/05/19/google-unveils-conversational-features-for-gmail-d-xcxwbn/" target="_blank">winbuzzer.com</a></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="track">
+      <div class="track-label">
+        <span class="track-pill">云平台 · 设计视角</span>
+        <div class="track-label-line"></div>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">AWS Bedrock AgentCore</span>
+            <span class="pc-sub">Amazon · Managed Payments</span>
+            <span class="pc-date" data-date-start="2026-05-14" data-date-end="2026-05-20">2026.05.14–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Managed Payments</b>：Agent 可自主支付 API / MCP 服务器 / 其他 Agent 的费用，与 Coinbase 和 Stripe 合作，设置会话级消费上限。</li>
+            <li><b>WorkSpaces for AI Agents</b>：Agent 可通过托管桌面安全操作 GUI 应用，实现对界面的自主控制。</li>
+          </ul>
+          <div class="pc-ux">AI「行动能力」首次延伸到花钱和操作桌面，UI 需要建立 3 层结构：① 授权确认（给 Agent 多大权限）→ ② 执行监控（Agent 在做什么）→ ③ 行为回溯（做了什么、花了多少）。缺少任意一层，用户感知就会失控。</div>
+          <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-amazon-bedrock-agentcore-payments-agent-toolkit-for-aws-and-more-may-11-2026/" target="_blank">aws.amazon.com</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Azure Intelligent Purview</span>
+            <span class="pc-sub">Microsoft · Copilot Studio Wave 1</span>
+            <span class="pc-date" data-date-start="2026-05-14" data-date-end="2026-05-20">2026.05.14–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Intelligent Purview</b>：实时对 AI Prompt 和响应执行 DLP 检测，合规管控下沉至每次 AI 对话层。</li>
+            <li><b>Confidential AI</b>：机密计算满足金融/医疗等高安全场景推理需求，隐私保护从基础设施层延伸至 AI 推理层。</li>
+          </ul>
+          <div class="pc-ux">合规功能「隐性化」是云 AI 产品的核心 UX 挑战——用户需要感知到受保护，但不能被频繁的合规提示打断工作流。两种方案：① 状态常驻（角落徽章「合规保护中」，建立长期信任）② 仅在触发时出现（内容被拦截时给出轻量解释）。选择哪种取决于用户的安全意识与产品场景。</div>
+          <div class="pc-src">来源：<a href="https://azure.microsoft.com/en-us/blog/" target="_blank">azure.microsoft.com</a></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 设计工具 Band ── -->
+<div class="wrap">
+  <div class="band-surface" id="s3">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">设计工具动态</div>
+
+    <div class="track">
+      <div class="track-label">
+        <span class="track-pill">设计工具</span>
+        <div class="track-label-line"></div>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Figma</span>
+            <span class="pc-sub">Make Skills · May Release</span>
+            <span class="pc-date" data-date-start="2026-05-14" data-date-end="2026-05-20">2026.05.14–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Make Skills 上线</b>：用 Markdown 文件定义团队 AI 工作规范（命名规则、组件协议、交付流程），通过 /指令 在任意 Prompt 中调用——AI 使用从临时对话升级为可积累的知识体系。</li>
+            <li><b>Slides 新增分节功能</b>：演示稿支持命名行、拖拽重排、Presenter View 直跳分节——AI 生成多屏后的组织管理能力补齐。</li>
+            <li><b>所有 AI 工具统一支持参考图</b>：Design / Draw / Buzz / Slides / FigJam 均可通过「添加参考」按钮或粘贴上传图像，锁定风格的方式标准化。</li>
+            <li>桌面 App 改进：文件间切换无中断，链接在当前位置打开。</li>
+          </ul>
+          <div class="pc-ux">Make Skills 代表了「AI 约定优先」的设计哲学：与其让 AI 推断你想要什么，不如用文档明确告诉 AI 应该怎么做。这对设计团队意味着：投资在设计规范文档上的时间，现在直接转化为 AI 输出质量的提升——文档不只是给人看的，也是 AI 的工作说明书。</div>
+          <div class="pc-src">来源：<a href="https://help.figma.com/hc/en-us/articles/40219873508247-Release-notes-roundup-May-2026" target="_blank">figma.com</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Google Stitch</span>
+            <span class="pc-sub">Google I/O 2026 发布</span>
+            <span class="pc-date" data-date-start="2026-05-19" data-date-end="2026-05-20">2026.05.19–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>多屏生成</b>：单次 Prompt 最多生成 5 个关联屏幕，保持页面间的导航逻辑和视觉一致性——AI 原生无限画布。</li>
+            <li><b>DESIGN.md</b>：从现有网站自动提取设计规则保存为可移植文件，让设计系统「随身携带」。</li>
+            <li><b>Voice Canvas</b>：语音命令实时驱动画布操作，输入形态从键盘扩展到语音。</li>
+          </ul>
+          <div class="pc-ux">DESIGN.md（从网站提取设计规则 → 保存为可移植文件）和 Figma Make Skills（用 Markdown 固化 AI 工作约定）是同一思路的两种实现：让 AI 生成时有「设计约束」可依，而不是每次从零开始。值得关注这类「设计规范文件化」的标准是否会收敛成行业接口。</div>
+          <div class="pc-src">来源：<a href="https://muz.li/blog/vibe-design-in-2026-what-ai-generated-ui-means-for-your-work/" target="_blank">muz.li</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Canva</span>
+            <span class="pc-sub">Offline Mode · Claude Integration</span>
+            <span class="pc-date" data-date-start="2026-05-14" data-date-end="2026-05-20">2026.05.14–20</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Claude 直接集成</b>：在 Canva 内对话 Claude，不用切换到独立 Claude 窗口——「AI 在你的工具里」模式落地。</li>
+            <li><b>Offline Mode 上线</b>：断网状态下继续编辑，重新联网后自动同步——设计工作不再依赖网络连接，可靠性大幅提升。</li>
+            <li><b>专业设计套件扩展</b>：新增 Affinity / Cavalry / Capture One / DaVinci Resolve 连接器，Canva 正在成为创意工作流的中心枢纽。</li>
+          </ul>
+          <div class="pc-ux">Canva 内置 Claude 是「AI 嵌入现有工具」vs「独立 AI 工具」博弈的一个信号：用户不需要切换上下文，AI 能力以插件形式出现在他们已经信任的界面里。这降低了 AI 的使用门槛，但也对 AI 功能的界面设计提出更高要求——它必须融入而非干扰当前工作流。</div>
+          <div class="pc-src">来源：<a href="https://releasebot.io/updates/canva" target="_blank">releasebot.io</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-head">
+            <span class="pc-name">Cursor</span>
+            <span class="pc-sub">Composer 2.5 · Cloud Agent Dev Envs</span>
+            <span class="pc-date" data-date-start="2026-05-13" data-date-end="2026-05-19">2026.05.13–19</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Composer 2.5 发布（5/18）</b>：基于 Kimi K2.5 的 Agent 模型，长代码任务表现与 Opus 4.7 持平，输入价格 $0.50/M（约为前者 1/10）——更低门槛让 AI 编码进入更多团队。</li>
+            <li><b>Cloud Agent 开发环境（5/13）</b>：多仓库支持 + Dockerfile 环境配置，含 Governance 模式（审计日志 + 环境级安全控制）——AI 编码 Agent 首次具备企业可管控性。</li>
+            <li><b>Cursor 接入 Jira（5/19）</b>：在 Jira 内直接触发 Cursor 编码任务，设计→研发→交付的链路缩短。</li>
+          </ul>
+          <div class="pc-ux">Cursor 在 Jira 内的集成是「AI 嵌入工作流」而非「工作流来找 AI」的典型——设计师在 Jira 追踪任务时就可以触发编码，上下文零切换。对设计视角的启示：AI 编码工具的战场已经从「写代码的能力」转向「在哪里被触发、如何融入现有协作流程」——入口即竞争力。</div>
+          <div class="pc-src">来源：<a href="https://cursor.com/changelog" target="_blank">cursor.com</a> · <a href="https://releasebot.io/updates/cursor" target="_blank">releasebot.io</a></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 04 启示 ── -->
+<div class="wrap">
+  <section class="section" id="s4">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">对我们的启示</div>
+
+    <div class="insight-grid">
+
+      <div class="insight-card">
+        <div class="in-num">启示 01</div>
+        <div class="in-trigger"><em>Canva</em> Claude 集成 + <em>ChatGPT</em> Personal Finance Dashboard</div>
+        <div class="in-title">AI 进入敏感场景，必须先建立可见性</div>
+        <div class="in-body">ChatGPT Personal Finance 的三步路径（可见性 → 理解 → 对话）揭示了 AI 进入高敏感数据场景的通用范式：先让用户看清楚「AI 连接了什么」，再帮他们理解数据，最后才激活问答能力。Canva 内置 Claude 也遵循同样逻辑——AI 嵌入已信任的界面，比独立入口更容易被接受。我们在引入 AI 功能时，应优先设计「数据可见层」，而不是直接跳到能力展示。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 02</div>
+        <div class="in-trigger"><em>Figma Make Skills</em> · <em>ChatGPT Codex Mobile</em></div>
+        <div class="in-title">AI 使用正从「临时对话」升级为「可积累的工作流」</div>
+        <div class="in-body">Figma Make Skills 用 Markdown 把团队 AI 工作规范固化为可调用的约定体系；ChatGPT Codex Mobile 把「手机委派 → Mac 执行 → 手机收结果」打通为异步工作闭环。两者都指向同一个趋势：AI 的价值正在从单次对话转向可沉淀的工作流系统。对我们的启示是：AI 功能的长期价值，不在于每次对话有多智能，而在于用户能否把经验积累下来，形成可复用的约定。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 03</div>
+        <div class="in-trigger"><em>Google I/O 2026</em> Gemini App 重设计 · pill 输入框 + inline Live</div>
+        <div class="in-title">AI 入口应该是「常驻控件」，而不是「独立页面」</div>
+        <div class="in-body">Gemini App 把输入框从全宽文本区压缩成悬浮 pill，并将 Live 实时视频直接嵌入对话流。这背后的设计信号是：AI 输入不再是「开启一段对话」的仪式，而是随时可触发的环境控件。对我们的启示：在云产品中引入 AI 功能时，不要新建独立的「AI 页面」——把它做成可从任意上下文快速唤起的浮层或快捷入口，才符合 AI 原生使用习惯，减少上下文切换成本。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 04</div>
+        <div class="in-trigger"><em>Google I/O 2026</em> Gemini Spark 个人 Agent</div>
+        <div class="in-title">主动型 Agent 需要同时设计「打断预算」</div>
+        <div class="in-body">Gemini Spark 不等用户提问，而是主动感知生活上下文、在合适时机推送建议——AI 交互从「人找 AI」翻转为「AI 找人」。随之而来的设计挑战是：什么时候介入才是帮忙而非打扰？通知应携带多少上下文才够可信？我们在设计主动型 AI 功能时，需要和能力本身一起设计「打断预算」机制——让用户能感知、控制 AI 的主动行为频率与边界，否则「智能」很快会变成「噪声」。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 05</div>
+        <div class="in-trigger"><em>Microsoft 365 Copilot</em> Researcher Critique + Council 多模型对比</div>
+        <div class="in-title">「呈现分歧」比「给出定论」更能建立用户信任</div>
+        <div class="in-body">Microsoft 用 Critique 让模型自我质疑，用 Council 把 GPT 与 Claude 对同一问题并排输出让用户当评委。这是一个重要信号：当 AI 能力趋同，差异化转移到「如何呈现不确定性」。对我们的启示：在 AI 辅助决策场景中，与其输出一个自信的答案，不如把置信度、多角度、反驳意见一并呈现——尤其在云运维、费用分析等高风险决策场景，「AI 给出分歧供人判断」比「AI 给出定论」更能赢得信任。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 06</div>
+        <div class="in-trigger"><em>Anthropic</em> MCP Tunnels + 云平台 Agent 权限管理演进</div>
+        <div class="in-title">AI 的「连接管道」本身正在成为需要被界面化的产品体验</div>
+        <div class="in-body">Anthropic 推出 MCP Tunnels，让 Claude 通过标准化协议安全接入第三方服务；各大云厂商同步强化 Agent 行为的审计与权限管理界面。这表明 AI 的「连接能力」不再只是技术后台，而是需要被产品界面化的核心体验。对我们的启示：「它能连什么、已连了什么、用户如何授权和随时撤销」这条链路的透明度，将直接影响用户是否愿意给 AI 更多权限。在云产品中，把 AI 连接状态做成可见、可控的一等公民 UI，是建立长期信任的基础。</div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div>
+      <h2>下一期同步<br>持续关注</h2>
+      <p>每周更新，覆盖全产品线最新动态。</p>
+    </div>
+    <div class="cta-band-meta">
+      云基础 &amp; VnE 团队<br>
+      数据来源：各产品官方 Changelog<br>
+      TechCrunch · The Verge · 9to5Google · Engadget
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.05</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // ── 覆盖窗口：从当前选中的报告条目读取 ──
+    var activeItem = document.querySelector('.report-dropdown__item--active[data-period-start]');
+    if (activeItem) {
+      document.getElementById('coverage-window').textContent =
+        '覆盖窗口：' + activeItem.dataset.periodStart + ' ~ ' + activeItem.dataset.periodEnd;
+    }
+
+    // ── 报告版本下拉选择器 ──
+    var trigger = document.getElementById('reportTrigger');
+    var dropdown = document.getElementById('reportDropdown');
+    var selector = document.getElementById('reportSelector');
+
+    function openDropdown() {
+      trigger.classList.add('open');
+      dropdown.classList.add('open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+    function closeDropdown() {
+      trigger.classList.remove('open');
+      dropdown.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdown.classList.contains('open') ? closeDropdown() : openDropdown();
+    });
+
+    // 点击条目
+    dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        var href = item.getAttribute('href');
+        if (href && href !== '#') {
+          window.location.href = href;
+        } else {
+          // 当前报告，仅关闭
+          closeDropdown();
+        }
+      });
+    });
+
+    // 点击外部关闭
+    document.addEventListener('click', function(e) {
+      if (!selector.contains(e.target)) closeDropdown();
+    });
+
+    // ESC 关闭
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeDropdown();
+    });
+  });
+</script>
+</body>
+</html>
