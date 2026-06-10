@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 产品 UX 观察报告 · 2026.06 第五期</title>
+<title>AI 产品 UX 观察报告 · 2026.05~06 第四期</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -448,25 +448,26 @@ footer {
 <div class="hero">
   <div class="report-selector" id="reportSelector">
     <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
-      <span id="triggerLabel">云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第五期</span>
+      <span id="triggerLabel">云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第四期</span>
       <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
     <div class="report-dropdown" id="reportDropdown" role="listbox">
       <div class="report-dropdown__section-title">选择期次</div>
-      <a class="report-dropdown__item report-dropdown__item--active" href="#" data-report-id="2026-06-w5" data-period-start="2026-06-04" data-period-end="2026-06-10" role="option" aria-selected="true">
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" data-report-id="2026-06-w5" data-period-start="2026-06-04" data-period-end="2026-06-10" role="option" aria-selected="false">
         <div class="report-dropdown__item-left">
           <span class="report-dropdown__item-label">2026.06 第五期</span>
           <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
         </div>
         <span class="report-dropdown__badge">最新</span>
       </a>
-      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" data-report-id="2026-06-w4" data-period-start="2026-05-28" data-period-end="2026-06-03" role="option" aria-selected="false">
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" data-report-id="2026-06-w4" data-period-start="2026-05-28" data-period-end="2026-06-03" role="option" aria-selected="true">
         <div class="report-dropdown__item-left">
           <span class="report-dropdown__item-label">2026.06 第四期</span>
           <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
         </div>
+        <span class="report-dropdown__badge report-dropdown__badge--viewing">查看中</span>
       </a>
       <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" data-report-id="2026-05-w3" data-period-start="2026-05-21" data-period-end="2026-05-27" role="option" aria-selected="false">
         <div class="report-dropdown__item-left">
@@ -502,45 +503,45 @@ footer {
     <div class="flash-grid">
 
       <div class="flash-card">
-        <span class="flash-card-chip">ANTHROPIC</span>
+        <span class="flash-card-chip">CLAUDE</span>
         <div class="flash-card-num">01</div>
-        <div class="flash-card-body"><strong>Claude Fable 5 + Mythos 5 发布——新一代旗舰双模型</strong>——Fable 5 刷新多项 SOTA，实测 Stripe 50M 行代码库 1 天完成迁移；Mythos 5 专为持久记忆 Agent 设计，具备跨会话长期记忆；视觉能力从截图重建完整界面。</div>
-        <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank">anthropic.com/news</a></div>
+        <div class="flash-card-body"><strong>Claude Opus 4.8 发布，首次引入用户可控「努力等级」</strong>——claude.ai 新增努力旋钮（高 / 更高 / 最高），Claude Code 上线动态工作流应对超大规模任务，快速模式以 2.5× 速度运行。AI 工作量第一次成为用户可调参数。</div>
+        <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news/claude-opus-4-8" target="_blank">anthropic.com/news</a></div>
       </div>
 
       <div class="flash-card">
         <span class="flash-card-chip">OPENAI</span>
         <div class="flash-card-num">02</div>
-        <div class="flash-card-body"><strong>ChatGPT 叙事档案 + OpenAI 宣告「Chat is Dead」</strong>——ChatGPT 开始按工作 / 兴趣 / 旅行为用户建立叙事档案；OpenAI CEO 同期宣称对话已死，全面转向 Agent 平台——产品形态重大转向信号。</div>
-        <div class="flash-card-src">来源：<a href="https://the-decoder.com/chatgpt-now-saves-narrative-dossiers-about-you-sorted-by-work-hobbies-and-travel/" target="_blank">the-decoder.com</a></div>
+        <div class="flash-card-body"><strong>ChatGPT 变身职业平台</strong>——整合 Indeed / Upwork / Appcast 的求职搜索，配合简历创建与 AI 定制优化，一键下载专业格式简历。同期 GPT-5.5 Instant 可读性升级，减少冗长列表，输出更自然流畅。</div>
+        <div class="flash-card-src">来源：<a href="https://the-decoder.com/openai-turns-chatgpt-into-a-career-platform-with-job-search-and-cv-editor/" target="_blank">the-decoder.com</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">APPLE</span>
+        <span class="flash-card-chip">GOOGLE</span>
         <div class="flash-card-num">03</div>
-        <div class="flash-card-body"><strong>WWDC 2026 · Siri AI 第二次机会</strong>——AFM 借助 Google Gemini 输出数据再训练，System Orchestrator 在本地 / 云端之间智能路由，实现跨 App 全系统操作；开放 AFM Framework 供开发者调用。</div>
-        <div class="flash-card-src">来源：<a href="https://the-decoder.com/apple-intelligence-gets-a-second-shot-with-help-from-google-and-nvidia/" target="_blank">the-decoder.com</a></div>
+        <div class="flash-card-body"><strong>Gemini Omni 发布——任意输入，生成视频</strong>——I/O 2026 后续落地：图片 / 音频 / 视频 / 文字全模态输入直接生成高质量视频，支持对话式剪辑；Gemini 3.5 Flash 同期发布，面向 Agent 工作流的前沿小模型。</div>
+        <div class="flash-card-src">来源：<a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-3-5-videos/" target="_blank">blog.google</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">GOOGLE</span>
+        <span class="flash-card-chip">MICROSOFT</span>
         <div class="flash-card-num">04</div>
-        <div class="flash-card-body"><strong>NotebookLM 云端计算机 + Gemini 3.5 实时翻译</strong>——NotebookLM 新增代码执行与自主研究能力，升级为云端「AI 研究伴侣」；Gemini 3.5 Live Translate 支持 20+ 语言实时语音翻译，直接集成 Meet 与 Gemini App。</div>
-        <div class="flash-card-src">来源：<a href="https://blog.google/innovation-and-ai/products/notebooklm/better-research-notebooklm/" target="_blank">blog.google · NotebookLM</a></div>
+        <div class="flash-card-body"><strong>Build 2026 · Work IQ 上线</strong>——10 个通用 MCP 工具打通 M365 全数据（邮件 / 日历 / 文件 / 人员 / 聊天），生产级 Agent 智能层 6 月 16 日 GA；Frontier Tuning 让企业数据持续调优自有 Agent。</div>
+        <div class="flash-card-src">来源：<a href="https://devblogs.microsoft.com/microsoft365dev/work-iq-production-ready-intelligence-for-every-agent/" target="_blank">devblogs.microsoft.com</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">APPLE DEV</span>
+        <span class="flash-card-chip">GITHUB</span>
         <div class="flash-card-num">05</div>
-        <div class="flash-card-body"><strong>Apple Foundation Models Framework 开放开发者接入</strong>——支持图片输入、自定义技能、服务端执行；Xcode 同步上线 AI 编程 Agent，在 IDE 内自主完成多步骤开发任务——Apple 生态首次向 AI 开发能力全面开放。</div>
-        <div class="flash-card-src">来源：WWDC 2026 开发者文档</div>
+        <div class="flash-card-body"><strong>Build 2026 · GitHub Copilot 全新桌面应用</strong>——「Agent 原生」开发控制中心：Canvas 将意图转化为可检视的工作输出；代码审查适配 agentic 大批量输出；统一 apps / tools / agents 的单一运行时。</div>
+        <div class="flash-card-src">来源：<a href="https://github.blog/news-insights/product-news/github-copilot-app-the-agent-native-desktop-experience/" target="_blank">github.blog</a></div>
       </div>
 
       <div class="flash-card">
-        <span class="flash-card-chip">GOOGLE</span>
+        <span class="flash-card-chip">MISTRAL</span>
         <div class="flash-card-num">06</div>
-        <div class="flash-card-body"><strong>Gemma 4 QAT 模型发布——移动 / 笔记本本地部署</strong>——量化感知训练（QAT）大幅压缩模型体积，同等性能下内存占用降低 50%+，手机 / 笔记本可流畅运行；开源权重面向端侧 AI 应用开发者。</div>
-        <div class="flash-card-src">来源：<a href="https://blog.google/innovation-and-ai/technology/developers-tools/quantization-aware-training-gemma-4/" target="_blank">blog.google · Gemma 4 QAT</a></div>
+        <div class="flash-card-body"><strong>Mistral Vibe 远程 Agent + Le Chat Work Mode</strong>——Coding Agent 从本地迁移到云端，异步并行运行，在 Le Chat 对话中直接启动；Mistral Medium 3.5（128B 开源）同步发布，Le Chat 新增 Work 多步骤任务模式。</div>
+        <div class="flash-card-src">来源：<a href="https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5/" target="_blank">mistral.ai/news</a></div>
       </div>
 
     </div>
@@ -563,47 +564,47 @@ footer {
         <div class="product-card">
           <div class="pc-head">
             <span class="pc-name">Claude</span>
-            <span class="pc-sub">Anthropic · Fable 5 + Mythos 5</span>
-            <span class="pc-date" data-date-start="2026-06-04" data-date-end="2026-06-10">2026.06.09</span>
+            <span class="pc-sub">Anthropic · Opus 4.8 Effort Control</span>
+            <span class="pc-date" data-date-start="2026-05-28" data-date-end="2026-06-03">2026.05.28</span>
           </div>
           <ul class="pc-list">
-            <li><b>Claude Fable 5——新一代旗舰，刷新多项 SOTA</b>：在编程、推理、科学研究等核心基准上刷新最高水平；实测数据：Stripe 50M 行代码库迁移任务，1 天完成——此前需要数周的工程师工作量。</li>
-            <li><b>视觉能力质变——从截图重建完整界面</b>：Fable 5 可从单张产品截图直接重建出可运行的前端代码，UI 还原精度达到实用级别；视觉理解不再只是「看懂图片」，而是「从图转化为工作代码」。</li>
-            <li><b>Claude Mythos 5——持久记忆 Agent 专属模型</b>：Mythos 5 设计目标是长时运行的 Agent 任务，具备跨会话持久记忆，能够在不同对话之间保持项目上下文；定价 $10 / $50 per million tokens（输入 / 输出）。</li>
+            <li><b>可控努力等级（Effort Control）</b>：claude.ai 新增「努力旋钮」，用户可选择高 / 更高 / 最高三档，默认高档；Claude Code 支持 xhigh / max 参数——AI 的工作量第一次成为用户可设置的显式参数。</li>
+            <li><b>Claude Code 动态工作流（Dynamic Workflows）</b>：应对超大规模问题时，Opus 4.8 可自主分解任务、协调子工作流，不再受限于单轮上下文——从「一问一答」到「项目级自主执行」。</li>
+            <li><b>快速模式（Fast Mode）</b>：以 2.5× 速度运行，Pro 用户免费试用；开发者可通过 API 以 $10 / $50 per million tokens 使用——响应速度与质量之间有了可见的权衡旋钮。</li>
           </ul>
-          <div class="pc-ux">Fable 5 的 Stripe 迁移案例是 AI 编程能力的一个新里程碑：50M 行代码、1 天完成，这不是「辅助编程」，而是「AI 主导、人工监督」的全新协作模式。对设计工具的启示：当 AI 能够独立完成大规模工程任务，工具 UX 的核心命题将从「如何让 AI 更好地辅助人」转变为「如何让人更好地监督 AI」——方向反转。</div>
-          <div class="pc-src">来源：<a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank">anthropic.com/news/claude-fable-5-mythos-5</a></div>
+          <div class="pc-ux">「努力等级」是 AI 交互里一个全新的设计语言：用户不再只能接受 AI 的默认输出质量，而是能显式地表达「我想要更多思考」还是「我想要更快答案」。这为未来产品引入「AI 深度 vs. 速度」的显式切换提供了范例——在工具型产品里，这种控制感本身就是信任建立的手段。</div>
+          <div class="pc-src">来源：<a href="https://www.anthropic.com/news/claude-opus-4-8" target="_blank">anthropic.com/news/claude-opus-4-8</a></div>
         </div>
 
         <div class="product-card">
           <div class="pc-head">
             <span class="pc-name">ChatGPT</span>
-            <span class="pc-sub">OpenAI · 叙事档案 + "Chat is Dead" 宣言</span>
-            <span class="pc-date" data-date-start="2026-06-04" data-date-end="2026-06-10">2026.06.04–07</span>
+            <span class="pc-sub">OpenAI · 职业平台 + GPT-5.5 Instant 升级</span>
+            <span class="pc-date" data-date-start="2026-05-28" data-date-end="2026-06-03">2026.05.29–06.02</span>
           </div>
           <ul class="pc-list">
-            <li><b>ChatGPT 叙事档案（Jun 4）</b>：ChatGPT 开始为每位用户建立结构化叙事档案，按工作 / 兴趣爱好 / 旅行三大维度分类存储用户信息；AI 不再只有短期记忆，而是在构建用户的「数字人设」。</li>
-            <li><b>OpenAI 宣告「Chat is Dead」（Jun 7）</b>：OpenAI CEO 公开宣称对话交互模式已死，全面转向 Agent 平台——每个功能都将以「任务执行」而非「问答交互」为核心设计范式。</li>
-            <li><b>Agent 平台全面转向的产品信号</b>：叙事档案是 Agent 个性化的基础设施——Agent 需要持久的用户模型才能执行跨会话、跨任务的复杂工作；ChatGPT 的档案系统正是为此铺路。</li>
+            <li><b>ChatGPT 职业平台（Jun 2）</b>：整合 Indeed / Upwork / Appcast 职位源，基于用户经验和技能个性化推荐职位；配套简历创建、上传、AI 针对职位定制优化、一键专业格式下载——美国用户所有套餐可用。</li>
+            <li><b>GPT-5.5 Instant 可读性升级（May 29）</b>：响应更自然流畅，减少过度使用列表的习惯，去除 Canvas 功能；o3 将于 8 月 26 日退出 ChatGPT，GPT-4.5 于 6 月 27 日退役。</li>
+            <li><b>OpenAI Codex 扩展角色插件（Jun 2）</b>：Codex 接入角色专属插件，正向知识工作者的通用 App 方向演进——不只是编程助手，而是面向产品 / 设计 / 运营等角色的 Agent 平台。</li>
           </ul>
-          <div class="pc-ux">「Chat is Dead」是本期最具战略意义的信号：当 AI 头部玩家集体宣布放弃「聊天界面」范式，意味着下一代 AI 产品的评判标准将从「对话质量」转向「任务完成率」。对我们产品的设计启示：需要提前思考在 Agent 执行范式下，用户的控制点在哪里——不是「我问 AI 答」，而是「我委托 Agent，随时可查看和接管」。</div>
-          <div class="pc-src">来源：<a href="https://the-decoder.com/chatgpt-now-saves-narrative-dossiers-about-you-sorted-by-work-hobbies-and-travel/" target="_blank">the-decoder.com · ChatGPT 叙事档案</a></div>
+          <div class="pc-ux">ChatGPT 切入求职场景是一个典型的「平台化扩张」信号：AI 助手不再满足于回答问题，而是开始接管用户生命周期中的高频、高价值场景（找工作、写简历）。对产品设计的启示：当 AI 整合了外部数据源（职位库），原本需要跨应用操作的流程开始在单一入口完成，这对传统垂类工具的流量入口形成直接竞争。</div>
+          <div class="pc-src">来源：<a href="https://the-decoder.com/openai-turns-chatgpt-into-a-career-platform-with-job-search-and-cv-editor/" target="_blank">the-decoder.com · ChatGPT Career</a> · <a href="https://the-decoder.com/openai-gives-gpt-5-5-instant-a-readability-upgrade-while-phasing-out-two-older-models/" target="_blank">GPT-5.5 Instant 升级</a></div>
         </div>
 
         <div class="product-card wide">
           <div class="pc-head">
-            <span class="pc-name">Apple Siri</span>
-            <span class="pc-sub">WWDC 2026 · Apple Intelligence 第二次机会</span>
-            <span class="pc-date" data-date-start="2026-06-04" data-date-end="2026-06-10">2026.06.09</span>
+            <span class="pc-name">Gemini</span>
+            <span class="pc-sub">Google · Gemini Omni + Gemini 3.5 Flash</span>
+            <span class="pc-date" data-date-start="2026-05-28" data-date-end="2026-06-03">2026.05.28–29</span>
           </div>
           <ul class="pc-list">
-            <li><b>AFM 借助 Google Gemini 数据再训练</b>：Apple Foundation Model 使用 Google Gemini 的输出数据进行知识蒸馏式再训练，显著提升推理和语言理解能力——Apple 首次承认引入外部 AI 数据进行模型改进。</li>
-            <li><b>System Orchestrator——本地 / 云端智能路由</b>：新的 System Orchestrator 层在设备端模型与云端 AI（包括 Google Gemini、第三方模型）之间动态路由，根据任务复杂度自动选择执行位置；用户无感知切换。</li>
-            <li><b>全系统操作（System-Wide Actions）</b>：Siri 可直接操作任意 App 的 UI——打开设置、填写表单、发送消息、切换账号——不再局限于 Apple 官方 App；跨 App 工作流可通过语音一句话完成。</li>
-            <li><b>AFM Framework 开放开发者接入</b>：第三方开发者可调用 Apple Foundation Model API，在 App 内嵌入端侧 AI 能力；与 Core ML 深度集成，支持自定义 Fine-tuning——Apple AI 生态正式对开发者开放。</li>
+            <li><b>Gemini Omni——任意输入生成视频</b>：Google I/O 2026 后续落地，Omni 可同时接受图片 / 音频 / 视频 / 文字作为输入，生成扎根真实世界知识的高质量视频；支持对话式剪辑，不需要传统时间轴操作。</li>
+            <li><b>Gemini Omni Flash 向订阅用户推送</b>：向 AI Plus / Pro / Ultra 全球用户开放，YouTube Shorts 和 YouTube Create App 免费可用——视频创作能力首次进入大众消费场景。</li>
+            <li><b>Gemini 3.5 Flash——Agent 工作流的前沿小模型</b>：在 coding 和复杂 agentic 任务上取得前沿水平，专为「长时运行、多工具调用」场景优化；前端已有 9 个演示视频展示 Omni + 3.5 Flash 协作能力。</li>
+            <li><b>Google I/O 2026 十二大亮点回顾（May 28）</b>：Gemini Spark 日简报、Universal Cart 全站购物车、Daily Brief、智能眼镜、SynthID 水印……消费级 AI 的「超级应用」形态轮廓已清晰。</li>
           </ul>
-          <div class="pc-ux">WWDC 2026 的 Siri 重构代表了苹果在 AI 策略上最重要的转变：从「封闭自研」到「开放借力」（引入 Google Gemini 数据）。System Orchestrator 的本地 / 云端无缝路由是一个值得学习的 UX 设计：用户不需要知道任务在哪里执行，产品自动优化性能、隐私和速度的权衡。对我们产品的启示：AI 的「执行位置」不应该作为用户负担暴露出来，而应当是产品的后台智能决策。</div>
-          <div class="pc-src">来源：<a href="https://the-decoder.com/apple-intelligence-gets-a-second-shot-with-help-from-google-and-nvidia/" target="_blank">the-decoder.com · Apple Intelligence WWDC 2026</a></div>
+          <div class="pc-ux">Gemini Omni 打破了视频创作工具的「输入单一性」假设——原来视频生成需要专属的文字/图片入口，现在任何已有素材（一段录音、一张截图、一个视频片段）都可以成为起点。对多媒体内容产品的 UX 启示：上传入口的设计应当拥抱「任意素材」，而不是为不同格式设置独立入口。</div>
+          <div class="pc-src">来源：<a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-3-5-videos/" target="_blank">blog.google · Gemini Omni &amp; 3.5 demos</a> · <a href="https://blog.google/innovation-and-ai/technology/ai/io-2026-keynote-moment-videos/" target="_blank">I/O 2026 十二大亮点</a></div>
         </div>
 
       </div>
@@ -621,40 +622,40 @@ footer {
 
     <div class="track">
       <div class="track-label">
-        <span class="track-pill">企业级 AI · Google</span>
+        <span class="track-pill">企业级 AI · Build 2026</span>
         <div class="track-label-line"></div>
       </div>
       <div class="product-grid">
 
-        <div class="product-card">
+        <div class="product-card wide">
           <div class="pc-head">
-            <span class="pc-name">Google NotebookLM</span>
-            <span class="pc-sub">云端计算机 · 代码执行 · 自主研究</span>
-            <span class="pc-date" data-date-start="2026-06-04" data-date-end="2026-06-10">2026.06.08–10</span>
+            <span class="pc-name">Microsoft 365</span>
+            <span class="pc-sub">Work IQ · Frontier Tuning · Build 2026</span>
+            <span class="pc-date" data-date-start="2026-05-28" data-date-end="2026-06-03">2026.06.02</span>
           </div>
           <ul class="pc-list">
-            <li><b>NotebookLM 升级为云端「AI 研究计算机」</b>：新增代码执行能力，AI 可在对话中直接运行 Python 代码、处理数据、生成图表——不再只是文档 Q&amp;A 工具，而是具备计算能力的研究伴侣。</li>
-            <li><b>自主研究模式（Autonomous Research）</b>：用户提出研究问题后，NotebookLM 可自主搜索、抓取、整合多来源信息，生成结构化研究报告；支持引用溯源，每个结论都可追踪至原始文档。</li>
-            <li><b>从「辅助阅读」到「主动研究」的定位转变</b>：原版 NotebookLM 是「帮你读懂上传的文档」，新版是「帮你主动研究任意主题」——信息获取模式从被动变为主动。</li>
+            <li><b>Work IQ——生产级 Agent 智能层</b>：10 个通用 MCP 工具打通 M365 全数据（邮件 / 日历 / 文件 / 人员 / 聊天 / 站点），Agent 通过标准动词（fetch / create / update）操作数据，结合 getSchema 动态发现数据结构——6 月 16 日 GA。</li>
+            <li><b>Frontier Tuning——企业数据驱动的 Agent 调优</b>：用企业自有数据（会话记录 / 知识库 / M365 文档）持续调优 Agent，在 Copilot Studio 和 Microsoft Foundry 内直接接入；已与 EY / Pearson / McKinsey 等大型企业完成验证。</li>
+            <li><b>Build 2026 协作 Agent 框架</b>：「Build collaborative agents where work happens」——Agent 在 Teams / Outlook / SharePoint 这些工作实际发生的地方协作，而不是在独立 AI 界面里孤立运行。</li>
           </ul>
-          <div class="pc-ux">NotebookLM 增加代码执行是研究工具的关键能力跃升：当 AI 不只能「理解数据」，还能「运行代码处理数据」，研究流程中「看→想→算→写」可以在同一工具内完成闭环。对我们产品的启示：AI 助手嵌入计算能力（执行、验证、可视化）会大幅提升专业用户的使用深度——只有语言能力的 AI 是文秘，拥有计算能力的 AI 才是研究伙伴。</div>
-          <div class="pc-src">来源：<a href="https://blog.google/innovation-and-ai/products/notebooklm/better-research-notebooklm/" target="_blank">blog.google · NotebookLM 研究升级</a></div>
+          <div class="pc-ux">Work IQ 的核心设计决策是「10 个工具打通一切」——不是为每个 M365 应用单独构建 API，而是用极小的接口面通过 MCP 协议统一抽象。对企业产品设计的启示：当 Agent 成为数据消费者，接口设计的「最小集」原则比「功能齐全」更重要——冗余接口会增加 Agent 的决策负担，导致行为不可预测。</div>
+          <div class="pc-src">来源：<a href="https://devblogs.microsoft.com/microsoft365dev/work-iq-production-ready-intelligence-for-every-agent/" target="_blank">devblogs.microsoft.com · Work IQ</a> · <a href="https://devblogs.microsoft.com/microsoft365dev/frontier-tuning-teaching-ai-to-work-the-way-you-do/" target="_blank">Frontier Tuning</a></div>
         </div>
 
         <div class="product-card wide">
           <div class="pc-head">
-            <span class="pc-name">Gemini 3.5 Live Translate</span>
-            <span class="pc-sub">Google · 实时语音翻译 · Google Meet 集成</span>
-            <span class="pc-date" data-date-start="2026-06-04" data-date-end="2026-06-10">2026.06.09</span>
+            <span class="pc-name">GitHub Copilot</span>
+            <span class="pc-sub">Agent-Native Desktop App · Canvas · Build 2026</span>
+            <span class="pc-date" data-date-start="2026-05-28" data-date-end="2026-06-03">2026.06.02</span>
           </div>
           <ul class="pc-list">
-            <li><b>实时语音翻译——20+ 语言双向实时传译</b>：Gemini 3.5 Live Translate 在通话过程中实时将语音翻译为目标语言并同步播出，延迟极低；支持中文 / 英语 / 日语 / 西班牙语 / 法语等 20+ 语言组合。</li>
-            <li><b>Google Meet 深度集成</b>：直接内嵌 Google Meet 视频会议，无需切换工具；每位参会者可独立设置接收语言，多语言会议无需人工口译——企业国际会议成本直接降低。</li>
-            <li><b>Gemini App 独立使用场景</b>：在 Gemini App 中可用于日常对话翻译、旅行沟通、语言学习场景；与 Live 多模态能力结合，支持图文 + 语音混合输入。</li>
-            <li><b>从「翻译工具」到「语言透明层」</b>：Live Translate 的目标不是做一个翻译 App，而是让语言差异在产品体验层面消失——用户感知到的是「自然沟通」，而不是「我在使用翻译」。</li>
+            <li><b>Copilot 全新桌面应用——Agent 原生开发控制中心</b>：不再是 IDE 插件，而是独立桌面应用；核心理念是「让 Agent 在你已有的工作流中运行」——文件系统、终端、浏览器、API 都在一个统一界面协同。</li>
+            <li><b>Canvas——意图变为可检视的工作输出</b>：Agent 执行过程在 Canvas 中实时展现，每个步骤的操作、文件变更、工具调用均可见；用户不再面对「黑盒 Agent」，而是可以在任意检查点接管或调整方向。</li>
+            <li><b>适配 agentic 输出的代码审查</b>：Agent 大批量生成代码时，传统逐行 Code Review 难以扩展；新 Code Review 以「意图 + 变更摘要」为主视图，人工只需审核高风险或不确定的部分——审查粒度从代码行升级到决策点。</li>
+            <li><b>统一 apps / tools / agents 的单一运行时</b>：Copilot App、CLI 工具、自定义 Agent 共享同一运行时，开发者不再为不同 Agent 形态维护多套基础设施。</li>
           </ul>
-          <div class="pc-ux">Live Translate 代表了一类重要的 AI UX 设计目标：「让 AI 本身变得不可见」。最好的翻译体验不是「好的翻译」，而是「感觉在用母语交流」。这是 AI 产品在「效用层」之上追求「体验透明层」的典型案例。对我们产品的设计启示：当 AI 能力足够强时，最好的 UX 设计往往是把 AI 藏起来——不展示 AI 正在工作，而是让用户感受到自己「变得更强了」。</div>
-          <div class="pc-src">来源：<a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/" target="_blank">blog.google · Gemini Live 3.5 Translate</a></div>
+          <div class="pc-ux">GitHub Copilot Canvas 是本期「Agent 工作可见性」设计中最完整的实现案例。它回答了一个核心 UX 问题：当 Agent 替你工作时，你怎么知道它在做对的事？Canvas 的答案是「全程可见 + 随时可接管」——不是事后的日志，而是实时的共享视图。对我们产品里 Agent 功能的设计启示：可见性（Visibility）和可接管性（Takeover）需要作为一等需求进行设计，而不是事后追加的日志窗口。</div>
+          <div class="pc-src">来源：<a href="https://github.blog/news-insights/product-news/github-copilot-app-the-agent-native-desktop-experience/" target="_blank">github.blog · GitHub Copilot App</a></div>
         </div>
 
       </div>
@@ -676,35 +677,34 @@ footer {
       </div>
       <div class="product-grid">
 
-        <div class="product-card">
+        <div class="product-card wide">
           <div class="pc-head">
-            <span class="pc-name">Apple Foundation Models</span>
-            <span class="pc-sub">WWDC 2026 · AFM Framework · Xcode Agent</span>
-            <span class="pc-date" data-date-start="2026-06-04" data-date-end="2026-06-10">2026.06.09</span>
+            <span class="pc-name">Figma</span>
+            <span class="pc-sub">Make · 本地代码集成</span>
+            <span class="pc-date" data-date-start="2026-05-28" data-date-end="2026-06-03">2026.05.28</span>
           </div>
           <ul class="pc-list">
-            <li><b>Apple Foundation Models Framework——AI 开发者接口全面开放</b>：开发者可通过 AFM API 在 App 内调用 Apple 端侧 AI 能力；支持图片输入（视觉理解）、自定义技能（Skill 扩展）、服务端执行（Server-side）——不再局限于设备端。</li>
-            <li><b>Xcode AI Agent——IDE 内自主多步骤编程</b>：Xcode 新增 AI 编程 Agent，可自主完成多步骤开发任务（写代码、修 Bug、运行测试、迭代修改）；开发者描述意图，Agent 执行全流程——Apple 开发环境首次引入「自主 Agent」概念。</li>
-            <li><b>与 Core ML 深度集成 + 自定义 Fine-tuning</b>：AFM Framework 与 Core ML 无缝集成，支持企业和开发者用自有数据 Fine-tune 模型；Apple 的端侧 AI 生态从「封闭能力」向「可编程平台」转型。</li>
+            <li><b>Figma Make 连接本地代码库</b>：Make 的 AI 能力从 Figma 云端延伸到开发者的本地代码仓库，视觉编辑、上下文 prompting 和协作均可直接作用于本地代码——设计侧改动即时同步至开发环境。</li>
+            <li><b>双向协同：设计与代码真正对齐</b>：开发者可在 Figma Make 里口述修改意图，AI 识别上下文后在本地代码中应用变更；设计师看到的改动和工程师看到的代码变更来自同一次操作。</li>
+            <li><b>系列配套：Config 2026 收官之作</b>：Make 本地代码是 Figma Config 2026（5 月 20 日 AI Design Agent 发布）的开发者配套——Agent 处理设计层，Make 负责代码层，两层协同完成设计到实现的完整链路。</li>
           </ul>
-          <div class="pc-ux">Apple 开放 Foundation Models Framework 是一个标志性的生态转变：从「Apple 控制所有 AI 体验」到「Apple 提供 AI 基础设施，开发者构建上层应用」。对设计工具开发者的启示：端侧 AI 能力开放意味着未来 iOS/macOS 上的设计辅助工具可以调用系统级 AI，而不需要全部依赖云端 API——隐私保护 + 低延迟的端侧 AI 是新的设计工具差异化方向。</div>
-          <div class="pc-src">来源：WWDC 2026 · Apple Developer Documentation</div>
+          <div class="pc-ux">Make 本地代码打通了设计到开发之间最难跨越的那道鸿沟——不是「将设计稿导出给开发」，而是「设计师和开发者在同一 AI 辅助环境里共同操作同一份实现」。对设计系统团队的启示：Design Token 的价值在这个场景里被极大放大——只有有良好结构化 Token 定义的设计系统，才能在 AI 驱动的跨层协同中保持一致性。</div>
+          <div class="pc-src">来源：<a href="https://www.figma.com/blog/figma-make-now-on-your-local-code/" target="_blank">figma.com/blog · Make 本地代码</a></div>
         </div>
 
         <div class="product-card wide">
           <div class="pc-head">
-            <span class="pc-name">Gemma 4 QAT</span>
-            <span class="pc-sub">Google · 量化感知训练 · 移动 / 笔记本本地部署</span>
-            <span class="pc-date" data-date-start="2026-06-04" data-date-end="2026-06-10">2026.06.05</span>
+            <span class="pc-name">Mistral Vibe</span>
+            <span class="pc-sub">远程 Agent + Le Chat Work Mode + Mistral Medium 3.5</span>
+            <span class="pc-date" data-date-start="2026-05-28" data-date-end="2026-06-03">2026.05.28</span>
           </div>
           <ul class="pc-list">
-            <li><b>量化感知训练（QAT）——压缩而不损精度</b>：Gemma 4 QAT 系列使用量化感知训练技术，在模型训练阶段就针对量化进行优化，相比传统训练后量化（PTQ）在同等压缩率下精度损失更小——这是端侧 AI 部署的关键技术突破。</li>
-            <li><b>移动 / 笔记本可流畅运行</b>：QAT 优化后，Gemma 4 系列在手机（高通 8 系 / Apple A 系列）和笔记本（M 系列 / Intel Core Ultra）上可流畅运行，无需 GPU 加速；同等性能下内存占用较 FP16 版本降低 50%+。</li>
-            <li><b>开源权重面向端侧应用开发者</b>：所有 QAT 模型开放权重下载，支持 TensorFlow Lite / ONNX / Core ML 多框架导出；开发者可直接集成到 Android / iOS / macOS 应用，无需调用云端 API。</li>
-            <li><b>对 AI 设计工具的端侧部署路径打开</b>：Gemma 4 QAT 使「本地运行的 AI 设计辅助」成为可能——代码补全、设计建议、内容生成等功能可在离线状态下运行，适合企业内网 / 隐私敏感场景。</li>
+            <li><b>Vibe 远程 Agent——Coding Agent 迁移至云端</b>：原本在本地运行的 Vibe Coding Agent 现在在云端异步并行运行，用户从 CLI 或 Le Chat 对话中启动后可以离开——Agent 自行完成任务，完成后通知用户，打破「等待 AI 完成」的交互模式。</li>
+            <li><b>Le Chat Work Mode</b>：基于 Mistral Medium 3.5 的多步骤任务 Agent，接入工具并行调用，适合研究、分析、长周期工作任务；Le Chat 从单轮对话工具升级为可异步执行复杂任务的「工作伙伴」。</li>
+            <li><b>Mistral Medium 3.5 开源发布</b>：128B 稠密模型，指令跟随 / 推理 / 编程单一权重合一，SWE-Bench 评分 77.6%，仅需 4 块 GPU 可自托管；开放权重使企业可在本地私有化部署同等能力。</li>
           </ul>
-          <div class="pc-ux">Gemma 4 QAT 打开了一条重要的产品路线：端侧 AI 不再是「性能削减版的云端 AI」，而是在特定场景下（低延迟、隐私保护、离线可用）具有明确优势的部署形态。对我们产品的技术选型启示：当功能对延迟敏感（输入实时建议、草图识别）或对隐私敏感（用户设计文件），端侧模型应当纳入技术方案评估，不能只考虑云端 API。</div>
-          <div class="pc-src">来源：<a href="https://blog.google/innovation-and-ai/technology/developers-tools/quantization-aware-training-gemma-4/" target="_blank">blog.google · Gemma 4 QAT 量化感知训练</a></div>
+          <div class="pc-ux">Vibe 远程 Agent 代表了一个重要的 UX 范式转变：AI 任务的执行从「同步阻塞」（用户等待）变成「异步通知」（用户去做别的，AI 完成后告知）。这在移动端尤其有意义——手机上用户不会盯着屏幕等几分钟，异步推送通知才是正确的交互形态。对我们产品里的长时 Agent 任务，异步化 + 进度通知应当成为标准 UX 模式，而不是让用户在 loading 状态里干等。</div>
+          <div class="pc-src">来源：<a href="https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5/" target="_blank">mistral.ai/news · Vibe Remote Agents &amp; Medium 3.5</a></div>
         </div>
 
       </div>
@@ -723,44 +723,44 @@ footer {
 
       <div class="insight-card">
         <div class="in-num">启示 01</div>
-        <div class="in-trigger"><em>Claude Fable 5</em> · Stripe 50M 行迁移</div>
-        <div class="in-title">AI 编程从「辅助」到「主导」——人的角色变为监督者</div>
-        <div class="in-body">Fable 5 的 Stripe 案例（50M 行代码 1 天完成迁移）是 AI 编程能力的新里程碑，也是 UX 范式的重要转变信号：当 AI 能够独立完成大规模工程任务，工具的核心 UX 命题将从「如何让 AI 更好地辅助人」变为「如何让人更好地监督 AI」。对我们的产品设计启示：AI 深度参与的功能，除了「输出质量」，更需要设计「监督界面」——用户怎么知道 AI 做对了？怎么在出错时快速介入？这两个问题比「怎么触发 AI」更重要。</div>
+        <div class="in-trigger"><em>Claude Opus 4.8 · 努力等级控制</em></div>
+        <div class="in-title">「AI 努力程度」成为可设计的用户参数</div>
+        <div class="in-body">Claude 的努力等级旋钮是 AI 交互里一个新的透明度设计范式：用户不再被动接受 AI 的默认质量，而是显式表达「我要更深的思考」或「我要更快的结果」。这种控制感本身就是信任建立的手段。对我们产品的启示：凡是有「AI 深度 vs. 速度」权衡的功能，都值得考虑将这个选择暴露给用户——哪怕只是简单的「精准模式 / 快速模式」切换，也能显著提升用户对 AI 输出的主人感。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 02</div>
-        <div class="in-trigger"><em>OpenAI「Chat is Dead」宣言</em></div>
-        <div class="in-title">对话范式终结——「任务委托 + 监督接管」才是下一代交互</div>
-        <div class="in-body">OpenAI CEO 宣告「Chat is Dead」不是噱头，而是产品战略的公开宣示：AI 产品的评判标准正在从「对话质量」转向「任务完成率」。叙事档案（Narrative Dossiers）是这个转变的基础设施——Agent 需要持久的用户模型才能跨会话执行复杂任务。对我们产品的设计启示：需要提前思考在 Agent 范式下用户的控制界面——不是「问答框」，而是「委托界面 + 进度视图 + 接管按钮」的三件套。这个范式转变不是渐进的，而是结构性的。</div>
+        <div class="in-trigger"><em>ChatGPT 职业平台</em> · AI 场景泛化</div>
+        <div class="in-title">AI 助手正在平台化——每个垂类场景都是潜在入口</div>
+        <div class="in-body">ChatGPT 接入职位库做求职 + 简历，是 AI 助手向「超级应用」演进的又一步：不是构建专属求职产品，而是将外部数据源（Indeed / Upwork）接入对话界面，让原本需要跨应用的流程在单一入口完成。对我们的启示：当产品与 AI 深度整合时，原本「用户需要去别处完成」的流程（查数据、填表单、找文档）都是可以被 AI 接管、在产品内完成闭环的机会。评估自己产品里有多少「用户需要离开去做的事」，就有多少 AI 整合的空间。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 03</div>
-        <div class="in-trigger"><em>Apple System Orchestrator</em> · 路由透明化</div>
-        <div class="in-title">AI 执行位置不应是用户负担——后台智能路由是更好的设计</div>
-        <div class="in-body">Apple System Orchestrator 在本地模型与云端 AI 之间智能路由，用户完全无感知——这是「AI 执行位置透明化」的最佳实践。用户不需要知道任务在设备上还是云端跑，产品自动平衡性能、隐私和速度。对我们产品的设计启示：当产品同时具备本地 AI 和云端 AI 能力时，「在哪里执行」不应该作为用户选项暴露出来（除非有强隐私需求的用户）；路由逻辑应当内化为产品智能，而不是用户配置负担。</div>
+        <div class="in-trigger"><em>Gemini Omni</em> · 多模态视频创作</div>
+        <div class="in-title">任意素材皆可成为创作起点——输入入口需要重新设计</div>
+        <div class="in-body">Gemini Omni 打破了视频创作工具「从零开始输入文字」的假设——任何已有素材（录音片段、截图、视频剪辑）都可以成为生成起点，且支持对话式剪辑，无需传统时间轴。这对内容创作产品的 UX 提出了新要求：上传入口的设计应当拥抱「任意格式」，而不是为每种输入格式设置独立、割裂的入口。在我们产品中，凡是有 AI 生成功能的地方，都应当思考：用户可以从哪些已有的材料「续写」，而不只是「从空白开始」。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 04</div>
-        <div class="in-trigger"><em>Google NotebookLM</em> · 代码执行能力</div>
-        <div class="in-title">AI 助手嵌入计算能力——从「文秘」升级为「研究伙伴」</div>
-        <div class="in-body">NotebookLM 增加代码执行能力是 AI 助手的关键跃升：当 AI 不只能「理解数据」，还能「运行代码处理数据」，研究流程中「看→想→算→写」可以在同一工具内闭环。只有语言能力的 AI 是文秘，拥有计算能力的 AI 才是研究伙伴。对我们产品的启示：AI 功能的深度不只来自于「更好的语言模型」，也来自于「接入更多执行能力」（代码执行、数据查询、图表生成）。评估产品里 AI 当前只能「说」但应该能「做」的地方，就是功能深度提升的空间。</div>
+        <div class="in-trigger"><em>Microsoft Work IQ</em> · MCP 标准协议</div>
+        <div class="in-title">Agent 接口设计：「最小集」优于「功能齐全」</div>
+        <div class="in-body">Work IQ 的核心决策是用 10 个通用 MCP 工具打通整个 M365 数据层——不是为每个应用单独构建 API，而是用极小的接口面统一抽象。这是 Agent 时代接口设计的重要范式：冗余工具会增加 Agent 的决策负担，导致行为不可预测、出错率升高。对产品设计的启示：为 AI Agent 设计工具接口时，宁可极度克制，只暴露最核心的能力，不要把「功能完整」当成目标。Agent 能用少量工具完成复杂任务，比拥有大量专用工具但行为混乱要好得多。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 05</div>
-        <div class="in-trigger"><em>Gemini Live Translate</em> · AI 透明层设计</div>
-        <div class="in-title">最好的 AI UX 是让 AI 消失——用户感受到「自己变强了」</div>
-        <div class="in-body">Gemini Live Translate 的目标不是「做好翻译」，而是让语言差异在体验层消失——用户感知到的是「自然沟通」，而不是「我在用翻译工具」。这是 AI 产品在效用之上追求「体验透明层」的典型案例。对我们产品的 AI UX 设计原则：当 AI 能力足够强时，最佳设计往往是把 AI 藏起来——不展示「AI 正在工作」，而是让用户感受到「我变得更强了」。凡是用户能意识到「是 AI 在帮我」的地方，都是还没做到透明的地方。</div>
+        <div class="in-trigger"><em>GitHub Copilot Canvas</em> · Agent 工作可见性</div>
+        <div class="in-title">可见性与可接管性——Agent 功能的两个设计必答题</div>
+        <div class="in-body">GitHub Copilot Canvas 回答了一个核心 UX 问题：当 Agent 替你工作时，你怎么知道它在做对的事？答案是「全程可见 + 随时可接管」——不是事后日志，而是实时共享视图，用户可在任意检查点接管或调整方向。对我们产品里所有 Agent 功能的设计要求：可见性（Visibility，用户能看到 Agent 在做什么）和可接管性（Takeover，用户随时能暂停 / 修正 / 接手）需要作为一等需求来设计，而不是在功能上线后追加的「日志面板」。没有这两点，用户对 Agent 的信任无从建立。</div>
       </div>
 
       <div class="insight-card">
         <div class="in-num">启示 06</div>
-        <div class="in-trigger"><em>Gemma 4 QAT</em> · 端侧 AI 部署</div>
-        <div class="in-title">端侧 AI 不是「削减版云端」——低延迟 + 隐私是差异化优势</div>
-        <div class="in-body">Gemma 4 QAT 使端侧 AI 真正可用，但更重要的是改变了端侧 AI 的定位：它不是「没网时的降级方案」，而是在延迟敏感（输入实时建议）和隐私敏感（用户私有文件）场景下具有明确优势的技术选型。对我们产品的技术选型原则：不能只考虑云端 API，需要评估「端侧模型」适合哪些功能——实时输入建议、草图识别、离线可用的 AI 能力。Apple AFM Framework 和 Gemma 4 QAT 同周发布，是端侧 AI 进入主流开发者工具链的明确信号。</div>
+        <div class="in-trigger"><em>Mistral Vibe 远程 Agent</em> · <em>异步执行模式</em></div>
+        <div class="in-title">长时 Agent 任务应当「异步化 + 通知化」，不应让用户干等</div>
+        <div class="in-body">Mistral Vibe 将 Coding Agent 迁移到云端异步运行，用户启动后可以去做别的事，Agent 完成后推送通知——这是对「用户等待 AI 完成」交互模式的根本性改变。在移动端这一点尤为关键：用户不会盯着手机屏幕等几分钟。对我们产品里所有执行时间超过 30 秒的 AI 任务，异步化 + 进度通知应当成为标准设计模式。这不只是技术架构问题，而是用户体验选择：让用户等待 loading 是最低效的时间使用方式，也是信任损耗最快的交互形态。</div>
       </div>
 
     </div>
@@ -780,7 +780,7 @@ footer {
 </div>
 
 <footer>
-  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第五期</span>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.05~06</span>
   <span>仅供设计大团队内部参考</span>
 </footer>
 
