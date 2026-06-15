@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI 产品 UX 观察报告 · 第五期 · Modal Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=DM+Serif+Display:wght@400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Design Tokens ── */
+:root {
+  --bg:       #070b07;
+  --surface:  #0c110c;
+  --surface2: #111811;
+  --green:    #a8ff57;
+  --green2:   rgba(168,255,87,.08);
+  --green3:   rgba(168,255,87,.05);
+  --green4:   rgba(168,255,87,.18);
+  --border:   rgba(168,255,87,.07);
+  --border2:  rgba(168,255,87,.15);
+  --white:    #ffffff;
+  --t1:       rgba(255,255,255,.92);
+  --t2:       rgba(255,255,255,.50);
+  --t3:       rgba(255,255,255,.22);
+  --t4:       rgba(255,255,255,.10);
+  --mono:     'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+  --serif:    'DM Serif Display', Georgia, serif;
+  --sans:     'Inter', -apple-system, 'PingFang SC', sans-serif;
+  --pad:      80px;
+  --r:        8px;
+  --ease:     cubic-bezier(.16,1,.3,1);
+}
+
+/* ── Base ── */
+*,*::before,*::after { margin:0;padding:0;box-sizing:border-box }
+html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
+.vp { position:fixed;inset:0;overflow:hidden;background:#020402 }
+
+/* ── Stage ── */
+.stage {
+  position:absolute;left:0;top:0;
+  width:1920px;height:1080px;
+  overflow:hidden;transform-origin:0 0;
+  background:var(--bg);
+  /* dot grid */
+  background-image:
+    radial-gradient(circle, rgba(168,255,87,.055) 1px, transparent 1px);
+  background-size:30px 30px;
+  background-position:-1px -1px;
+}
+
+/* ── Slides ── */
+.slide {
+  position:absolute;inset:0;
+  width:1920px;height:1080px;overflow:hidden;
+  background:var(--bg);
+  background-image:radial-gradient(circle,rgba(168,255,87,.055) 1px,transparent 1px);
+  background-size:30px 30px;background-position:-1px -1px;
+  visibility:hidden;opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.slide.on { visibility:visible;opacity:1;pointer-events:auto;z-index:1 }
+
+/* ── Entrance animations ── */
+@keyframes riseUp {
+  from { opacity:0; transform:translateY(16px) }
+  to   { opacity:1; transform:none }
+}
+@keyframes fadeIn {
+  from { opacity:0 }
+  to   { opacity:1 }
+}
+@keyframes scanIn {
+  from { clip-path:inset(0 100% 0 0) }
+  to   { clip-path:inset(0 0% 0 0) }
+}
+.slide.on .rv { animation:riseUp .55s var(--ease) both }
+.slide.on .rv:nth-child(1) { animation-delay:.03s }
+.slide.on .rv:nth-child(2) { animation-delay:.09s }
+.slide.on .rv:nth-child(3) { animation-delay:.15s }
+.slide.on .rv:nth-child(4) { animation-delay:.21s }
+.slide.on .rv:nth-child(5) { animation-delay:.27s }
+.slide.on .rv:nth-child(6) { animation-delay:.33s }
+.slide.on .rv:nth-child(7) { animation-delay:.39s }
+.slide.on .rv:nth-child(8) { animation-delay:.45s }
+.slide.on .line-in { animation:scanIn .7s var(--ease) both }
+
+/* terminal line typewriter */
+@keyframes termLine {
+  from { clip-path:inset(0 100% 0 0); opacity:0 }
+  8%   { opacity:1 }
+  to   { clip-path:inset(0 0% 0 0); opacity:1 }
+}
+.slide.on .terminal-body > div {
+  animation: termLine .35s cubic-bezier(.16,1,.3,1) both;
+  white-space: nowrap;
+}
+.slide.on .terminal-body > div:nth-child(1) { animation-delay:.45s;animation-duration:.45s }
+.slide.on .terminal-body > div:nth-child(2) { animation-delay:1.0s;animation-duration:.4s }
+.slide.on .terminal-body > div:nth-child(3) { animation-delay:1.55s;animation-duration:.35s }
+.slide.on .terminal-body > div:nth-child(4) { animation-delay:1.95s;animation-duration:.3s }
+.slide.on .terminal-body > div:nth-child(5) { animation-delay:2.3s;animation-duration:.3s }
+.slide.on .terminal-body > div:nth-child(6) { animation-delay:2.65s;animation-duration:.3s }
+.slide.on .terminal-body > div:nth-child(7) { animation-delay:3.0s;animation-duration:.3s }
+
+/* blinking cursor */
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+.cursor::after {
+  content:'█';
+  font-family:var(--mono);font-size:.8em;
+  color:var(--green);
+  animation:blink 1.1s step-end infinite;
+  margin-left:2px;
+}
+
+/* ── Top scan line ── */
+.top-line {
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--green),rgba(168,255,87,.3),transparent);
+}
+
+/* ── Monospace labels ── */
+.mono-label {
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  color:rgba(168,255,87,.5);letter-spacing:.5px;
+}
+.mono-label.bright { color:var(--green) }
+
+/* ── Chips ── */
+.chip {
+  display:inline-flex;align-items:center;
+  padding:3px 10px;border-radius:4px;
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:.2px;border:1px solid;
+}
+.chip-co {
+  background:var(--co-bg,rgba(168,255,87,.06));
+  border-color:var(--co-br,rgba(168,255,87,.2));
+  color:var(--co,#a8ff57);
+}
+.chip-ghost {
+  background:transparent;
+  border-color:var(--t4);
+  color:var(--t3);
+}
+
+/* ── Product slide layout ── */
+.p-left {
+  position:absolute;left:0;top:0;
+  width:920px;height:100%;
+  padding:66px var(--pad);
+  display:flex;flex-direction:column;
+}
+.p-right {
+  position:absolute;right:0;top:0;
+  width:1000px;height:100%;overflow:hidden;
+}
+.p-img {
+  position:absolute;inset:0;
+  background-size:cover;background-repeat:no-repeat;
+  filter:brightness(.55) saturate(.7);
+}
+.p-fade {
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--bg) 0%,rgba(7,11,7,.05) 26%,transparent 48%);
+}
+/* green tint over image */
+.p-tint {
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(168,255,87,.04) 0%,transparent 60%);
+  mix-blend-mode:screen;
+}
+
+.p-title {
+  font-family:var(--serif);font-weight:400;
+  color:var(--t1);line-height:.9;
+  letter-spacing:-1.5px;margin-bottom:8px;
+}
+.p-sub {
+  font-family:var(--mono);font-size:13px;font-weight:300;
+  color:var(--t2);margin-bottom:36px;letter-spacing:.2px;
+}
+.bullets { display:flex;flex-direction:column;gap:17px;flex:1 }
+.bullet { display:flex;gap:14px;align-items:flex-start }
+.b-num {
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  color:var(--co,#a8ff57);min-width:28px;
+  padding-top:4px;letter-spacing:.3px;flex-shrink:0;
+}
+.b-text {
+  font-family:var(--sans);font-size:22px;
+  color:var(--t2);line-height:1.6;
+}
+.b-text b { color:var(--t1);font-weight:500 }
+
+.insight {
+  background:var(--co,#a8ff57);
+  border-radius:8px;
+  padding:18px 22px;
+  margin-bottom:22px;
+}
+.insight-lbl {
+  font-family:var(--mono);font-size:10px;font-weight:400;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(0,0,0,.5);margin-bottom:7px;
+}
+.insight-txt {
+  font-family:var(--sans);font-size:19px;color:#000;line-height:1.6;
+}
+.insight-txt b { color:#000;font-weight:700 }
+
+/* source link */
+.src-link {
+  margin-top:12px;
+  font-family:var(--mono);font-size:12px;font-weight:300;
+  color:var(--t3);letter-spacing:.3px;
+}
+.src-link a {
+  color:var(--t3);text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  transition:color .15s,border-color .15s;
+}
+.src-link a:hover { color:var(--green);border-color:rgba(168,255,87,.4) }
+
+/* ── Slide number: top-right corner ── */
+.sn {
+  position:absolute;top:32px;right:var(--pad);
+  font-family:var(--mono);font-size:12px;font-weight:300;
+  color:var(--t3);letter-spacing:.5px;
+}
+
+/* ── Nav ── */
+.dots {
+  position:fixed;left:50%;bottom:64px;
+  transform:translateX(-50%);z-index:999;
+  display:flex;gap:5px;
+}
+.dot {
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(168,255,87,.2);cursor:pointer;transition:all .2s;
+}
+.dot.on { background:var(--green);width:16px;border-radius:3px }
+.cbar {
+  position:fixed;left:50%;bottom:22px;
+  transform:translateX(-50%);z-index:999;
+  display:flex;align-items:center;gap:10px;
+}
+.cbtn {
+  width:36px;height:36px;border-radius:4px;
+  border:1px solid rgba(168,255,87,.15);
+  background:rgba(168,255,87,.04);
+  color:rgba(168,255,87,.6);
+  font-family:var(--mono);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.cbtn:hover { background:rgba(168,255,87,.1);border-color:rgba(168,255,87,.3);color:var(--green) }
+.ctr {
+  font-family:var(--mono);font-size:11px;
+  color:var(--t3);min-width:52px;text-align:center;
+  background:rgba(168,255,87,.04);padding:4px 10px;
+  border-radius:4px;border:1px solid var(--border);
+  letter-spacing:.5px;
+}
+
+/* ── Terminal block (cover) ── */
+.terminal {
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(168,255,87,.12);
+  border-radius:8px;overflow:hidden;
+}
+.terminal-bar {
+  background:rgba(168,255,87,.05);
+  border-bottom:1px solid rgba(168,255,87,.08);
+  padding:8px 14px;
+  display:flex;gap:6px;align-items:center;
+}
+.terminal-dot {
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(168,255,87,.2);
+}
+.terminal-body {
+  padding:20px 24px;
+  font-family:var(--mono);font-size:14px;
+  color:var(--t2);line-height:2;
+}
+.terminal-body .cmd { color:var(--green) }
+.terminal-body .ok  { color:rgba(168,255,87,.6) }
+.terminal-body .dim { color:var(--t3) }
+.terminal-body .val { color:#7dd3fc }
+
+/* ── Period Selector ── */
+.period-selector { position:relative;display:inline-block }
+.period-trigger {
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  color:#000;letter-spacing:.3px;
+  background:var(--green);border:none;cursor:pointer;
+  padding:5px 11px 5px 10px;border-radius:5px;
+  display:flex;align-items:center;gap:6px;
+}
+.period-trigger:hover { background:#bfff6b }
+.period-trigger svg { transition:transform .2s;flex-shrink:0 }
+.period-trigger.open svg { transform:rotate(180deg) }
+.period-dropdown {
+  position:fixed;top:0;left:0;
+  background:#080e08;border:1px solid rgba(168,255,87,.25);
+  border-radius:8px;padding:6px;min-width:290px;
+  opacity:0;pointer-events:none;transform:translateY(-6px);
+  transition:opacity .18s,transform .18s;z-index:99999;
+  box-shadow:0 16px 48px rgba(0,0,0,.85);
+}
+.period-dropdown.open { opacity:1;pointer-events:auto;transform:translateY(0) }
+.period-dropdown__label {
+  font-family:var(--mono);font-size:10px;color:var(--t3);
+  padding:6px 10px 8px;letter-spacing:.5px;border-bottom:1px solid var(--border);margin-bottom:4px;
+}
+.period-item {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;border-radius:5px;text-decoration:none;gap:8px;
+}
+.period-item:hover { background:rgba(168,255,87,.05) }
+.period-item.active { background:rgba(168,255,87,.07) }
+.period-item-info { display:flex;flex-direction:column;gap:2px }
+.period-item-name { font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500 }
+.period-item-date { font-family:var(--mono);font-size:11px;color:var(--t3) }
+.period-badge {
+  font-family:var(--mono);font-size:10px;color:var(--green);
+  background:rgba(168,255,87,.1);border:1px solid rgba(168,255,87,.2);
+  border-radius:4px;padding:2px 7px;white-space:nowrap;
+}
+</style>
+</head>
+<body>
+<div class="vp">
+<main class="stage" id="stage">
+
+<!-- ═══ S1 · Cover ═══ -->
+<section class="slide on" id="s1">
+  <div class="top-line line-in"></div>
+  <!-- top spotlight -->
+  <div style="position:absolute;top:-300px;left:50%;transform:translateX(-50%);width:1000px;height:700px;background:radial-gradient(ellipse,rgba(168,255,87,.07) 0%,transparent 65%);pointer-events:none"></div>
+
+  <!-- left -->
+  <div style="position:absolute;left:0;top:0;width:880px;height:100%;padding:80px var(--pad);display:flex;flex-direction:column;justify-content:center">
+    <div class="period-selector rv" style="margin-bottom:36px">
+      <button class="period-trigger" id="periodTrigger" aria-haspopup="listbox" aria-expanded="false">
+        <span>// 云基础 &amp; VNE 团队 · 第五期</span>
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="period-dropdown" id="periodDropdown" role="listbox">
+        <div class="period-dropdown__label">// 选择期次</div>
+        <a class="period-item active" href="#" role="option" aria-selected="true">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.06 第五期</span>
+            <span class="period-item-date">2026-06-04 ~ 2026-06-10</span>
+          </div>
+          <span class="period-badge">当前</span>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05-w4.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.06 第四期</span>
+            <span class="period-item-date">2026-05-28 ~ 2026-06-03</span>
+          </div>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05-w3.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.05 第三期</span>
+            <span class="period-item-date">2026-05-21 ~ 2026-05-27</span>
+          </div>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05-w2.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.05 第二期</span>
+            <span class="period-item-date">2026-05-14 ~ 2026-05-20</span>
+          </div>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05-w1.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.05 第一期</span>
+            <span class="period-item-date">2026-04-29 ~ 2026-05-13</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <h1 class="rv" style="font-family:var(--serif);font-size:112px;font-weight:400;line-height:.88;color:var(--t1);letter-spacing:-3px;margin-bottom:24px">
+      AI 产品<br><span style="color:var(--green)">UX 观察</span><br>报告
+    </h1>
+    <p class="rv" style="font-family:var(--mono);font-size:14px;font-weight:300;color:var(--t2);letter-spacing:.5px;margin-bottom:48px">
+      period: 2026-06-04 → 2026-06-10 &nbsp;·&nbsp; 7 products analyzed
+    </p>
+    <div class="rv" style="display:flex;gap:10px;flex-wrap:wrap">
+      <span class="chip chip-co" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.06);--co-br:rgba(168,255,87,.2)">v5.0</span>
+      <span class="chip chip-ghost">anthropic · openai · apple · google</span>
+    </div>
+  </div>
+
+  <!-- right: terminal -->
+  <div style="position:absolute;right:var(--pad);top:50%;transform:translateY(-50%);width:640px">
+    <div class="terminal rv">
+      <div class="terminal-bar">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <span style="font-family:var(--mono);font-size:11px;color:rgba(168,255,87,.3);margin-left:6px">ai_report.py</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="cmd">$</span> modal run ai_report.py <span class="dim">--period w5</span></div>
+        <div class="dim">✦ Initializing report engine...</div>
+        <div><span class="ok">✓</span> Period: <span class="val">2026-06-04</span> → <span class="val">2026-06-10</span></div>
+        <div><span class="ok">✓</span> Products scanned: <span class="val">7</span></div>
+        <div><span class="ok">✓</span> Key insights extracted: <span class="val">6</span></div>
+        <div><span class="ok">✓</span> Design implications: <span class="val">6</span></div>
+        <div><span class="ok">✓</span> Report ready <span class="cursor"></span></div>
+      </div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <div style="flex:1;background:rgba(168,255,87,.04);border:1px solid var(--border);border-radius:6px;padding:12px 16px">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(168,255,87,.4);margin-bottom:4px">TOP EVENT</div>
+        <div style="font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500">Claude Fable 5 刷新 SOTA</div>
+      </div>
+      <div style="flex:1;background:rgba(168,255,87,.04);border:1px solid var(--border);border-radius:6px;padding:12px 16px">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(168,255,87,.4);margin-bottom:4px">SHIFT</div>
+        <div style="font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500">Chat is Dead → Agent</div>
+      </div>
+    </div>
+  </div>
+  <div class="sn">01 / 10</div>
+</section>
+
+<!-- ═══ S2 · 速览 ═══ -->
+<section class="slide" id="s2">
+  <div class="top-line line-in"></div>
+  <div style="position:absolute;inset:0;padding:60px var(--pad) 68px;display:flex;flex-direction:column">
+    <div class="rv" style="display:flex;align-items:center;gap:16px;margin-bottom:34px">
+      <span class="mono-label">// section_01</span>
+      <div style="width:1px;height:14px;background:var(--border2)"></div>
+      <h2 style="font-family:var(--serif);font-size:48px;font-weight:400;color:var(--t1);letter-spacing:-1px;line-height:1">本期速览</h2>
+      <span class="mono-label" style="margin-left:4px">6 signals · 2026-06-04~10</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;flex:1">
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(255,95,160,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#ff5fa0;--co-bg:rgba(255,95,160,.07);--co-br:rgba(255,95,160,.2)">anthropic</span>
+          <span class="mono-label">01</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Claude Fable 5 + Mythos 5</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">多项 SOTA 基准刷新，Stripe 50M 行代码库 1 天迁移（此前需数周），视觉能力质变——单张截图即可重建可运行前端代码。Mythos 5 实现跨会话持久记忆，专为长时 Agent 任务设计，让 AI 第一次真正"记住"用户。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank">anthropic.com/news</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(0,229,160,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#00e5a0;--co-bg:rgba(0,229,160,.07);--co-br:rgba(0,229,160,.2)">openai</span>
+          <span class="mono-label">02</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">叙事档案 + "Chat is Dead"</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">叙事档案功能按工作/兴趣/旅行建立跨会话用户画像，让记忆成为可审阅的透明资产，用户可随时编辑或删除。OpenAI 正式宣告「对话已死」，全面转向以 Agent 为核心的平台架构，重塑产品形态。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://the-decoder.com/chatgpt-now-saves-narrative-dossiers-about-you-sorted-by-work-hobbies-and-travel-preferences/" target="_blank">the-decoder.com · 叙事档案</a> · <a href="https://the-decoder.com/openai-says-chat-is-dead-and-plans-to-rebuild-chatgpt-as-a-full-blown-agent-app/" target="_blank">Chat is Dead</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(168,168,255,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#a8a8ff;--co-bg:rgba(168,168,255,.07);--co-br:rgba(168,168,255,.2)">apple</span>
+          <span class="mono-label">03</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">WWDC 2026 · Siri 重构</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">AFM 借助 Gemini 数据再训练后推理质量显著提升；System Orchestrator 根据隐私等级和延迟需求自动路由本地/云端，对用户完全透明。Siri 重构后可理解上下文意图，支持跨 App 串联操作，覆盖全系统功能。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://the-decoder.com/apple-intelligence-gets-a-second-shot-with-help-from-google-and-nvidia/" target="_blank">the-decoder.com · Apple Intelligence WWDC 2026</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(90,174,255,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#5aafff;--co-bg:rgba(90,174,255,.07);--co-br:rgba(90,174,255,.2)">google</span>
+          <span class="mono-label">04</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">NotebookLM + Gemini 翻译</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">NotebookLM 新增代码执行和自主研究模式，可直接操作数据验证假设，而非仅输出文字报告，知识工具迈向真正的认知伙伴。Gemini 3.5 Flash 支持 20+ 语言实时语音翻译并已集成至 Google Meet，跨语言沟通壁垒近乎消除。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://blog.google/innovation-and-ai/products/notebooklm/better-research-notebooklm/" target="_blank">blog.google · NotebookLM</a> · <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/" target="_blank">Gemini Live Translate</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(90,200,250,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.07);--co-br:rgba(90,200,250,.2)">apple.dev</span>
+          <span class="mono-label">05</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Foundation Models SDK</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Foundation Models API 开放图片输入、自定义技能、服务端执行，开发者可按场景灵活选择端侧或云端部署策略。Xcode AI Agent 实现从需求到测试的多步骤闭环——首次让 IDE 具备真正的 Agent 能力，大幅压缩开发迭代周期。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://developer.apple.com/documentation/foundationmodels" target="_blank">developer.apple.com · Foundation Models</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(168,255,87,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.07);--co-br:rgba(168,255,87,.2)">google.oss</span>
+          <span class="mono-label">06</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Gemma 4 QAT 端侧模型</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Gemma 4 采用量化感知训练（QAT），同等性能下内存占用降低 50%+，手机和笔记本均可流畅运行，开源权重可自由部署。低延迟 + 离线可用 + 数据不出设备三重优势，使其在医疗、企业私有化等隐私敏感场景中成为云端模型的有力替代。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://blog.google/innovation-and-ai/technology/developers-tools/quantization-aware-training-gemma-4/" target="_blank">blog.google · Gemma 4 QAT</a></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="sn">02 / 10</div>
+</section>
+
+<!-- ═══ S3 · Claude ═══ -->
+<section class="slide" id="s3" style="--co:#ff5fa0;--co-bg:rgba(255,95,160,.07);--co-br:rgba(255,95,160,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">anthropic</span>
+      <span class="chip chip-ghost">2026-06-09</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:88px">Claude<br>Fable 5</h2>
+    <p class="p-sub rv">// + Mythos 5 · cross-session memory</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">工具 UX 核心命题反转：从「辅助人」变为「让人<b>监督 AI</b>」——「监督界面」与「输出质量」同等重要。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>刷新多项 SOTA 基准</b> —— Stripe 50M 行代码库 1 天迁移，此前需数周工程量。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>视觉能力质变</b> —— 从单张截图重建可运行前端代码，UI 还原达实用级别。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>Mythos 5 持久记忆</b> —— 跨会话保持项目上下文，专为长时 Agent 任务设计；$10 / $50 per M tokens。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank">anthropic.com/news/claude-fable-5-mythos-5</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://cdn.sanity.io/images/4zrzovbb/website/1e65982497d7d4891219ed0e83141625a291b860-2600x2870.png');background-position:center top;background-size:contain;background-repeat:no-repeat"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">03 / 10</div>
+</section>
+
+<!-- ═══ S4 · ChatGPT ═══ -->
+<section class="slide" id="s4" style="--co:#00e5a0;--co-bg:rgba(0,229,160,.06);--co-br:rgba(0,229,160,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">openai</span>
+      <span class="chip chip-ghost">2026-06-04~05</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:76px">叙事档案<br>+ Agent 转型</h2>
+    <p class="p-sub rv">// ChatGPT dual-track evolution</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">需要提前设计「<b>委托界面 + 进度视图 + 接管按钮</b>」三件套——这是 Agent 时代的最小可用 UX 单元。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>叙事档案</b> —— 按工作/兴趣/旅行分类，自动记录用户偏好，形成跨对话上下文档案。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>"Chat is Dead"</b> —— OpenAI 宣告对话时代终结，全面转向主动出击的 Agent 平台架构。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>范式转移</b> —— 从「问答助手」到「主动出击的智能体」，用户角色从提问者变为委托者。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://the-decoder.com/chatgpt-now-saves-narrative-dossiers-about-you-sorted-by-work-hobbies-and-travel-preferences/" target="_blank">the-decoder.com · 叙事档案</a> · <a href="https://the-decoder.com/openai-says-chat-is-dead-and-plans-to-rebuild-chatgpt-as-a-full-blown-agent-app/" target="_blank">Chat is Dead 宣言</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://the-decoder.com/wp-content/uploads/2026/06/chatgpt_Saved_memories.webp');background-position:center top"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">04 / 10</div>
+</section>
+
+<!-- ═══ S5 · Apple Siri ═══ -->
+<section class="slide" id="s5" style="--co:#a8a8ff;--co-bg:rgba(168,168,255,.06);--co-br:rgba(168,168,255,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">apple · wwdc26</span>
+      <span class="chip chip-ghost">2026-06</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:104px"><span>Siri</span><br>重构</h2>
+    <p class="p-sub rv">// system_orchestrator + afm_retraining</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">AI <b>执行位置不应是用户负担</b> —— 本地 / 云端路由内化为产品智能，不作为配置选项暴露给用户。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>System Orchestrator</b> —— 全系统跨 App 操作能力，iOS / macOS 内所有 App 均可被 Siri 调度。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>AFM 协同训练</b> —— 借助 Google Gemini 和 NVIDIA 工具链对 Apple Foundation Model 进行再训练提升。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>本地 / 云端智能路由</b> —— 隐私敏感任务留本地，复杂任务上云，用户完全无感知。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://the-decoder.com/apple-intelligence-gets-a-second-shot-with-help-from-google-and-nvidia/" target="_blank">the-decoder.com · Apple Intelligence WWDC 2026</a> · <a href="https://developer.apple.com/wwdc26/" target="_blank">developer.apple.com/wwdc26</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://devimages-cdn.apple.com/wwdc-services/images/9B2E82C5-4DDF-4B9A-9459-328D8E297696/00E61AFD-A68C-4443-B6DB-54AE290F9657/10990_wide_900x506_2x.jpg');background-position:center center"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">05 / 10</div>
+</section>
+
+<!-- ═══ S6 · NotebookLM ═══ -->
+<section class="slide" id="s6" style="--co:#5aafff;--co-bg:rgba(90,174,255,.06);--co-br:rgba(90,174,255,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">google</span>
+      <span class="chip chip-ghost">2026-06-05</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:100px">Notebook<br><span>LM</span></h2>
+    <p class="p-sub rv">// code_execution + autonomous_research</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">只有语言能力的 AI 是<b>文秘</b>，拥有计算能力的 AI 才是<b>研究伙伴</b> —— 两者的设计范式完全不同。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>代码执行能力</b> —— 可在笔记本中运行 Python，直接对上传数据进行分析和可视化。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>自主研究模式</b> —— 用户提问后，自动搜索多来源、综合信息，生成结构化研究报告。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>角色升级</b> —— 从「整理笔记的文秘」进化为「主动执行研究的伙伴」，价值密度跃升。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://blog.google/innovation-and-ai/products/notebooklm/better-research-notebooklm/" target="_blank">blog.google · NotebookLM 研究升级</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IMG_1_Hero_2x.width-1300.png');background-position:center 20%"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">06 / 10</div>
+</section>
+
+<!-- ═══ S7 · Gemini Translate ═══ -->
+<section class="slide" id="s7" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.06);--co-br:rgba(168,255,87,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">google · gemini</span>
+      <span class="chip chip-ghost">2026-06-05</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:88px">Gemini<br><span>Live 翻译</span></h2>
+    <p class="p-sub rv">// 20+ languages · realtime voice · meet</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">最好的 AI UX 是让 AI <b>消失</b> —— 凡是用户意识到「是 AI 在帮我」的地方，都是还没做到透明的地方。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>实时语音翻译</b> —— 支持 20+ 语言，延迟极低，无需暂停或切换任何界面。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>深度集成 Meet</b> —— 跨语言会议无缝进行，参与者无需安装任何额外客户端。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>AI 透明化</b> —— 用户感受不到 AI 存在，只感受到语言障碍消失，「自己变强了」。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/" target="_blank">blog.google · Gemini Live 3.5 Translate</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://storage.googleapis.com/gweb-uniblog-publish-prod/images/3-5_Live_Translate_hero.width-1300.png');background-position:center 30%"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">07 / 10</div>
+</section>
+
+<!-- ═══ S8 · Apple Foundation Models ═══ -->
+<section class="slide" id="s8" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.06);--co-br:rgba(90,200,250,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">apple.dev</span>
+      <span class="chip chip-ghost">2026-06-09</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:82px">Foundation<br><span>Models</span> SDK</h2>
+    <p class="p-sub rv">// multimodal · custom_skills · xcode_agent</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">平台提供原生 AI SDK 后，第三方差异化不在<b>模型能力</b>，而在<b>场景理解</b> —— 谁更懂用户场景，谁赢。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>图片输入 + 自定义技能</b> —— 开发者可直接调用端侧 AFM，无需连接云端，隐私留本地。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>服务端执行</b> —— 复杂任务可选服务端 AFM，开发者一套 API 灵活切换本地 / 云端。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>Xcode AI Agent</b> —— 在 IDE 内自主完成多步骤开发：写代码、跑测试、修 Bug。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://developer.apple.com/documentation/foundationmodels" target="_blank">developer.apple.com · Foundation Models</a> · <a href="https://developer.apple.com/xcode/" target="_blank">Xcode AI Agent</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://devimages-cdn.apple.com/wwdc-services/images/9B2E82C5-4DDF-4B9A-9459-328D8E297696/11252/11252_wide_900x506_2x.jpg');background-position:center center"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">08 / 10</div>
+</section>
+
+<!-- ═══ S9 · Gemma 4 QAT ═══ -->
+<section class="slide" id="s9" style="--co:#ffd60a;--co-bg:rgba(255,214,10,.06);--co-br:rgba(255,214,10,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">google.oss</span>
+      <span class="chip chip-ghost">2026-06-04</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:104px">Gemma 4<br><span>QAT</span></h2>
+    <p class="p-sub rv">// quantization_aware_training · on-device</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">延迟敏感和隐私敏感场景，<b>端侧模型应纳入技术选型优先评估</b> —— 它是差异化优势，不是妥协方案。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>内存降低 50%+</b> —— QAT 训练使同等性能下内存占用大幅下降，手机 / 笔记本可流畅运行。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>开源权重</b> —— 可私有化部署，企业数据完全不出本地，满足数据合规要求。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>端侧 AI 新基准</b> —— 低延迟 + 离线运行 + 隐私保护三大优势齐备，不是「削减版云端」。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://blog.google/innovation-and-ai/technology/developers-tools/quantization-aware-training-gemma-4/" target="_blank">blog.google · Gemma 4 QAT 量化感知训练</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Hero_Visual_Blog.width-1300.png');background-position:center center"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">09 / 10</div>
+</section>
+
+<!-- ═══ S10 · Insights ═══ -->
+<section class="slide" id="s10">
+  <div class="top-line line-in"></div>
+  <!-- top glow -->
+  <div style="position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(168,255,87,.06) 0%,transparent 65%);pointer-events:none"></div>
+  <div style="position:absolute;inset:0;padding:56px var(--pad) 62px;display:flex;flex-direction:column">
+    <div class="rv" style="display:flex;align-items:center;gap:16px;margin-bottom:28px">
+      <span class="mono-label">// section_04</span>
+      <div style="width:1px;height:14px;background:var(--border2)"></div>
+      <h2 style="font-family:var(--serif);font-size:48px;font-weight:400;color:var(--t1);letter-spacing:-1px;line-height:1">对我们的启示</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;flex:1">
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_01</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">claude fable 5</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 编程从辅助到主导——人的角色变为监督者</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">当 AI 能独立完成 50M 行代码迁移，工具核心价值不再是「提速」，而是「让人放心委托」。设计重心须从「降低使用门槛」转向「提升审查体验」——用户没能力验证输出，才是真正的产品缺陷。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_02</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">openai</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">对话范式终结——委托 + 监督才是下一代交互</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">用户心智正在从「一问一答」转变为「发出任务 → 等待结果 → 必要时介入」。每个 AI 功能都需要「委托入口 + 执行进度 + 接管控制」三件套，缺少任何一环都会让用户陷入焦虑和失控感。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_03</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">apple siri</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 执行位置不应是用户负担——后台路由更好</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">用户无需了解任务跑在端侧还是云端，就像使用手机时感知不到 CPU 调度。本地 / 云端路由应由产品按隐私等级和延迟需求自动决策，以「保障」体现，而不是以「选项」暴露给用户。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_04</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">notebooklm</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 嵌入计算——从「文秘」升级为「研究伙伴」</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">能执行代码的 AI 可以直接操作数据、验证假设、生成可复现分析，不只是「更聪明的文字处理器」。这标志着 AI 产品价值密度的跃迁：从辅助「表达想法」进化为参与「认知过程」本身。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_05</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">gemini live</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">最好的 AI UX 是让 AI 消失——用户感受自己变强了</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Gemini 翻译让用户感受到的是「语言障碍消失了」，而不是「AI 在帮我翻译」。当用户意识到「是 AI 在帮我」时，说明产品还有摩擦待消除——真正的目标是让能力无缝融入，体验「自己变强了」。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_06</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">gemma 4 qat</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">端侧 AI 不是削减版云端——低延迟 + 隐私是优势</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Gemma 4 QAT 在性能持平的前提下内存降低 50%+，低延迟 + 离线 + 隐私三大优势同时具备。实时交互、医疗、企业私有化等场景中，端侧模型应是默认优先选项，而非云端的「退而求其次」。</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="sn">10 / 10</div>
+</section>
+
+</main>
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="cbar">
+  <button class="cbtn" onclick="dk.prev()">←</button>
+  <span class="ctr" id="ctr">01 / 10</span>
+  <button class="cbtn" onclick="dk.next()">→</button>
+</div>
+
+<script>
+const dk = {
+  slides: document.querySelectorAll('.slide'),
+  cur: 0,
+  stage: document.getElementById('stage'),
+  dotsEl: document.getElementById('dots'),
+  init() {
+    this.scale();
+    window.addEventListener('resize', () => this.scale());
+    document.addEventListener('keydown', e => {
+      if ([' ','ArrowRight','ArrowDown'].includes(e.key)) { e.preventDefault(); this.next(); }
+      if (['ArrowLeft','ArrowUp'].includes(e.key)) { e.preventDefault(); this.prev(); }
+    });
+    let tx = 0;
+    document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+    document.addEventListener('touchend', e => {
+      const d = tx - e.changedTouches[0].clientX;
+      if (Math.abs(d) > 50) d > 0 ? this.next() : this.prev();
+    });
+    this.slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' on' : '');
+      d.onclick = () => this.go(i);
+      this.dotsEl.appendChild(d);
+    });
+    this.go(0);
+  },
+  scale() {
+    const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    const x = (window.innerWidth - 1920 * f) / 2;
+    const y = (window.innerHeight - 1080 * f) / 2;
+    this.stage.style.transform = `translate(${x}px,${y}px) scale(${f})`;
+  },
+  go(n) {
+    this.slides[this.cur].classList.remove('on');
+    document.querySelectorAll('.dot')[this.cur].classList.remove('on');
+    this.cur = n;
+    this.slides[n].classList.add('on');
+    document.querySelectorAll('.dot')[n].classList.add('on');
+    document.getElementById('ctr').textContent =
+      String(n + 1).padStart(2,'0') + ' / ' + String(this.slides.length).padStart(2,'0');
+  },
+  next() { this.go((this.cur + 1) % this.slides.length); },
+  prev() { this.go((this.cur - 1 + this.slides.length) % this.slides.length); }
+};
+dk.init();
+
+// Period selector — mount dropdown on body to escape transform stacking context
+(function() {
+  const trigger = document.getElementById('periodTrigger');
+  const dropdown = document.getElementById('periodDropdown');
+  if (!trigger || !dropdown) return;
+  // Move out of scaled .stage so position:fixed is relative to real viewport
+  document.body.appendChild(dropdown);
+
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.contains('open');
+    if (!isOpen) {
+      const rect = trigger.getBoundingClientRect();
+      dropdown.style.top  = (rect.bottom + 6) + 'px';
+      dropdown.style.left = rect.left + 'px';
+    }
+    trigger.classList.toggle('open', !isOpen);
+    dropdown.classList.toggle('open', !isOpen);
+    trigger.setAttribute('aria-expanded', String(!isOpen));
+  });
+  document.addEventListener('click', function() {
+    trigger.classList.remove('open');
+    dropdown.classList.remove('open');
+    trigger.setAttribute('aria-expanded', 'false');
+  });
+  dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+})();
+</script>
+</body>
+</html>
