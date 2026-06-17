@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.06 第六期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --on-dark:       #ffffff;
+  --teal:          #1a3a3a;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero { max-width: 1200px; margin: 0 auto; padding: 56px 48px 40px; }
+
+.report-selector { position: relative; display: inline-block; margin-bottom: 20px; }
+.report-selector__trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-card); color: var(--muted);
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  border-radius: 9999px; padding: 6px 14px 6px 16px;
+  cursor: pointer; border: none; font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s; user-select: none;
+}
+.report-selector__trigger:hover { background: var(--surface-strong); color: var(--body); }
+.report-selector__trigger.open  { background: var(--surface-strong); color: var(--body-strong); }
+.report-selector__chevron { width: 14px; height: 14px; opacity: 0.5; transition: transform 0.2s; flex-shrink: 0; }
+.report-selector__trigger.open .report-selector__chevron { transform: rotate(180deg); opacity: 0.8; }
+.report-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 300px; background: #fff;
+  border: 1px solid var(--hairline); border-radius: 16px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10); z-index: 100;
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.report-dropdown__section-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-soft); padding: 6px 10px 4px; }
+.report-dropdown__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none;
+  color: var(--body); transition: background 0.12s;
+}
+.report-dropdown__item:hover { background: var(--surface-soft); }
+.report-dropdown__item--active { background: var(--surface-card); color: var(--body-strong); }
+.report-dropdown__item-left { display: flex; flex-direction: column; gap: 2px; }
+.report-dropdown__item-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.report-dropdown__item-period { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.report-dropdown__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; background: var(--teal); color: #fff; border-radius: 9999px; padding: 2px 8px; flex-shrink: 0; }
+
+.hero h1 { font-size: clamp(52px, 7vw, 80px); font-weight: 500; letter-spacing: -2.5px; line-height: 1; color: var(--ink); max-width: 720px; margin-bottom: 16px; }
+.hero-sub { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+.section { padding: 48px 0 0; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); margin-bottom: 16px; }
+.section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+.section-note { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+.flash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flash-card { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px; min-height: 210px; }
+.flash-card:nth-child(1) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: #d4e8e3;      color: var(--ink); }
+.flash-card:nth-child(3) { background: #ece8f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #d8eef8;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; }
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); color: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 9999px; padding: 4px 12px; align-self: flex-start; }
+
+.track { margin-top: 52px; }
+.track-label { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.track-pill { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 9999px; padding: 6px 16px; background: var(--surface-card); color: var(--muted); white-space: nowrap; }
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+.track-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.product-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: 16px; padding: 28px; transition: box-shadow 0.15s; }
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.product-card.empty { border-style: dashed; background: var(--surface-soft); }
+.pc-img { margin: -28px -28px 22px; height: 200px; border-radius: 15px 15px 0 0; overflow: hidden; background: var(--surface-strong); }
+.pc-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.4s ease; }
+.product-card:hover .pc-img img { transform: scale(1.03); }
+.pc-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date { margin-left: auto; font-size: 12px; color: var(--muted-soft); background: var(--surface-card); border-radius: 9999px; padding: 3px 12px; white-space: nowrap; }
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li { font-size: 14px; color: var(--body); line-height: 1.6; padding-left: 18px; position: relative; }
+.pc-list li::before { content: '·'; position: absolute; left: 4px; color: var(--muted-soft); font-size: 18px; line-height: 1.3; }
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux { margin-top: 14px; padding: 10px 12px; background: rgba(232,185,74,0.10); border-radius: 8px; border-left: 3px solid var(--ochre); font-size: 13px; color: var(--body); line-height: 1.55; }
+.pc-ux::before { content: "设计视角 · "; font-weight: 700; color: #b8860b; }
+.pc-empty-note { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .section-note { color: rgba(255,255,255,0.4); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .track-desc { color: rgba(255,255,255,0.35); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card.empty { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub, .band-teal .pc-date { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+.band-teal .pc-empty-note { color: rgba(255,255,255,0.4); }
+
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #d4e8e3; }
+.insight-card:nth-child(2) { background: #d8eef8; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #faf3d8; }
+.insight-card:nth-child(5) { background: #fce4ee; }
+.insight-card:nth-child(6) { background: #dde8e5; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.5; margin-bottom: 12px; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+
+.cta-band { background: var(--surface-soft); border-radius: 24px; margin: 80px 0; padding: 80px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+footer { background: var(--surface-soft); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer, .cta-band { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第六期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第六期</span>
+          <span class="report-dropdown__item-period">2026-06-11 ~ 2026-06-17</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第五期</span>
+          <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第四期</span>
+          <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub">覆盖窗口：2026-06-11 ~ 2026-06-17｜阅读时长：约 5 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示</p>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 板块一 · 本期速览 ═══ -->
+<section class="section" id="s1">
+  <div class="section-label">板块一</div>
+  <div class="section-title">本期速览</div>
+
+  <div class="flash-grid">
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE · ANTHROPIC</span>
+      <div class="flash-card-num">01</div>
+      <div class="flash-card-body"><strong>Claude Fable 5 + Mythos 5 持续落地</strong>——持久记忆 Agent 能力本周进入企业深度集成阶段；「AI 真正记住用户」首次成为可用的产品功能，UX 核心命题从「提速」转变为「让人放心监督 AI」。</div>
+      <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">GEMINI · GOOGLE</span>
+      <div class="flash-card-num">02</div>
+      <div class="flash-card-body"><strong>Android 17 + Wear OS 7：Gemini 以「系统 UI 组件」身份出现</strong>——气泡栏多任务 UI、Wear OS 个性化 Gemini 部件；AI 首次作为系统层交互组件而非独立 App，预示 AI 助手的产品形态将发生结构性变化。</div>
+      <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/16/android-17-launches-with-new-multitasking-tools-as-google-expands-gemini-features/" target="_blank">TechCrunch · Android 17</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">META AI · FACEBOOK</span>
+      <div class="flash-card-num">03</div>
+      <div class="flash-card-body"><strong>Facebook AI Mode——内容平台「答案入口」首次成熟落地</strong>——自然语言搜索 Groups/Reels/公开帖子并合成带来源的答案；AI 换装 + AI 照片预设同步上线；内容平台的「找答案」UX 开始系统性迁移。</div>
+      <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/15/metas-new-ai-mode-on-facebook-pulls-from-public-info-across-its-platforms/" target="_blank">TechCrunch · Meta AI Mode</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE ENTERPRISE</span>
+      <div class="flash-card-num">04</div>
+      <div class="flash-card-body"><strong>Claude 进入受监管行业——TCS + DXC 完成企业集成</strong>——银行 / 航空 / 医疗等监管场景下的 AI UX 如何平衡「能力」与「可审计透明度」，成为本期最值得关注的设计命题。</div>
+      <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Jun 11-12</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">GITHUB COPILOT</span>
+      <div class="flash-card-num">05</div>
+      <div class="flash-card-body"><strong>Copilot 正式转 token 用量计费——AI 工具进入成本感知时代</strong>——固定订阅 → 按实际消耗计费；预览账单 UX 让用户首次看见 AI 使用成本与价值的对应关系，「价值可视化」设计变得紧迫。</div>
+      <div class="flash-card-src">来源：<a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">The Decoder · Copilot 计费</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CURSOR · 设计工具</span>
+      <div class="flash-card-num">06</div>
+      <div class="flash-card-body"><strong>SpaceX 宣布以 $600 亿收购 Cursor——AI 编程工具生态加速整合</strong>——设计师常用的 AI 辅助编程工具从「独立工具」变为大公司战略资产；工具中立性降低，工作流依赖风险需要重新评估。</div>
+      <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/16/spacex-to-acquire-cursor-for-60b-in-stock-days-after-blockbuster-ipo/" target="_blank">TechCrunch · SpaceX 收购 Cursor</a></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══ 板块二 · AI 消费级产品 ═══ -->
+<section class="section" id="s2">
+  <div class="section-label">板块二</div>
+  <div class="section-title">产品动态</div>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">AI 消费级产品</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">关注：Claude · ChatGPT · Gemini · Kimi · DeepSeek · MiniMax｜重点记录：功能发布、交互与 UX 变化、用户增长信号</p>
+
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="pc-img"><img src="https://cdn.sanity.io/images/4zrzovbb/website/1e65982497d7d4891219ed0e83141625a291b860-2600x2870.png" alt="Claude Fable 5 基准" loading="lazy"></div>
+        <div class="pc-head">
+          <span class="pc-name">Claude</span>
+          <span class="pc-sub">Anthropic · Fable 5 + Mythos 5</span>
+          <span class="pc-date">Jun 9 发布 → 本周落地</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Mythos 5 跨会话持久记忆</b>：工作项目 / 个人偏好 / 历史决策跨对话保留，「每次重新解释背景」的摩擦首次被系统性消除——AI 记忆机制成为 UX 设计新变量。</li>
+          <li><b>视觉能力质变</b>：单张截图重建可运行前端代码，UI 还原达实用级别，设计稿 → 代码工作流出现根本性加速可能。</li>
+          <li><b>UX 核心命题转向</b>：Fable 5 可独立完成大规模代码迁移，人的角色从「操作者」变为「监督者」——「监督界面」设计优先级大幅上升。</li>
+        </ul>
+        <div class="pc-ux">当 AI 能记住用户、独立完成复杂任务，工具最重要的 UX 问题不再是「如何让用户用起来」，而是「如何让用户放心委托、看到进度、随时接管」。委托 + 监督 + 接管控制三件套，是 AI Agent 功能的最小可用 UX 单元。</div>
+        <div class="pc-src">来源：<a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank">anthropic.com · Claude Fable 5 + Mythos 5</a></div>
+      </div>
+
+      <div class="product-card">
+        <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2026/06/gemini-app-GettyImages-2276204472.jpg" alt="Android 17 Gemini" loading="lazy"></div>
+        <div class="pc-head">
+          <span class="pc-name">Gemini</span>
+          <span class="pc-sub">Google · Android 17 + Wear OS 7</span>
+          <span class="pc-date">2026.06.16</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Bubble bar 气泡多任务 UI</b>：底部气泡栏整合最近 App 实现快速切换；前后摄同时录制 + 直接分享社交平台——多任务 UX 从「卡片切换」演进为「气泡浮层」新范式。</li>
+          <li><b>Wear OS 7 + Gemini 个性化部件</b>：自然语言描述生成专属手表表盘部件；跨日历 / Gmail / Keep 提供上下文感知建议——AI 进入可穿戴设备系统 UI 层。</li>
+          <li><b>Pixel Drop 解耦 AI 更新</b>：AI 能力更新与 OS 大版本解耦，独立推送——AI 产品迭代节奏可以超越 OS 发版周期，对 AI 功能 AB 测试和快速迭代有重要意义。</li>
+        </ul>
+        <div class="pc-ux">Android 17 的信号是：Gemini 作为「系统 UI 组件」出现（Bubble bar、Wear OS 部件），而不是独立 App。AI 助手正在经历从「应用」到「系统能力」的角色迁移——第三方 App 需要思考如何与平台级 AI 协同，而不是在相同层次竞争。</div>
+        <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/16/android-17-launches-with-new-multitasking-tools-as-google-expands-gemini-features/" target="_blank">TechCrunch · Android 17 + Gemini</a></div>
+      </div>
+
+      <div class="product-card wide">
+        <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2026/05/meta-apps-GettyImages-2152655816.jpg" alt="Meta Facebook AI Mode" loading="lazy"></div>
+        <div class="pc-head">
+          <span class="pc-name">Meta AI</span>
+          <span class="pc-sub">Meta · Facebook AI Mode + AI 编辑工具</span>
+          <span class="pc-date">2026.06.15</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>AI Mode：平台内自然语言搜索</b>——用户在 Facebook 内用自然语言提问，AI 从 Groups / Reels / 公开帖子提取并合成带来源的答案；「关键词搜索」UX 开始向「问答对话」UX 迁移，内容平台变身「答案引擎」。</li>
+          <li><b>AI 换装 + AI 照片预设</b>——Stories 内虚拟试穿球衣 / 更换发型；AI 风格滤镜一键应用——AI 编辑工具从专业软件下沉到日常内容创作场景，使用门槛趋近于零。</li>
+          <li><b>UGC 答案的可靠性挑战</b>——AI 从普通用户帖子提取内容，无人工审核；与结构化知识库不同，平台 UGC 的质量和准确性无法系统性保证——这是内容平台 AI 搜索面临的核心 UX 挑战：如何让用户感知答案的可信度？</li>
+        </ul>
+        <div class="pc-ux">Meta AI Mode 揭示了「内容平台 AI 搜索」的核心 UX 设计难点：能力不是障碍，可信度才是。当 AI 从 UGC 合成答案时，来源透明度设计（答案来自哪里）+ 置信度提示（可信程度如何）+ 内容质量信号（来源用户是谁），将成为答案生成型 UX 的基础设计原则——直接关联用户的信任建立。</div>
+        <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/15/metas-new-ai-mode-on-facebook-pulls-from-public-info-across-its-platforms/" target="_blank">TechCrunch · Meta AI Mode on Facebook</a></div>
+      </div>
+
+      <div class="product-card wide empty">
+        <div class="pc-head"><span class="pc-name">Kimi · DeepSeek · MiniMax</span></div>
+        <p class="pc-empty-note">本期（2026-06-11 ~ 17）暂未发现上述产品的重大 UX 功能更新或交互变化。如团队成员有实测发现，欢迎补充。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</div>
+
+
+<!-- ═══ 板块二（续）· 企业级 + 云平台 ═══ -->
+<div class="wrap">
+<div class="color-band band-teal" id="s2b">
+  <div class="section-label">板块二（续）</div>
+  <div class="section-title">企业级 AI 产品 &amp; 云平台</div>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">企业级 AI 产品</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">关注：ChatGPT Enterprise · Claude Enterprise · Gemini for Workspace · Kimi｜重点记录：UX 变化、团队协作功能</p>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="pc-head">
+          <span class="pc-name">Claude Enterprise</span>
+          <span class="pc-sub">Anthropic + TCS · DXC · 受监管行业</span>
+          <span class="pc-date">2026.06.11 – 12</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>TCS + Anthropic 战略合作</b>：面向银行 / 保险 / 医疗等受监管行业提供 Claude 企业集成，合规约束（数据驻留 / 审计日志 / 权限管控）被作为产品一等公民设计。</li>
+          <li><b>DXC Technology 深度集成</b>：将 Claude 嵌入银行 / 航空 / 医疗关键系统工作流，AI 从「辅助工具」升级为「业务流程组件」。</li>
+          <li><b>企业 AI UX 的三个核心约束</b>：监管合规（可审计）+ 数据隔离（可信任）+ 工作流集成（可嵌入）——消费级 AI 的 UX 原则在企业场景需系统性重构。</li>
+        </ul>
+        <div class="pc-ux">企业级 AI 的核心 UX 挑战：用户不是个人探索者，而是有合规责任的业务角色；每一步 AI 操作都可能需要被审计、解释、回滚。「AI 决策可解释、操作有日志、结果可撤销」——这是企业 AI UX 必须满足的最低设计标准。</div>
+        <div class="pc-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Jun 11-12 两则公告</a></div>
+      </div>
+
+      <div class="product-card">
+        <div class="pc-head">
+          <span class="pc-name">GitHub Copilot</span>
+          <span class="pc-sub">Microsoft · Token 计量计费 · UX 影响</span>
+          <span class="pc-date">2026.06</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>正式转 token 用量计费</b>：固定月订阅 → 按实际消耗量；一句话提问 vs 数小时 Agent 任务的算力成本「天壤之别」，固定费用已无法反映真实价值。</li>
+          <li><b>预览账单 UX：首次让工程师看见 AI 成本</b>：账单按功能 / 任务类型分解消耗，形成直觉性成本感知——这是企业 AI 工具的首个「成本可视化」UX 设计实践。</li>
+          <li><b>使用行为将被显著重塑</b>：高频 Agent 任务用户面临成本压力；轻度用户可能获益；产品团队首次能看到真实的「功能使用率 × 成本」数据。</li>
+        </ul>
+        <div class="pc-ux">Copilot 预览账单是一个值得研究的设计案例：AI 工具第一次尝试系统性回答「我用的钱花在哪里了」。核心设计原则：让用户感知「AI 帮我节省了多少时间」，而不是「我花了多少 token」——价值感知先于成本感知，才能建立正向的使用心理。</div>
+        <div class="pc-src">来源：<a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">The Decoder · GitHub Copilot token billing</a></div>
+      </div>
+
+      <div class="product-card wide empty">
+        <div class="pc-head"><span class="pc-name">ChatGPT Enterprise · Gemini for Workspace</span></div>
+        <p class="pc-empty-note">本期暂未发现重大 UX 功能更新。如团队成员有实测发现，欢迎补充。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="track" style="margin-top:60px">
+    <div class="track-label">
+      <span class="track-pill">云厂商 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">关注：Google Cloud · Azure AI · AWS Bedrock｜重点记录：企业控制台 UX 更新</p>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="pc-head">
+          <span class="pc-name">Azure AI Studio</span>
+          <span class="pc-sub">Microsoft · Build 2026 落地 · Copilot Studio</span>
+          <span class="pc-date">2026.06.11</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Microsoft Build 2026 摘要（官博 Jun 11）</b>：AI 从「实验阶段」迈向「执行阶段」——从孤立工具演进为连接业务数据的 Agentic 系统，企业 AI 控制台 UX 进入 Agent 编排时代。</li>
+          <li><b>Microsoft Discovery GA</b>：已正式发布，提供构建和治理 Agentic AI 工作流的综合平台——企业 AI 编排 UX 首次系统化，从「配置页面」升级为「流程设计器」。</li>
+          <li><b>Copilot Studio 低代码 Agent 构建</b>：企业用户可在无代码环境下组合 AI 工作流，面向非技术用户的 AI 编排 UX 成熟度持续提升。</li>
+        </ul>
+        <div class="pc-ux">Azure 的信号：企业 AI 控制台 UX 的核心正在从「配置模型参数」转向「编排 Agent 工作流」。面向企业管理员的 AI 界面，需要从「设置页面」范式升级为「流程设计器」范式——流程可视化、节点调试、异常处理是新的设计重点。</div>
+        <div class="pc-src">来源：<a href="https://azure.microsoft.com/en-us/blog/" target="_blank">azure.microsoft.com · Jun 11 摘要博客</a></div>
+      </div>
+
+      <div class="product-card empty">
+        <div class="pc-head"><span class="pc-name">Google Cloud AI · AWS Bedrock</span></div>
+        <p class="pc-empty-note">本期（2026-06-11 ~ 17）暂未发现 Google Cloud AI Studio 或 AWS Bedrock 控制台的重大 UX 更新。如有团队实测，欢迎补充。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ═══ 板块三 · 设计工具动态 ═══ -->
+<div class="wrap">
+<div class="band-surface" id="s3">
+  <div class="section-label">板块三</div>
+  <div class="section-title">设计工具动态</div>
+
+  <!-- 设计主力工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">设计主力工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">关注：Figma · Adobe Creative Cloud｜AI 功能迭代、插件生态、新交互范式</p>
+    <div class="product-grid">
+      <div class="product-card wide empty">
+        <div class="pc-head"><span class="pc-name">Figma · Adobe Creative Cloud</span></div>
+        <p class="pc-empty-note">本期（2026-06-11 ~ 17）暂未发现重大 AI 功能发布或交互范式更新。Figma Config 2026 主要发布集中在此前数周，本期为消化期。如团队有实测新功能发现，欢迎补充。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 原生设计工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">AI 原生设计工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">关注：Claude Artifacts · v0 by Vercel · Galileo AI · Lovable｜「描述生成界面」的体验、交互流程、产出质量</p>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2026/06/elon-nasdaq-spacex-ipo.jpg" alt="Cursor AI 编程工具" loading="lazy" style="object-position: center top;"></div>
+        <div class="pc-head">
+          <span class="pc-name">Cursor</span>
+          <span class="pc-sub">被 SpaceX 收购 · AI 编程工具生态变局</span>
+          <span class="pc-date">2026.06.16</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>$600 亿被 SpaceX 收购</b>：Cursor 从独立 AI 编程工具变为大公司战略资产；短期产品体验（Tab 补全 / 多文件编辑 / Agent 模式）不变，但长期产品路线图将受 SpaceX/xAI 战略影响。</li>
+          <li><b>对「设计稿 → 代码」工作流的影响</b>：Cursor 是设计师 Code 阶段最常用的 AI 工具之一；被收购后产品优先级是否仍匹配设计师需求，需持续观察。</li>
+          <li><b>独立工具中立性正在减少</b>：Cursor 被收购 + Copilot 计量化，AI 编程工具正快速从「中立工具」变为「平台战略资产」，选型时需考虑生态绑定风险。</li>
+        </ul>
+        <div class="pc-ux">Cursor 被收购的核心 UX 影响是「工具中立性降低」——当背后有大公司战略驱动，功能优先级可能偏离普通设计师 / 开发者的实际需求。这提示我们需要识别工作流中对单一 AI 工具的依赖程度，评估哪些 AI 能力需要通过 API 自建以保持灵活性。</div>
+        <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/16/spacex-to-acquire-cursor-for-60b-in-stock-days-after-blockbuster-ipo/" target="_blank">TechCrunch · SpaceX 收购 Cursor</a></div>
+      </div>
+
+      <div class="product-card empty">
+        <div class="pc-head"><span class="pc-name">v0 by Vercel · Claude Artifacts · Lovable</span></div>
+        <p class="pc-empty-note">本期暂未发现重大功能更新。Lovable 在 Jun 9 发布了「Build Economy」生态报告（信号：AI 原生工具的商业化加速），但无直接 UX 功能迭代。如团队有实测，欢迎补充。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 效率工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">设计师高频效率工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">关注：Cursor · Notion AI · Canva AI｜有影响力的新功能、值得借鉴的交互设计</p>
+    <div class="product-grid">
+
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">GitHub Copilot 成本感知 UX</span>
+          <span class="pc-sub">Microsoft · 预览账单设计 · 值得借鉴的交互</span>
+          <span class="pc-date">2026.06</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>值得借鉴的设计思路</b>：预览账单 UI 按「功能类型 / 任务类型」分解 token 消耗，而不是只显示总量——这是「成本透明」设计中「价值对应」的好实践：让用户看到「这次 Agent 任务等于帮我节省了几小时工作」。</li>
+          <li><b>代理任务成本预估</b>：Copilot Agent 模式下的多步骤任务，用户可在委托前预估成本范围——这是 AI 工具「可信委托」设计的重要实践，降低了用户因成本不透明而产生的焦虑感。</li>
+          <li><b>设计迁移应用</b>：任何带有 AI 用量限制的功能，都应考虑如何让用户在「开始使用前」看到预估价值，而不只是在「用完之后」看到扣费通知——主动的价值预期管理是减少用量焦虑的关键。</li>
+        </ul>
+        <div class="pc-ux">Copilot 预览账单是本期设计工具中最值得研究的 UX 实践。核心原则：好的「成本感知 UX」应该像健身 App 的卡路里计算一样，不是让你焦虑于「消耗了什么」，而是让你满足于「获得了什么」。价值感知是用量接受的先决条件。</div>
+        <div class="pc-src">来源：<a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">The Decoder · GitHub Copilot token billing</a></div>
+      </div>
+
+      <div class="product-card wide empty">
+        <div class="pc-head"><span class="pc-name">Notion AI · Canva AI</span></div>
+        <p class="pc-empty-note">本期（2026-06-11 ~ 17）暂未发现 Notion AI 或 Canva AI 的重大功能更新或有影响力的交互变化。如团队有实测，欢迎补充。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ═══ 板块四 · 对我们的启示 ═══ -->
+<div class="wrap">
+<section class="section" id="s4">
+  <div class="section-label">板块四</div>
+  <div class="section-title">对我们的启示</div>
+  <p class="section-note" style="margin-bottom:8px">从设计视角出发，提炼本期具体可执行的建议——竞品的哪个变化值得我们参考或警惕？</p>
+
+  <div class="insight-grid">
+
+    <div class="insight-card">
+      <div class="in-num">启示 01</div>
+      <div class="in-trigger">Claude Fable 5 · Mythos 5 持久记忆</div>
+      <div class="in-title">AI Agent 功能必须配备「委托三件套」</div>
+      <div class="in-body">当 AI 能记住用户且独立完成复杂任务，工具最重要的 UX 不再是「降低使用门槛」，而是「让人放心委托」。<br><br><b>可执行建议</b>：在设计任何 AI 自动化功能时，先问三个问题：用户能在哪里清晰发出委托？执行过程中用户能看到什么？用户什么时候可以随时介入？——「委托入口 + 执行进度 + 接管控制」三件套，是 Agent UX 的最小完整单元。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">启示 02</div>
+      <div class="in-trigger">Meta AI Mode · UGC 答案可信度</div>
+      <div class="in-title">答案生成型 UX 的核心是来源透明，不是答案质量</div>
+      <div class="in-body">Meta AI Mode 最大的 UX 挑战不是 AI 能否生成答案，而是用户能否信任这个答案。<br><br><b>可执行建议</b>：任何 AI 答案生成功能，在视觉设计上都需要明确传达「来源是什么」「准确度如何」「如何验证」三个信息——不仅仅展示最终答案，更要展示答案的可信度依据。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">启示 03</div>
+      <div class="in-trigger">Android 17 · Gemini 进入 OS 层</div>
+      <div class="in-title">与平台 AI 协同，而非在同层竞争</div>
+      <div class="in-body">Android 17 把 Gemini 做进了系统 UI，AI 能力正在从「应用功能」变为「系统基础设施」。<br><br><b>可执行建议</b>：评估我们产品的 AI 功能中，哪些可以通过调用平台级 AI API 实现（更快、更省），哪些必须自建以保持核心差异化（不能被系统 AI 替代的独特价值）。两者需要明确区分，避免在平台已覆盖的能力上重复投入。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">启示 04</div>
+      <div class="in-trigger">GitHub Copilot · Token 计量 · 预览账单</div>
+      <div class="in-title">AI 计量 UX：价值可视化先于成本透明</div>
+      <div class="in-body">Copilot 的预览账单是 AI 工具「成本感知 UX」的首个成熟实践，提供了重要的设计参考。<br><br><b>可执行建议</b>：设计任何 AI 用量相关的 UI 时，把「节省了多少时间 / 工作量」作为主要展示信息，把「用了多少资源」作为次要信息；同时在用户「委托任务前」展示预估价值范围，而非在「任务完成后」才展示成本。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">启示 05</div>
+      <div class="in-trigger">Claude Enterprise · TCS/DXC · 受监管行业</div>
+      <div class="in-title">企业级 AI UX：可解释 + 可审计 + 可撤销</div>
+      <div class="in-body">Claude 进入受监管行业揭示了企业 AI UX 的本质约束：每一步 AI 操作都可能需要被审计、解释、回滚。<br><br><b>可执行建议</b>：面向企业用户的 AI 功能在设计时需明确三个问题：这个 AI 决策能被解释吗？这个操作有日志记录吗？这个结果可以被撤销或修正吗？三个问题均为「是」，才是企业级 AI UX 的最低合格线。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">启示 06</div>
+      <div class="in-trigger">Cursor 被收购 · 工具中立性风险</div>
+      <div class="in-title">AI 工具选型：评估中立性风险，准备退出方案</div>
+      <div class="in-body">Cursor 被收购说明独立 AI 工具随时可能因大公司战略调整而改变优先级，甚至被关闭。<br><br><b>可执行建议</b>：对设计团队使用频率最高的 AI 工具（Cursor、Figma AI 等），识别「可替代的」（通用能力，换工具成本低）和「深度绑定的」（工作流核心）。后者需要有明确的备份方案或 API 自建路径，避免因工具整合而导致工作流断裂。</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="cta-band">
+  <div>
+    <h2>下一期同步<br>持续关注</h2>
+    <p>每周更新，聚焦 AI 产品 UX 变化与设计启示。</p>
+  </div>
+  <div class="cta-band-meta">
+    云基础 &amp; VnE 团队<br>
+    来源：anthropic.com · techcrunch.com<br>
+    the-decoder.com · azure.microsoft.com
+  </div>
+</div>
+</div>
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第六期</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger = document.getElementById('reportTrigger');
+  var dropdown = document.getElementById('reportDropdown');
+  var selector = document.getElementById('reportSelector');
+  function open() { trigger.classList.add('open'); dropdown.classList.add('open'); trigger.setAttribute('aria-expanded','true'); }
+  function close() { trigger.classList.remove('open'); dropdown.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); }
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); dropdown.classList.contains('open') ? close() : open(); });
+  dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href !== '#') { e.preventDefault(); window.location.href = href; } else { close(); }
+    });
+  });
+  document.addEventListener('click', function(e) { if (!selector.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+});
+</script>
+</body>
+</html>

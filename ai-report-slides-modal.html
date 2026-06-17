@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI 产品 UX 观察报告 · 第六期 · Modal Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=DM+Serif+Display:wght@400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Design Tokens ── */
+:root {
+  --bg:       #070b07;
+  --surface:  #0c110c;
+  --surface2: #111811;
+  --green:    #a8ff57;
+  --green2:   rgba(168,255,87,.08);
+  --green3:   rgba(168,255,87,.05);
+  --green4:   rgba(168,255,87,.18);
+  --border:   rgba(168,255,87,.07);
+  --border2:  rgba(168,255,87,.15);
+  --white:    #ffffff;
+  --t1:       rgba(255,255,255,.92);
+  --t2:       rgba(255,255,255,.50);
+  --t3:       rgba(255,255,255,.22);
+  --t4:       rgba(255,255,255,.10);
+  --mono:     'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+  --serif:    'DM Serif Display', Georgia, serif;
+  --sans:     'Inter', -apple-system, 'PingFang SC', sans-serif;
+  --pad:      80px;
+  --r:        8px;
+  --ease:     cubic-bezier(.16,1,.3,1);
+}
+
+/* ── Base ── */
+*,*::before,*::after { margin:0;padding:0;box-sizing:border-box }
+html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
+.vp { position:fixed;inset:0;overflow:hidden;background:#020402 }
+
+/* ── Stage ── */
+.stage {
+  position:absolute;left:0;top:0;
+  width:1920px;height:1080px;
+  overflow:hidden;transform-origin:0 0;
+  background:var(--bg);
+  /* dot grid */
+  background-image:
+    radial-gradient(circle, rgba(168,255,87,.055) 1px, transparent 1px);
+  background-size:30px 30px;
+  background-position:-1px -1px;
+}
+
+/* ── Slides ── */
+.slide {
+  position:absolute;inset:0;
+  width:1920px;height:1080px;overflow:hidden;
+  background:var(--bg);
+  background-image:radial-gradient(circle,rgba(168,255,87,.055) 1px,transparent 1px);
+  background-size:30px 30px;background-position:-1px -1px;
+  visibility:hidden;opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.slide.on { visibility:visible;opacity:1;pointer-events:auto;z-index:1 }
+
+/* ── Entrance animations ── */
+@keyframes riseUp {
+  from { opacity:0; transform:translateY(16px) }
+  to   { opacity:1; transform:none }
+}
+@keyframes fadeIn {
+  from { opacity:0 }
+  to   { opacity:1 }
+}
+@keyframes scanIn {
+  from { clip-path:inset(0 100% 0 0) }
+  to   { clip-path:inset(0 0% 0 0) }
+}
+.slide.on .rv { animation:riseUp .55s var(--ease) both }
+.slide.on .rv:nth-child(1) { animation-delay:.03s }
+.slide.on .rv:nth-child(2) { animation-delay:.09s }
+.slide.on .rv:nth-child(3) { animation-delay:.15s }
+.slide.on .rv:nth-child(4) { animation-delay:.21s }
+.slide.on .rv:nth-child(5) { animation-delay:.27s }
+.slide.on .rv:nth-child(6) { animation-delay:.33s }
+.slide.on .rv:nth-child(7) { animation-delay:.39s }
+.slide.on .rv:nth-child(8) { animation-delay:.45s }
+.slide.on .line-in { animation:scanIn .7s var(--ease) both }
+
+/* terminal line typewriter */
+@keyframes termLine {
+  from { clip-path:inset(0 100% 0 0); opacity:0 }
+  8%   { opacity:1 }
+  to   { clip-path:inset(0 0% 0 0); opacity:1 }
+}
+.slide.on .terminal-body > div {
+  animation: termLine .35s cubic-bezier(.16,1,.3,1) both;
+  white-space: nowrap;
+}
+.slide.on .terminal-body > div:nth-child(1) { animation-delay:.45s;animation-duration:.45s }
+.slide.on .terminal-body > div:nth-child(2) { animation-delay:1.0s;animation-duration:.4s }
+.slide.on .terminal-body > div:nth-child(3) { animation-delay:1.55s;animation-duration:.35s }
+.slide.on .terminal-body > div:nth-child(4) { animation-delay:1.95s;animation-duration:.3s }
+.slide.on .terminal-body > div:nth-child(5) { animation-delay:2.3s;animation-duration:.3s }
+.slide.on .terminal-body > div:nth-child(6) { animation-delay:2.65s;animation-duration:.3s }
+.slide.on .terminal-body > div:nth-child(7) { animation-delay:3.0s;animation-duration:.3s }
+
+/* blinking cursor */
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+.cursor::after {
+  content:'█';
+  font-family:var(--mono);font-size:.8em;
+  color:var(--green);
+  animation:blink 1.1s step-end infinite;
+  margin-left:2px;
+}
+
+/* ── Top scan line ── */
+.top-line {
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--green),rgba(168,255,87,.3),transparent);
+}
+
+/* ── Monospace labels ── */
+.mono-label {
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  color:rgba(168,255,87,.5);letter-spacing:.5px;
+}
+.mono-label.bright { color:var(--green) }
+
+/* ── Chips ── */
+.chip {
+  display:inline-flex;align-items:center;
+  padding:3px 10px;border-radius:4px;
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  letter-spacing:.2px;border:1px solid;
+}
+.chip-co {
+  background:var(--co-bg,rgba(168,255,87,.06));
+  border-color:var(--co-br,rgba(168,255,87,.2));
+  color:var(--co,#a8ff57);
+}
+.chip-ghost {
+  background:transparent;
+  border-color:var(--t4);
+  color:var(--t3);
+}
+
+/* ── Product slide layout ── */
+.p-left {
+  position:absolute;left:0;top:0;
+  width:920px;height:100%;
+  padding:66px var(--pad);
+  display:flex;flex-direction:column;
+}
+.p-right {
+  position:absolute;right:0;top:0;
+  width:1000px;height:100%;overflow:hidden;
+}
+.p-img {
+  position:absolute;inset:0;
+  background-size:cover;background-repeat:no-repeat;
+  filter:brightness(.55) saturate(.7);
+}
+.p-fade {
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--bg) 0%,rgba(7,11,7,.05) 26%,transparent 48%);
+}
+/* green tint over image */
+.p-tint {
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(168,255,87,.04) 0%,transparent 60%);
+  mix-blend-mode:screen;
+}
+
+.p-title {
+  font-family:var(--serif);font-weight:400;
+  color:var(--t1);line-height:.9;
+  letter-spacing:-1.5px;margin-bottom:8px;
+}
+.p-sub {
+  font-family:var(--mono);font-size:13px;font-weight:300;
+  color:var(--t2);margin-bottom:36px;letter-spacing:.2px;
+}
+.bullets { display:flex;flex-direction:column;gap:17px;flex:1 }
+.bullet { display:flex;gap:14px;align-items:flex-start }
+.b-num {
+  font-family:var(--mono);font-size:11px;font-weight:400;
+  color:var(--co,#a8ff57);min-width:28px;
+  padding-top:4px;letter-spacing:.3px;flex-shrink:0;
+}
+.b-text {
+  font-family:var(--sans);font-size:22px;
+  color:var(--t2);line-height:1.6;
+}
+.b-text b { color:var(--t1);font-weight:500 }
+
+.insight {
+  background:var(--co,#a8ff57);
+  border-radius:8px;
+  padding:18px 22px;
+  margin-bottom:22px;
+}
+.insight-lbl {
+  font-family:var(--mono);font-size:10px;font-weight:400;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(0,0,0,.5);margin-bottom:7px;
+}
+.insight-txt {
+  font-family:var(--sans);font-size:19px;color:#000;line-height:1.6;
+}
+.insight-txt b { color:#000;font-weight:700 }
+
+/* source link */
+.src-link {
+  margin-top:12px;
+  font-family:var(--mono);font-size:12px;font-weight:300;
+  color:var(--t3);letter-spacing:.3px;
+}
+.src-link a {
+  color:var(--t3);text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  transition:color .15s,border-color .15s;
+}
+.src-link a:hover { color:var(--green);border-color:rgba(168,255,87,.4) }
+
+/* ── Slide number: top-right corner ── */
+.sn {
+  position:absolute;top:32px;right:var(--pad);
+  font-family:var(--mono);font-size:12px;font-weight:300;
+  color:var(--t3);letter-spacing:.5px;
+}
+
+/* ── Nav ── */
+.dots {
+  position:fixed;left:50%;bottom:64px;
+  transform:translateX(-50%);z-index:999;
+  display:flex;gap:5px;
+}
+.dot {
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(168,255,87,.2);cursor:pointer;transition:all .2s;
+}
+.dot.on { background:var(--green);width:16px;border-radius:3px }
+.cbar {
+  position:fixed;left:50%;bottom:22px;
+  transform:translateX(-50%);z-index:999;
+  display:flex;align-items:center;gap:10px;
+}
+.cbtn {
+  width:36px;height:36px;border-radius:4px;
+  border:1px solid rgba(168,255,87,.15);
+  background:rgba(168,255,87,.04);
+  color:rgba(168,255,87,.6);
+  font-family:var(--mono);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.cbtn:hover { background:rgba(168,255,87,.1);border-color:rgba(168,255,87,.3);color:var(--green) }
+.ctr {
+  font-family:var(--mono);font-size:11px;
+  color:var(--t3);min-width:52px;text-align:center;
+  background:rgba(168,255,87,.04);padding:4px 10px;
+  border-radius:4px;border:1px solid var(--border);
+  letter-spacing:.5px;
+}
+
+/* ── Terminal block (cover) ── */
+.terminal {
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(168,255,87,.12);
+  border-radius:8px;overflow:hidden;
+}
+.terminal-bar {
+  background:rgba(168,255,87,.05);
+  border-bottom:1px solid rgba(168,255,87,.08);
+  padding:8px 14px;
+  display:flex;gap:6px;align-items:center;
+}
+.terminal-dot {
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(168,255,87,.2);
+}
+.terminal-body {
+  padding:20px 24px;
+  font-family:var(--mono);font-size:14px;
+  color:var(--t2);line-height:2;
+}
+.terminal-body .cmd { color:var(--green) }
+.terminal-body .ok  { color:rgba(168,255,87,.6) }
+.terminal-body .dim { color:var(--t3) }
+.terminal-body .val { color:#7dd3fc }
+
+/* ── Period Selector ── */
+.period-selector { position:relative;display:inline-block }
+.period-trigger {
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  color:#000;letter-spacing:.3px;
+  background:var(--green);border:none;cursor:pointer;
+  padding:5px 11px 5px 10px;border-radius:5px;
+  display:flex;align-items:center;gap:6px;
+}
+.period-trigger:hover { background:#bfff6b }
+.period-trigger svg { transition:transform .2s;flex-shrink:0 }
+.period-trigger.open svg { transform:rotate(180deg) }
+.period-dropdown {
+  position:fixed;top:0;left:0;
+  background:#080e08;border:1px solid rgba(168,255,87,.25);
+  border-radius:8px;padding:6px;min-width:290px;
+  opacity:0;pointer-events:none;transform:translateY(-6px);
+  transition:opacity .18s,transform .18s;z-index:99999;
+  box-shadow:0 16px 48px rgba(0,0,0,.85);
+}
+.period-dropdown.open { opacity:1;pointer-events:auto;transform:translateY(0) }
+.period-dropdown__label {
+  font-family:var(--mono);font-size:10px;color:var(--t3);
+  padding:6px 10px 8px;letter-spacing:.5px;border-bottom:1px solid var(--border);margin-bottom:4px;
+}
+.period-item {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;border-radius:5px;text-decoration:none;gap:8px;
+}
+.period-item:hover { background:rgba(168,255,87,.05) }
+.period-item.active { background:rgba(168,255,87,.07) }
+.period-item-info { display:flex;flex-direction:column;gap:2px }
+.period-item-name { font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500 }
+.period-item-date { font-family:var(--mono);font-size:11px;color:var(--t3) }
+.period-badge {
+  font-family:var(--mono);font-size:10px;color:var(--green);
+  background:rgba(168,255,87,.1);border:1px solid rgba(168,255,87,.2);
+  border-radius:4px;padding:2px 7px;white-space:nowrap;
+}
+</style>
+</head>
+<body>
+<div class="vp">
+<main class="stage" id="stage">
+
+<!-- ═══ S1 · Cover ═══ -->
+<section class="slide on" id="s1">
+  <div class="top-line line-in"></div>
+  <!-- top spotlight -->
+  <div style="position:absolute;top:-300px;left:50%;transform:translateX(-50%);width:1000px;height:700px;background:radial-gradient(ellipse,rgba(168,255,87,.07) 0%,transparent 65%);pointer-events:none"></div>
+
+  <!-- left -->
+  <div style="position:absolute;left:0;top:0;width:880px;height:100%;padding:80px var(--pad);display:flex;flex-direction:column;justify-content:center">
+    <div class="period-selector rv" style="margin-bottom:36px">
+      <button class="period-trigger" id="periodTrigger" aria-haspopup="listbox" aria-expanded="false">
+        <span>// 云基础 &amp; VNE 团队 · 第六期</span>
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="period-dropdown" id="periodDropdown" role="listbox">
+        <div class="period-dropdown__label">// 选择期次</div>
+        <a class="period-item active" href="#" role="option" aria-selected="true">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.06 第六期</span>
+            <span class="period-item-date">2026-06-11 ~ 2026-06-17</span>
+          </div>
+          <span class="period-badge">当前</span>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.06 第五期</span>
+            <span class="period-item-date">2026-06-04 ~ 2026-06-10</span>
+          </div>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05-w4.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.06 第四期</span>
+            <span class="period-item-date">2026-05-28 ~ 2026-06-03</span>
+          </div>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05-w3.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.05 第三期</span>
+            <span class="period-item-date">2026-05-21 ~ 2026-05-27</span>
+          </div>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05-w2.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.05 第二期</span>
+            <span class="period-item-date">2026-05-14 ~ 2026-05-20</span>
+          </div>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05-w1.html" target="_blank" role="option">
+          <div class="period-item-info">
+            <span class="period-item-name">2026.05 第一期</span>
+            <span class="period-item-date">2026-04-29 ~ 2026-05-13</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <h1 class="rv" style="font-family:var(--serif);font-size:112px;font-weight:400;line-height:.88;color:var(--t1);letter-spacing:-3px;margin-bottom:24px">
+      AI 产品<br><span style="color:var(--green)">UX 观察</span><br>报告
+    </h1>
+    <p class="rv" style="font-family:var(--mono);font-size:14px;font-weight:300;color:var(--t2);letter-spacing:.5px;margin-bottom:48px">
+      period: 2026-06-11 → 2026-06-17 &nbsp;·&nbsp; 7 products analyzed
+    </p>
+    <div class="rv" style="display:flex;gap:10px;flex-wrap:wrap">
+      <span class="chip chip-co" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.06);--co-br:rgba(168,255,87,.2)">v6.0</span>
+      <span class="chip chip-ghost">openai · google · meta · github · spacex · anthropic · salesforce</span>
+    </div>
+  </div>
+
+  <!-- right: terminal -->
+  <div style="position:absolute;right:var(--pad);top:50%;transform:translateY(-50%);width:640px">
+    <div class="terminal rv">
+      <div class="terminal-bar">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <span style="font-family:var(--mono);font-size:11px;color:rgba(168,255,87,.3);margin-left:6px">ai_report.py</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="cmd">$</span> modal run ai_report.py <span class="dim">--period w6</span></div>
+        <div class="dim">✦ Initializing report engine...</div>
+        <div><span class="ok">✓</span> Period: <span class="val">2026-06-11</span> → <span class="val">2026-06-17</span></div>
+        <div><span class="ok">✓</span> Products scanned: <span class="val">7</span></div>
+        <div><span class="ok">✓</span> Key insights extracted: <span class="val">6</span></div>
+        <div><span class="ok">✓</span> Design implications: <span class="val">6</span></div>
+        <div><span class="ok">✓</span> Report ready <span class="cursor"></span></div>
+      </div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <div style="flex:1;background:rgba(168,255,87,.04);border:1px solid var(--border);border-radius:6px;padding:12px 16px">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(168,255,87,.4);margin-bottom:4px">TOP SIGNAL</div>
+        <div style="font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500">AI Agent 持久记忆落地</div>
+      </div>
+      <div style="flex:1;background:rgba(168,255,87,.04);border:1px solid var(--border);border-radius:6px;padding:12px 16px">
+        <div style="font-family:var(--mono);font-size:10px;color:rgba(168,255,87,.4);margin-bottom:4px">UX SHIFT</div>
+        <div style="font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500">委托 + 监督 + 接管控制</div>
+      </div>
+    </div>
+  </div>
+  <div class="sn">01 / 10</div>
+</section>
+
+<!-- ═══ S2 · 速览 ═══ -->
+<section class="slide" id="s2">
+  <div class="top-line line-in"></div>
+  <div style="position:absolute;inset:0;padding:60px var(--pad) 68px;display:flex;flex-direction:column">
+    <div class="rv" style="display:flex;align-items:center;gap:16px;margin-bottom:34px">
+      <span class="mono-label">// section_01</span>
+      <div style="width:1px;height:14px;background:var(--border2)"></div>
+      <h2 style="font-family:var(--serif);font-size:48px;font-weight:400;color:var(--t1);letter-spacing:-1px;line-height:1">本期速览</h2>
+      <span class="mono-label" style="margin-left:4px">6 signals · 2026-06-11~17</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;flex:1">
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(255,95,160,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#ff5fa0;--co-bg:rgba(255,95,160,.07);--co-br:rgba(255,95,160,.2)">anthropic · claude</span>
+          <span class="mono-label">01</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Claude Fable 5 + Mythos 5</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">持久记忆 Agent 能力本周进入企业集成阶段；「AI 记住用户」首次成为可用产品功能；UX 核心命题从「提速」转为「让用户放心监督委托」——委托三件套成为 Agent 产品设计新范式。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://www.anthropic.com/news" target="_blank">anthropic.com · Claude Fable 5 + Mythos 5</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(168,255,87,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.07);--co-br:rgba(168,255,87,.2)">google</span>
+          <span class="mono-label">02</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Android 17 + Gemini 深入 OS</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Bubble bar 多任务 UI + 分屏录制；Wear OS 引入 Gemini 个性化部件与 Personal Intelligence，连接日历/Gmail/Keep 提供跨服务建议——AI 战场从 App 层下沉到 OS 层。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://techcrunch.com/2026/06/16/android-17-launches-with-new-multitasking-tools-as-google-expands-gemini-features/" target="_blank">techcrunch.com · Android 17</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(168,168,255,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#a8a8ff;--co-bg:rgba(168,168,255,.07);--co-br:rgba(168,168,255,.2)">meta</span>
+          <span class="mono-label">03</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Facebook AI Mode</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Facebook 推出 AI Mode，自然语言搜索 Groups / Reels / 公开帖子并合成答案；同步上线 AI 换装、AI 照片预设——内容平台争夺用户在平台内找答案的习惯。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://techcrunch.com/2026/06/15/metas-new-ai-mode-on-facebook-pulls-from-public-info-across-its-platforms/" target="_blank">techcrunch.com · Meta AI Mode</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(90,200,250,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.07);--co-br:rgba(90,200,250,.2)">github</span>
+          <span class="mono-label">04</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Copilot 转按 token 计费</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">6 月起从固定订阅改为 token 用量计费，理由：短对话 vs 数小时 Agent 任务成本差异巨大；5 月预览账单上线，用户首次感知 AI 使用成本——AI 工具进入计量经济时代。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">the-decoder.com · Copilot 计费变更</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(255,214,10,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#ffd60a;--co-bg:rgba(255,214,10,.07);--co-br:rgba(255,214,10,.2)">spacex · xai</span>
+          <span class="mono-label">05</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">$600亿收购 Cursor</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">SpaceX IPO 后首笔大额收购；xAI 已并入 SpaceX，AI 编程成为 $26T 市场战略核心；Cursor 估值 $290 亿，融资 $20 亿无法盈亏平衡——AI 编程工具最大并购案。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://techcrunch.com/2026/06/16/spacex-to-acquire-cursor-for-60b-in-stock-days-after-blockbuster-ipo/" target="_blank">techcrunch.com · SpaceX 收购 Cursor</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(90,174,255,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#5aafff;--co-bg:rgba(90,174,255,.07);--co-br:rgba(90,174,255,.2)">anthropic · enterprise</span>
+          <span class="mono-label">06</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Claude 进入受监管行业</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">TCS + DXC 完成 Claude 企业深度集成，覆盖银行 / 航空 / 医疗受监管场景——企业级 AI UX 新命题：如何平衡 AI 能力与「可审计透明度」？可解释 + 可审计 + 可撤销，成为企业 AI UX 最低标准。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://www.anthropic.com/news" target="_blank">anthropic.com · Jun 11-12 企业公告</a></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="sn">02 / 10</div>
+</section>
+
+<!-- ═══ S3 · Claude Fable 5 + Mythos 5 ═══ -->
+<section class="slide" id="s3" style="--co:#ff5fa0;--co-bg:rgba(255,95,160,.07);--co-br:rgba(255,95,160,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">anthropic · claude</span>
+      <span class="chip chip-ghost">Jun 9 发布 → 本周落地</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:82px">Claude<br>Fable 5<br>+ Mythos 5</h2>
+    <p class="p-sub rv">// persistent_memory · agent_ux · visual_fidelity</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">当 AI 能记住用户并独立完成复杂任务，最重要的 UX 不再是「降低门槛」——而是<b>让人放心委托</b>：委托入口 + 执行进度 + 接管控制，是 Agent 产品的最小完整 UX 单元。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>Mythos 5 跨会话持久记忆</b> —— 工作项目 / 个人偏好 / 历史决策跨对话保留；「每次重新解释背景」的摩擦首次被系统性消除。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>视觉能力质变</b> —— 单张截图重建可运行前端代码，UI 还原达实用级别；设计稿 → 代码工作流出现根本性加速可能。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>人的角色从「操作者」变为「监督者」</b> —— Fable 5 可独立完成大规模代码迁移；「监督界面」设计优先级大幅上升。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://www.anthropic.com/news" target="_blank">anthropic.com · Claude Fable 5 + Mythos 5</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://cdn.sanity.io/images/4zrzovbb/website/1e65982497d7d4891219ed0e83141625a291b860-2600x2870.png');background-position:center top"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">03 / 10</div>
+</section>
+
+<!-- ═══ S4 · Google / Android 17 ═══ -->
+<section class="slide" id="s4" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.06);--co-br:rgba(168,255,87,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">google</span>
+      <span class="chip chip-ghost">2026-06-16</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:96px">Android 17<br><span>+ Gemini</span></h2>
+    <p class="p-sub rv">// wear_os · bubble_bar · system_level_ai</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">AI 战场从 <b>App 层下沉到 OS 层</b>——竞争边界正在从产品功能迁移到系统基础设施。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>Bubble bar + 分屏录制</b> —— 底部气泡多任务 UI；前后摄同时录制，直接分享 TikTok / Reels。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>Wear OS + Gemini Personal Intelligence</b> —— 自然语言生成个性化部件，跨日历/Gmail/Keep 建议。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>竞争参照：Apple iOS 27 仍在追赶</b> —— Google 正借 Android 17 拉开系统级 AI 差距。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/16/android-17-launches-with-new-multitasking-tools-as-google-expands-gemini-features/" target="_blank">techcrunch.com · Android 17 launches</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2026/06/gemini-app-GettyImages-2276204472.jpg');background-position:center center"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">04 / 10</div>
+</section>
+
+<!-- ═══ S5 · Meta / Facebook AI Mode ═══ -->
+<section class="slide" id="s5" style="--co:#a8a8ff;--co-bg:rgba(168,168,255,.06);--co-br:rgba(168,168,255,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">meta</span>
+      <span class="chip chip-ghost">2026-06-15</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:104px">Facebook<br><span>AI Mode</span></h2>
+    <p class="p-sub rv">// in-platform_search · ai_editing · ugc_risk</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">内容平台把 AI 做进<b>搜索入口</b>——答案在平台内生成，对 Google 搜索流量的蚕食已经开始。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>AI Mode 自然语言搜索</b> —— 从 Groups / Reels / 公开帖子提取信息合成答案，来源可追溯。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>AI 换装 + AI 照片预设</b> —— 虚拟试穿球衣 / 更换发型；AI 风格滤镜一键应用。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>可靠性风险</b> —— AI 汇总 UGC 无人工审核，错误信息传播风险是核心挑战。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/15/metas-new-ai-mode-on-facebook-pulls-from-public-info-across-its-platforms/" target="_blank">techcrunch.com · Meta AI Mode on Facebook</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2026/05/meta-apps-GettyImages-2152655816.jpg');background-position:center center"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">05 / 10</div>
+</section>
+
+<!-- ═══ S6 · GitHub Copilot ═══ -->
+<section class="slide" id="s6" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.06);--co-br:rgba(90,200,250,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">github · microsoft</span>
+      <span class="chip chip-ghost">2026-06</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:88px">Copilot<br><span>按量计费</span></h2>
+    <p class="p-sub rv">// token_billing · agentic_cost · value_ux</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">AI 进入计量时代——UX 必须让<b>价值</b>而非成本可见，「节省了多少时间」比「用了多少 token」更重要。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>6 月转 token 用量计费</b> —— 固定订阅 → 按实际消耗；一句话 vs 数小时 Agent 任务成本差异巨大。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>5 月推出预览账单</b> —— 开发者首次感知 AI 实际使用成本，行为将被显著重塑。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>交互数据训练政策</b> —— 4 月 24 日起使用 Copilot 用户交互数据改进模型，同步公示。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">the-decoder.com · GitHub Copilot token billing</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://the-decoder.com/wp-content/uploads/2023/03/github_copilot_X_gpt-4.jpg');background-position:center center"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">06 / 10</div>
+</section>
+
+<!-- ═══ S7 · SpaceX / Cursor ═══ -->
+<section class="slide" id="s7" style="--co:#ffd60a;--co-bg:rgba(255,214,10,.06);--co-br:rgba(255,214,10,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">spacex · xai</span>
+      <span class="chip chip-ghost">2026-06-16</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:74px">SpaceX<br><span>$600亿</span><br>收购 Cursor</h2>
+    <p class="p-sub rv">// tool_neutrality · workflow_dependency · ux_risk</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">工具中立性降低——Cursor 从<b>独立设计工具</b>变为大公司战略资产后，功能优先级将受收购方战略驱动，不再完全匹配设计师实际需求。工作流深度依赖需要评估退出成本。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>设计师工作流影响</b> —— Cursor 是「设计稿 → 代码」工作流的核心 AI 工具之一；被收购后产品路线图将受 SpaceX/xAI 战略驱动，设计师需求优先级存在不确定性。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>独立工具中立性正在减少</b> —— Cursor 被收购 + Copilot 计量化，AI 编程工具正快速从「中立工具」变为「平台战略资产」，选型时需考虑生态绑定风险。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>工作流依赖评估</b> —— 识别哪些 AI 能力可以通过 API 自建保持灵活性，哪些可以被其他工具替代，避免因工具整合导致工作流断裂。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/16/spacex-to-acquire-cursor-for-60b-in-stock-days-after-blockbuster-ipo/" target="_blank">techcrunch.com · SpaceX to acquire Cursor</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2026/06/elon-nasdaq-spacex-ipo.jpg');background-position:center top"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">07 / 10</div>
+</section>
+
+<!-- ═══ S8 · Claude Enterprise · TCS/DXC ═══ -->
+<section class="slide" id="s8" style="--co:#5aafff;--co-bg:rgba(90,174,255,.06);--co-br:rgba(90,174,255,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">anthropic · enterprise</span>
+      <span class="chip chip-ghost">2026-06-11 ~ 12</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:74px">Claude<br>企业级<br>受监管行业</h2>
+    <p class="p-sub rv">// regulated_industry · audit · compliance_ux</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">企业级 AI 最低设计标准：<b>可解释 + 可审计 + 可撤销</b>——面向合规角色的 AI UX 与消费级完全不同，每一步操作都可能需要被审计、解释、回滚。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>TCS + Anthropic：受监管行业企业集成</b> —— 银行 / 保险 / 医疗场景下，合规约束（数据驻留 / 审计日志 / 权限管控）被作为产品一等公民设计。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>DXC Technology 深度集成银行/航空/医疗</b> —— AI 从「辅助工具」升级为「业务流程组件」；与 IT 系统工作流的无缝嵌入成为产品核心能力。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>企业 AI UX 三核心约束</b> —— 监管合规（可审计）+ 数据隔离（可信任）+ 工作流集成（可嵌入）；消费级 AI 的 UX 原则在企业场景需系统性重构。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://www.anthropic.com/news" target="_blank">anthropic.com · Jun 11-12 两则企业公告</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://cdn.sanity.io/images/4zrzovbb/website/1e65982497d7d4891219ed0e83141625a291b860-2600x2870.png');background-position:center center;filter:brightness(.4) saturate(.5)"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">08 / 10</div>
+</section>
+
+<!-- ═══ S9 · Azure Build 2026 ═══ -->
+<section class="slide" id="s9" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.06);--co-br:rgba(90,200,250,.18)">
+  <div class="top-line line-in"></div>
+  <div class="p-left">
+    <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
+      <span class="chip chip-co">microsoft · azure</span>
+      <span class="chip chip-ghost">2026-06-11</span>
+    </div>
+    <h2 class="p-title rv" style="font-size:82px">Azure AI<br>Build 2026<br>Agentic UX</h2>
+    <p class="p-sub rv">// agent_orchestration · enterprise_console · workflow_ux</p>
+    <div class="insight rv">
+      <div class="insight-lbl">// design_implication</div>
+      <div class="insight-txt">企业 AI 控制台正从「<b>配置参数</b>」范式升级为「<b>流程设计器</b>」范式——面向管理员的 AI 界面，需要流程可视化、节点调试、异常处理作为新的设计重点。</div>
+    </div>
+    <div class="bullets">
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>AI 从「实验」迈向「执行」</b> —— Build 2026 核心主题：孤立工具 → 连接业务数据的 Agentic 系统；企业 AI 控制台 UX 进入 Agent 编排时代。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>Microsoft Discovery GA</b> —— 正式发布，提供构建和治理 Agentic AI 工作流的综合平台；企业 AI 编排 UX 首次系统化。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>Copilot Studio 低代码 Agent 构建</b> —— 非技术企业用户可在无代码环境下组合 AI 工作流；面向业务角色的 AI 编排 UX 成熟度持续提升。</p></div>
+    </div>
+    <div class="src-link rv">↗ <a href="https://azure.microsoft.com/en-us/blog/" target="_blank">azure.microsoft.com · Build 2026 摘要博客</a></div>
+  </div>
+  <div class="p-right">
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2026/06/gemini-app-GettyImages-2276204472.jpg');background-position:center center;filter:brightness(.4) saturate(.5) hue-rotate(160deg)"></div>
+    <div class="p-tint"></div>
+    <div class="p-fade"></div>
+  </div>
+  <div class="sn">09 / 10</div>
+</section>
+
+<!-- ═══ S10 · Insights ═══ -->
+<section class="slide" id="s10">
+  <div class="top-line line-in"></div>
+  <!-- top glow -->
+  <div style="position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(168,255,87,.06) 0%,transparent 65%);pointer-events:none"></div>
+  <div style="position:absolute;inset:0;padding:56px var(--pad) 62px;display:flex;flex-direction:column">
+    <div class="rv" style="display:flex;align-items:center;gap:16px;margin-bottom:28px">
+      <span class="mono-label">// section_04</span>
+      <div style="width:1px;height:14px;background:var(--border2)"></div>
+      <h2 style="font-family:var(--serif);font-size:48px;font-weight:400;color:var(--t1);letter-spacing:-1px;line-height:1">对我们的启示</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;flex:1">
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_01</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">claude fable 5</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI Agent 功能必须配备「委托三件套」</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">当 AI 能记住用户并独立完成复杂任务，最重要的 UX 不再是「降低使用门槛」，而是「让人放心委托」。设计任何 AI 自动化功能时，先问：用户在哪里发出委托？能看到什么执行进度？什么时候可以随时介入接管？三件套缺一不可。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_02</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">copilot billing</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 计量时代——价值可见比成本透明更重要</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Copilot 转计量计费标志 AI 工具「无感使用」时代终结。若引入 AI 用量限制，UX 重心应放在「价值可视化」：用户需要看到「AI 帮我节省了多少时间」，而不是「我用了多少 token」——价值感知先于成本感知。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_03</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">meta ai mode</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">平台内 AI 搜索——可靠性是下一个关键战场</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">内容平台用 AI 做平台内搜索的核心挑战：UGC 质量无法保证。若 AI 功能从非结构化内容提取答案，必须在 UX 层设计「来源标注 + 可信度提示」——让用户清楚「这个答案来自哪里」是 AI 答案产品的基本责任。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_04</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">claude enterprise</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">企业级 AI UX——可解释 + 可审计 + 可撤销</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Claude 进入受监管行业揭示了企业 AI UX 的本质：每一步操作都可能需要被审计、解释、回滚。面向企业用户的 AI 功能设计三问：这个 AI 决策能被解释吗？这个操作有日志记录吗？这个结果可以被撤销或修正吗？均为「是」才是合格线。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_05</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">android 17</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 下沉 OS 层——系统级集成重塑竞争边界</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Google 把 Gemini 做进 Wear OS 和 Bubble bar，意味着 AI 能力正在从「应用功能」下沉为「系统基础设施」。在产品设计时需善用平台 AI 能力，同时清晰认识哪些核心 AI 功能必须自建以保持差异化。</div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_06</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">cursor $60b</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 工具选型——评估中立性风险，准备退出方案</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Cursor 被收购说明独立 AI 工具随时可能因大公司战略调整而改变产品优先级。对设计团队高频 AI 工具，识别哪些属于「可替代的通用能力」（换工具成本低），哪些属于「深度绑定的核心工作流」（后者需有明确退出方案）。</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="sn">10 / 10</div>
+</section>
+
+</main>
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="cbar">
+  <button class="cbtn" onclick="dk.prev()">←</button>
+  <span class="ctr" id="ctr">01 / 10</span>
+  <button class="cbtn" onclick="dk.next()">→</button>
+</div>
+
+<script>
+const dk = {
+  slides: document.querySelectorAll('.slide'),
+  cur: 0,
+  stage: document.getElementById('stage'),
+  dotsEl: document.getElementById('dots'),
+  init() {
+    this.scale();
+    window.addEventListener('resize', () => this.scale());
+    document.addEventListener('keydown', e => {
+      if ([' ','ArrowRight','ArrowDown'].includes(e.key)) { e.preventDefault(); this.next(); }
+      if (['ArrowLeft','ArrowUp'].includes(e.key)) { e.preventDefault(); this.prev(); }
+    });
+    let tx = 0;
+    document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+    document.addEventListener('touchend', e => {
+      const d = tx - e.changedTouches[0].clientX;
+      if (Math.abs(d) > 50) d > 0 ? this.next() : this.prev();
+    });
+    this.slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' on' : '');
+      d.onclick = () => this.go(i);
+      this.dotsEl.appendChild(d);
+    });
+    this.go(0);
+  },
+  scale() {
+    const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    const x = (window.innerWidth - 1920 * f) / 2;
+    const y = (window.innerHeight - 1080 * f) / 2;
+    this.stage.style.transform = `translate(${x}px,${y}px) scale(${f})`;
+  },
+  go(n) {
+    this.slides[this.cur].classList.remove('on');
+    document.querySelectorAll('.dot')[this.cur].classList.remove('on');
+    this.cur = n;
+    this.slides[n].classList.add('on');
+    document.querySelectorAll('.dot')[n].classList.add('on');
+    document.getElementById('ctr').textContent =
+      String(n + 1).padStart(2,'0') + ' / ' + String(this.slides.length).padStart(2,'0');
+  },
+  next() { this.go((this.cur + 1) % this.slides.length); },
+  prev() { this.go((this.cur - 1 + this.slides.length) % this.slides.length); }
+};
+dk.init();
+
+// Period selector — mount dropdown on body to escape transform stacking context
+(function() {
+  const trigger = document.getElementById('periodTrigger');
+  const dropdown = document.getElementById('periodDropdown');
+  if (!trigger || !dropdown) return;
+  // Move out of scaled .stage so position:fixed is relative to real viewport
+  document.body.appendChild(dropdown);
+
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.contains('open');
+    if (!isOpen) {
+      const rect = trigger.getBoundingClientRect();
+      dropdown.style.top  = (rect.bottom + 6) + 'px';
+      dropdown.style.left = rect.left + 'px';
+    }
+    trigger.classList.toggle('open', !isOpen);
+    dropdown.classList.toggle('open', !isOpen);
+    trigger.setAttribute('aria-expanded', String(!isOpen));
+  });
+  document.addEventListener('click', function() {
+    trigger.classList.remove('open');
+    dropdown.classList.remove('open');
+    trigger.setAttribute('aria-expanded', 'false');
+  });
+  dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+})();
+</script>
+</body>
+</html>
