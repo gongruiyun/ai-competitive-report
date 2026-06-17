@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>AI 产品 UX 观察报告 · 第五期 · Modal Edition</title>
+<title>AI 产品 UX 观察报告 · 第六期 · Modal Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=DM+Serif+Display:wght@400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ── Design Tokens ── */
@@ -342,7 +342,7 @@ html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
   <div style="position:absolute;left:0;top:0;width:880px;height:100%;padding:80px var(--pad);display:flex;flex-direction:column;justify-content:center">
     <div class="period-selector rv" style="margin-bottom:36px">
       <button class="period-trigger" id="periodTrigger" aria-haspopup="listbox" aria-expanded="false">
-        <span>// 云基础 &amp; VNE 团队 · 第五期</span>
+        <span>// 云基础 &amp; VNE 团队 · 第六期</span>
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -351,10 +351,16 @@ html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
         <div class="period-dropdown__label">// 选择期次</div>
         <a class="period-item active" href="#" role="option" aria-selected="true">
           <div class="period-item-info">
+            <span class="period-item-name">2026.06 第六期</span>
+            <span class="period-item-date">2026-06-11 ~ 2026-06-17</span>
+          </div>
+          <span class="period-badge">当前</span>
+        </a>
+        <a class="period-item" href="ai-competitive-report-2026-05.html" target="_blank" role="option">
+          <div class="period-item-info">
             <span class="period-item-name">2026.06 第五期</span>
             <span class="period-item-date">2026-06-04 ~ 2026-06-10</span>
           </div>
-          <span class="period-badge">当前</span>
         </a>
         <a class="period-item" href="ai-competitive-report-2026-05-w4.html" target="_blank" role="option">
           <div class="period-item-info">
@@ -386,11 +392,11 @@ html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
       AI 产品<br><span style="color:var(--green)">UX 观察</span><br>报告
     </h1>
     <p class="rv" style="font-family:var(--mono);font-size:14px;font-weight:300;color:var(--t2);letter-spacing:.5px;margin-bottom:48px">
-      period: 2026-06-04 → 2026-06-10 &nbsp;·&nbsp; 7 products analyzed
+      period: 2026-06-11 → 2026-06-17 &nbsp;·&nbsp; 7 products analyzed
     </p>
     <div class="rv" style="display:flex;gap:10px;flex-wrap:wrap">
-      <span class="chip chip-co" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.06);--co-br:rgba(168,255,87,.2)">v5.0</span>
-      <span class="chip chip-ghost">anthropic · openai · apple · google</span>
+      <span class="chip chip-co" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.06);--co-br:rgba(168,255,87,.2)">v6.0</span>
+      <span class="chip chip-ghost">openai · google · meta · github · spacex · anthropic · salesforce</span>
     </div>
   </div>
 
@@ -404,9 +410,9 @@ html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
         <span style="font-family:var(--mono);font-size:11px;color:rgba(168,255,87,.3);margin-left:6px">ai_report.py</span>
       </div>
       <div class="terminal-body">
-        <div><span class="cmd">$</span> modal run ai_report.py <span class="dim">--period w5</span></div>
+        <div><span class="cmd">$</span> modal run ai_report.py <span class="dim">--period w6</span></div>
         <div class="dim">✦ Initializing report engine...</div>
-        <div><span class="ok">✓</span> Period: <span class="val">2026-06-04</span> → <span class="val">2026-06-10</span></div>
+        <div><span class="ok">✓</span> Period: <span class="val">2026-06-11</span> → <span class="val">2026-06-17</span></div>
         <div><span class="ok">✓</span> Products scanned: <span class="val">7</span></div>
         <div><span class="ok">✓</span> Key insights extracted: <span class="val">6</span></div>
         <div><span class="ok">✓</span> Design implications: <span class="val">6</span></div>
@@ -416,11 +422,11 @@ html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
     <div style="margin-top:16px;display:flex;gap:10px">
       <div style="flex:1;background:rgba(168,255,87,.04);border:1px solid var(--border);border-radius:6px;padding:12px 16px">
         <div style="font-family:var(--mono);font-size:10px;color:rgba(168,255,87,.4);margin-bottom:4px">TOP EVENT</div>
-        <div style="font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500">Claude Fable 5 刷新 SOTA</div>
+        <div style="font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500">ChatGPT 份额跌破 50%</div>
       </div>
       <div style="flex:1;background:rgba(168,255,87,.04);border:1px solid var(--border);border-radius:6px;padding:12px 16px">
         <div style="font-family:var(--mono);font-size:10px;color:rgba(168,255,87,.4);margin-bottom:4px">SHIFT</div>
-        <div style="font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500">Chat is Dead → Agent</div>
+        <div style="font-family:var(--sans);font-size:14px;color:var(--t1);font-weight:500">并购潮 · AI 计量时代</div>
       </div>
     </div>
   </div>
@@ -435,74 +441,74 @@ html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
       <span class="mono-label">// section_01</span>
       <div style="width:1px;height:14px;background:var(--border2)"></div>
       <h2 style="font-family:var(--serif);font-size:48px;font-weight:400;color:var(--t1);letter-spacing:-1px;line-height:1">本期速览</h2>
-      <span class="mono-label" style="margin-left:4px">6 signals · 2026-06-04~10</span>
+      <span class="mono-label" style="margin-left:4px">6 signals · 2026-06-11~17</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;flex:1">
-
-      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(255,95,160,.8),transparent)"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span class="chip chip-co" style="--co:#ff5fa0;--co-bg:rgba(255,95,160,.07);--co-br:rgba(255,95,160,.2)">anthropic</span>
-          <span class="mono-label">01</span>
-        </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Claude Fable 5 + Mythos 5</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">多项 SOTA 基准刷新，Stripe 50M 行代码库 1 天迁移（此前需数周），视觉能力质变——单张截图即可重建可运行前端代码。Mythos 5 实现跨会话持久记忆，专为长时 Agent 任务设计，让 AI 第一次真正"记住"用户。</div>
-        <div class="src-link" style="margin-top:4px">↗ <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank">anthropic.com/news</a></div>
-      </div>
 
       <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
         <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(0,229,160,.8),transparent)"></div>
         <div style="display:flex;justify-content:space-between;align-items:center">
           <span class="chip chip-co" style="--co:#00e5a0;--co-bg:rgba(0,229,160,.07);--co-br:rgba(0,229,160,.2)">openai</span>
-          <span class="mono-label">02</span>
+          <span class="mono-label">01</span>
         </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">叙事档案 + "Chat is Dead"</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">叙事档案功能按工作/兴趣/旅行建立跨会话用户画像，让记忆成为可审阅的透明资产，用户可随时编辑或删除。OpenAI 正式宣告「对话已死」，全面转向以 Agent 为核心的平台架构，重塑产品形态。</div>
-        <div class="src-link" style="margin-top:4px">↗ <a href="https://the-decoder.com/chatgpt-now-saves-narrative-dossiers-about-you-sorted-by-work-hobbies-and-travel-preferences/" target="_blank">the-decoder.com · 叙事档案</a> · <a href="https://the-decoder.com/openai-says-chat-is-dead-and-plans-to-rebuild-chatgpt-as-a-full-blown-agent-app/" target="_blank">Chat is Dead</a></div>
-      </div>
-
-      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(168,168,255,.8),transparent)"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span class="chip chip-co" style="--co:#a8a8ff;--co-bg:rgba(168,168,255,.07);--co-br:rgba(168,168,255,.2)">apple</span>
-          <span class="mono-label">03</span>
-        </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">WWDC 2026 · Siri 重构</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">AFM 借助 Gemini 数据再训练后推理质量显著提升；System Orchestrator 根据隐私等级和延迟需求自动路由本地/云端，对用户完全透明。Siri 重构后可理解上下文意图，支持跨 App 串联操作，覆盖全系统功能。</div>
-        <div class="src-link" style="margin-top:4px">↗ <a href="https://the-decoder.com/apple-intelligence-gets-a-second-shot-with-help-from-google-and-nvidia/" target="_blank">the-decoder.com · Apple Intelligence WWDC 2026</a></div>
-      </div>
-
-      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(90,174,255,.8),transparent)"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span class="chip chip-co" style="--co:#5aafff;--co-bg:rgba(90,174,255,.07);--co-br:rgba(90,174,255,.2)">google</span>
-          <span class="mono-label">04</span>
-        </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">NotebookLM + Gemini 翻译</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">NotebookLM 新增代码执行和自主研究模式，可直接操作数据验证假设，而非仅输出文字报告，知识工具迈向真正的认知伙伴。Gemini 3.5 Flash 支持 20+ 语言实时语音翻译并已集成至 Google Meet，跨语言沟通壁垒近乎消除。</div>
-        <div class="src-link" style="margin-top:4px">↗ <a href="https://blog.google/innovation-and-ai/products/notebooklm/better-research-notebooklm/" target="_blank">blog.google · NotebookLM</a> · <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/" target="_blank">Gemini Live Translate</a></div>
-      </div>
-
-      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(90,200,250,.8),transparent)"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span class="chip chip-co" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.07);--co-br:rgba(90,200,250,.2)">apple.dev</span>
-          <span class="mono-label">05</span>
-        </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Foundation Models SDK</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Foundation Models API 开放图片输入、自定义技能、服务端执行，开发者可按场景灵活选择端侧或云端部署策略。Xcode AI Agent 实现从需求到测试的多步骤闭环——首次让 IDE 具备真正的 Agent 能力，大幅压缩开发迭代周期。</div>
-        <div class="src-link" style="margin-top:4px">↗ <a href="https://developer.apple.com/documentation/foundationmodels" target="_blank">developer.apple.com · Foundation Models</a></div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">ChatGPT 份额跌破 50%</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Sensor Tower：ChatGPT 占比降至 46.4%，Gemini 27.7%，Claude 10.3%——竞争从一家独大走向多极分化；Claude 付费转化率 13% 全行业领跑；ChatGPT 广告已覆盖 17% 日活用户。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://techcrunch.com/2026/06/16/chatgpts-market-share-slips-below-50-for-first-time/" target="_blank">techcrunch.com · ChatGPT 市场份额</a></div>
       </div>
 
       <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
         <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(168,255,87,.8),transparent)"></div>
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span class="chip chip-co" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.07);--co-br:rgba(168,255,87,.2)">google.oss</span>
+          <span class="chip chip-co" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.07);--co-br:rgba(168,255,87,.2)">google</span>
+          <span class="mono-label">02</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Android 17 + Gemini 深入 OS</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Bubble bar 多任务 UI + 分屏录制；Wear OS 引入 Gemini 个性化部件与 Personal Intelligence，连接日历/Gmail/Keep 提供跨服务建议——AI 战场从 App 层下沉到 OS 层。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://techcrunch.com/2026/06/16/android-17-launches-with-new-multitasking-tools-as-google-expands-gemini-features/" target="_blank">techcrunch.com · Android 17</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(168,168,255,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#a8a8ff;--co-bg:rgba(168,168,255,.07);--co-br:rgba(168,168,255,.2)">meta</span>
+          <span class="mono-label">03</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Facebook AI Mode</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Facebook 推出 AI Mode，自然语言搜索 Groups / Reels / 公开帖子并合成答案；同步上线 AI 换装、AI 照片预设——内容平台争夺用户在平台内找答案的习惯。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://techcrunch.com/2026/06/15/metas-new-ai-mode-on-facebook-pulls-from-public-info-across-its-platforms/" target="_blank">techcrunch.com · Meta AI Mode</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(90,200,250,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.07);--co-br:rgba(90,200,250,.2)">github</span>
+          <span class="mono-label">04</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Copilot 转按 token 计费</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">6 月起从固定订阅改为 token 用量计费，理由：短对话 vs 数小时 Agent 任务成本差异巨大；5 月预览账单上线，用户首次感知 AI 使用成本——AI 工具进入计量经济时代。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">the-decoder.com · Copilot 计费变更</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(255,214,10,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#ffd60a;--co-bg:rgba(255,214,10,.07);--co-br:rgba(255,214,10,.2)">spacex · xai</span>
+          <span class="mono-label">05</span>
+        </div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">$600亿收购 Cursor</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">SpaceX IPO 后首笔大额收购；xAI 已并入 SpaceX，AI 编程成为 $26T 市场战略核心；Cursor 估值 $290 亿，融资 $20 亿无法盈亏平衡——AI 编程工具最大并购案。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://techcrunch.com/2026/06/16/spacex-to-acquire-cursor-for-60b-in-stock-days-after-blockbuster-ipo/" target="_blank">techcrunch.com · SpaceX 收购 Cursor</a></div>
+      </div>
+
+      <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,rgba(90,174,255,.8),transparent)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="chip chip-co" style="--co:#5aafff;--co-bg:rgba(90,174,255,.07);--co-br:rgba(90,174,255,.2)">salesforce</span>
           <span class="mono-label">06</span>
         </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">Gemma 4 QAT 端侧模型</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Gemma 4 采用量化感知训练（QAT），同等性能下内存占用降低 50%+，手机和笔记本均可流畅运行，开源权重可自由部署。低延迟 + 离线可用 + 数据不出设备三重优势，使其在医疗、企业私有化等隐私敏感场景中成为云端模型的有力替代。</div>
-        <div class="src-link" style="margin-top:4px">↗ <a href="https://blog.google/innovation-and-ai/technology/developers-tools/quantization-aware-training-gemma-4/" target="_blank">blog.google · Gemma 4 QAT</a></div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.1;margin-top:4px">$36亿收购 Fin</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Salesforce 收购 Intercom 旗下 AI 客服平台 Fin；Fin 已是 Intercom 主要收入来源；传统 CRM 切入「AI 员工替代」市场——企业软件并购 AI 能力的速度超过自研。</div>
+        <div class="src-link" style="margin-top:4px">↗ <a href="https://techcrunch.com/2026/06/15/salesforce-acquires-ai-customer-service-platform-fin-for-3-6b/" target="_blank">techcrunch.com · Salesforce 收购 Fin</a></div>
       </div>
 
     </div>
@@ -510,203 +516,203 @@ html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
   <div class="sn">02 / 10</div>
 </section>
 
-<!-- ═══ S3 · Claude ═══ -->
-<section class="slide" id="s3" style="--co:#ff5fa0;--co-bg:rgba(255,95,160,.07);--co-br:rgba(255,95,160,.18)">
+<!-- ═══ S3 · OpenAI / ChatGPT ═══ -->
+<section class="slide" id="s3" style="--co:#00e5a0;--co-bg:rgba(0,229,160,.07);--co-br:rgba(0,229,160,.18)">
   <div class="top-line line-in"></div>
   <div class="p-left">
     <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
-      <span class="chip chip-co">anthropic</span>
-      <span class="chip chip-ghost">2026-06-09</span>
+      <span class="chip chip-co">openai</span>
+      <span class="chip chip-ghost">2026-06-16</span>
     </div>
-    <h2 class="p-title rv" style="font-size:88px">Claude<br>Fable 5</h2>
-    <p class="p-sub rv">// + Mythos 5 · cross-session memory</p>
+    <h2 class="p-title rv" style="font-size:96px">ChatGPT<br>市场洗牌</h2>
+    <p class="p-sub rv">// market share &lt; 50% · ads · monetization</p>
     <div class="insight rv">
       <div class="insight-lbl">// design_implication</div>
-      <div class="insight-txt">工具 UX 核心命题反转：从「辅助人」变为「让人<b>监督 AI</b>」——「监督界面」与「输出质量」同等重要。</div>
+      <div class="insight-txt">竞争格局碎片化是最大信号：用户会迁移——<b>差异化能力</b>不再是护城河，而是入场券。</div>
     </div>
     <div class="bullets">
-      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>刷新多项 SOTA 基准</b> —— Stripe 50M 行代码库 1 天迁移，此前需数周工程量。</p></div>
-      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>视觉能力质变</b> —— 从单张截图重建可运行前端代码，UI 还原达实用级别。</p></div>
-      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>Mythos 5 持久记忆</b> —— 跨会话保持项目上下文，专为长时 Agent 任务设计；$10 / $50 per M tokens。</p></div>
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>份额首次跌破 50%（46.4%）</b> —— Gemini 27.7%，Claude 10.3%；竞争从一家独大走向多极分化。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>广告商业化：5 月覆盖 17% 日活用户</b> —— 软件 / 购物 / 媒体为主，正向电商导流扩张。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>Claude 付费转化率 13% 领跑全行业</b> —— 差异化能力正在直接转化为订阅收入。</p></div>
     </div>
-    <div class="src-link rv">↗ <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank">anthropic.com/news/claude-fable-5-mythos-5</a></div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/16/chatgpts-market-share-slips-below-50-for-first-time/" target="_blank">techcrunch.com · ChatGPT market share slips below 50%</a></div>
   </div>
   <div class="p-right">
-    <div class="p-img" style="background-image:url('https://cdn.sanity.io/images/4zrzovbb/website/1e65982497d7d4891219ed0e83141625a291b860-2600x2870.png');background-position:center top;background-size:contain;background-repeat:no-repeat"></div>
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2025/04/GettyImages-2205105208.jpg');background-position:center center"></div>
     <div class="p-tint"></div>
     <div class="p-fade"></div>
   </div>
   <div class="sn">03 / 10</div>
 </section>
 
-<!-- ═══ S4 · ChatGPT ═══ -->
-<section class="slide" id="s4" style="--co:#00e5a0;--co-bg:rgba(0,229,160,.06);--co-br:rgba(0,229,160,.18)">
+<!-- ═══ S4 · Google / Android 17 ═══ -->
+<section class="slide" id="s4" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.06);--co-br:rgba(168,255,87,.18)">
   <div class="top-line line-in"></div>
   <div class="p-left">
     <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
-      <span class="chip chip-co">openai</span>
-      <span class="chip chip-ghost">2026-06-04~05</span>
+      <span class="chip chip-co">google</span>
+      <span class="chip chip-ghost">2026-06-16</span>
     </div>
-    <h2 class="p-title rv" style="font-size:76px">叙事档案<br>+ Agent 转型</h2>
-    <p class="p-sub rv">// ChatGPT dual-track evolution</p>
+    <h2 class="p-title rv" style="font-size:96px">Android 17<br><span>+ Gemini</span></h2>
+    <p class="p-sub rv">// wear_os · bubble_bar · system_level_ai</p>
     <div class="insight rv">
       <div class="insight-lbl">// design_implication</div>
-      <div class="insight-txt">需要提前设计「<b>委托界面 + 进度视图 + 接管按钮</b>」三件套——这是 Agent 时代的最小可用 UX 单元。</div>
+      <div class="insight-txt">AI 战场从 <b>App 层下沉到 OS 层</b>——竞争边界正在从产品功能迁移到系统基础设施。</div>
     </div>
     <div class="bullets">
-      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>叙事档案</b> —— 按工作/兴趣/旅行分类，自动记录用户偏好，形成跨对话上下文档案。</p></div>
-      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>"Chat is Dead"</b> —— OpenAI 宣告对话时代终结，全面转向主动出击的 Agent 平台架构。</p></div>
-      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>范式转移</b> —— 从「问答助手」到「主动出击的智能体」，用户角色从提问者变为委托者。</p></div>
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>Bubble bar + 分屏录制</b> —— 底部气泡多任务 UI；前后摄同时录制，直接分享 TikTok / Reels。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>Wear OS + Gemini Personal Intelligence</b> —— 自然语言生成个性化部件，跨日历/Gmail/Keep 建议。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>竞争参照：Apple iOS 27 仍在追赶</b> —— Google 正借 Android 17 拉开系统级 AI 差距。</p></div>
     </div>
-    <div class="src-link rv">↗ <a href="https://the-decoder.com/chatgpt-now-saves-narrative-dossiers-about-you-sorted-by-work-hobbies-and-travel-preferences/" target="_blank">the-decoder.com · 叙事档案</a> · <a href="https://the-decoder.com/openai-says-chat-is-dead-and-plans-to-rebuild-chatgpt-as-a-full-blown-agent-app/" target="_blank">Chat is Dead 宣言</a></div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/16/android-17-launches-with-new-multitasking-tools-as-google-expands-gemini-features/" target="_blank">techcrunch.com · Android 17 launches</a></div>
   </div>
   <div class="p-right">
-    <div class="p-img" style="background-image:url('https://the-decoder.com/wp-content/uploads/2026/06/chatgpt_Saved_memories.webp');background-position:center top"></div>
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2026/06/gemini-app-GettyImages-2276204472.jpg');background-position:center center"></div>
     <div class="p-tint"></div>
     <div class="p-fade"></div>
   </div>
   <div class="sn">04 / 10</div>
 </section>
 
-<!-- ═══ S5 · Apple Siri ═══ -->
+<!-- ═══ S5 · Meta / Facebook AI Mode ═══ -->
 <section class="slide" id="s5" style="--co:#a8a8ff;--co-bg:rgba(168,168,255,.06);--co-br:rgba(168,168,255,.18)">
   <div class="top-line line-in"></div>
   <div class="p-left">
     <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
-      <span class="chip chip-co">apple · wwdc26</span>
-      <span class="chip chip-ghost">2026-06</span>
+      <span class="chip chip-co">meta</span>
+      <span class="chip chip-ghost">2026-06-15</span>
     </div>
-    <h2 class="p-title rv" style="font-size:104px"><span>Siri</span><br>重构</h2>
-    <p class="p-sub rv">// system_orchestrator + afm_retraining</p>
+    <h2 class="p-title rv" style="font-size:104px">Facebook<br><span>AI Mode</span></h2>
+    <p class="p-sub rv">// in-platform_search · ai_editing · ugc_risk</p>
     <div class="insight rv">
       <div class="insight-lbl">// design_implication</div>
-      <div class="insight-txt">AI <b>执行位置不应是用户负担</b> —— 本地 / 云端路由内化为产品智能，不作为配置选项暴露给用户。</div>
+      <div class="insight-txt">内容平台把 AI 做进<b>搜索入口</b>——答案在平台内生成，对 Google 搜索流量的蚕食已经开始。</div>
     </div>
     <div class="bullets">
-      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>System Orchestrator</b> —— 全系统跨 App 操作能力，iOS / macOS 内所有 App 均可被 Siri 调度。</p></div>
-      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>AFM 协同训练</b> —— 借助 Google Gemini 和 NVIDIA 工具链对 Apple Foundation Model 进行再训练提升。</p></div>
-      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>本地 / 云端智能路由</b> —— 隐私敏感任务留本地，复杂任务上云，用户完全无感知。</p></div>
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>AI Mode 自然语言搜索</b> —— 从 Groups / Reels / 公开帖子提取信息合成答案，来源可追溯。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>AI 换装 + AI 照片预设</b> —— 虚拟试穿球衣 / 更换发型；AI 风格滤镜一键应用。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>可靠性风险</b> —— AI 汇总 UGC 无人工审核，错误信息传播风险是核心挑战。</p></div>
     </div>
-    <div class="src-link rv">↗ <a href="https://the-decoder.com/apple-intelligence-gets-a-second-shot-with-help-from-google-and-nvidia/" target="_blank">the-decoder.com · Apple Intelligence WWDC 2026</a> · <a href="https://developer.apple.com/wwdc26/" target="_blank">developer.apple.com/wwdc26</a></div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/15/metas-new-ai-mode-on-facebook-pulls-from-public-info-across-its-platforms/" target="_blank">techcrunch.com · Meta AI Mode on Facebook</a></div>
   </div>
   <div class="p-right">
-    <div class="p-img" style="background-image:url('https://devimages-cdn.apple.com/wwdc-services/images/9B2E82C5-4DDF-4B9A-9459-328D8E297696/00E61AFD-A68C-4443-B6DB-54AE290F9657/10990_wide_900x506_2x.jpg');background-position:center center"></div>
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2026/05/meta-apps-GettyImages-2152655816.jpg');background-position:center center"></div>
     <div class="p-tint"></div>
     <div class="p-fade"></div>
   </div>
   <div class="sn">05 / 10</div>
 </section>
 
-<!-- ═══ S6 · NotebookLM ═══ -->
-<section class="slide" id="s6" style="--co:#5aafff;--co-bg:rgba(90,174,255,.06);--co-br:rgba(90,174,255,.18)">
+<!-- ═══ S6 · GitHub Copilot ═══ -->
+<section class="slide" id="s6" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.06);--co-br:rgba(90,200,250,.18)">
   <div class="top-line line-in"></div>
   <div class="p-left">
     <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
-      <span class="chip chip-co">google</span>
-      <span class="chip chip-ghost">2026-06-05</span>
+      <span class="chip chip-co">github · microsoft</span>
+      <span class="chip chip-ghost">2026-06</span>
     </div>
-    <h2 class="p-title rv" style="font-size:100px">Notebook<br><span>LM</span></h2>
-    <p class="p-sub rv">// code_execution + autonomous_research</p>
+    <h2 class="p-title rv" style="font-size:88px">Copilot<br><span>按量计费</span></h2>
+    <p class="p-sub rv">// token_billing · agentic_cost · value_ux</p>
     <div class="insight rv">
       <div class="insight-lbl">// design_implication</div>
-      <div class="insight-txt">只有语言能力的 AI 是<b>文秘</b>，拥有计算能力的 AI 才是<b>研究伙伴</b> —— 两者的设计范式完全不同。</div>
+      <div class="insight-txt">AI 进入计量时代——UX 必须让<b>价值</b>而非成本可见，「节省了多少时间」比「用了多少 token」更重要。</div>
     </div>
     <div class="bullets">
-      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>代码执行能力</b> —— 可在笔记本中运行 Python，直接对上传数据进行分析和可视化。</p></div>
-      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>自主研究模式</b> —— 用户提问后，自动搜索多来源、综合信息，生成结构化研究报告。</p></div>
-      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>角色升级</b> —— 从「整理笔记的文秘」进化为「主动执行研究的伙伴」，价值密度跃升。</p></div>
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>6 月转 token 用量计费</b> —— 固定订阅 → 按实际消耗；一句话 vs 数小时 Agent 任务成本差异巨大。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>5 月推出预览账单</b> —— 开发者首次感知 AI 实际使用成本，行为将被显著重塑。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>交互数据训练政策</b> —— 4 月 24 日起使用 Copilot 用户交互数据改进模型，同步公示。</p></div>
     </div>
-    <div class="src-link rv">↗ <a href="https://blog.google/innovation-and-ai/products/notebooklm/better-research-notebooklm/" target="_blank">blog.google · NotebookLM 研究升级</a></div>
+    <div class="src-link rv">↗ <a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">the-decoder.com · GitHub Copilot token billing</a></div>
   </div>
   <div class="p-right">
-    <div class="p-img" style="background-image:url('https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IMG_1_Hero_2x.width-1300.png');background-position:center 20%"></div>
+    <div class="p-img" style="background-image:url('https://the-decoder.com/wp-content/uploads/2023/03/github_copilot_X_gpt-4.jpg');background-position:center center"></div>
     <div class="p-tint"></div>
     <div class="p-fade"></div>
   </div>
   <div class="sn">06 / 10</div>
 </section>
 
-<!-- ═══ S7 · Gemini Translate ═══ -->
-<section class="slide" id="s7" style="--co:#a8ff57;--co-bg:rgba(168,255,87,.06);--co-br:rgba(168,255,87,.18)">
+<!-- ═══ S7 · SpaceX / Cursor ═══ -->
+<section class="slide" id="s7" style="--co:#ffd60a;--co-bg:rgba(255,214,10,.06);--co-br:rgba(255,214,10,.18)">
   <div class="top-line line-in"></div>
   <div class="p-left">
     <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
-      <span class="chip chip-co">google · gemini</span>
-      <span class="chip chip-ghost">2026-06-05</span>
+      <span class="chip chip-co">spacex · xai</span>
+      <span class="chip chip-ghost">2026-06-16</span>
     </div>
-    <h2 class="p-title rv" style="font-size:88px">Gemini<br><span>Live 翻译</span></h2>
-    <p class="p-sub rv">// 20+ languages · realtime voice · meet</p>
+    <h2 class="p-title rv" style="font-size:74px">SpaceX<br><span>$600亿</span><br>收购 Cursor</h2>
+    <p class="p-sub rv">// m&amp;a · ai_coding · strategic_asset</p>
     <div class="insight rv">
       <div class="insight-lbl">// design_implication</div>
-      <div class="insight-txt">最好的 AI UX 是让 AI <b>消失</b> —— 凡是用户意识到「是 AI 在帮我」的地方，都是还没做到透明的地方。</div>
+      <div class="insight-txt">AI 编程工具升级为<b>战略资产</b>——独立产品的生存窗口加速关闭，差异化护城河比融资更重要。</div>
     </div>
     <div class="bullets">
-      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>实时语音翻译</b> —— 支持 20+ 语言，延迟极低，无需暂停或切换任何界面。</p></div>
-      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>深度集成 Meet</b> —— 跨语言会议无缝进行，参与者无需安装任何额外客户端。</p></div>
-      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>AI 透明化</b> —— 用户感受不到 AI 存在，只感受到语言障碍消失，「自己变强了」。</p></div>
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>SpaceX IPO 后首笔大额收购</b> —— 上市数日后以股票形式收购；上市股价从 $135 涨至 $200+。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>xAI 并入 SpaceX，$26T TAM 战略</b> —— AI 编程是 $22.7T 「企业应用」目标的核心入口。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>Cursor 估值 $290 亿但无法盈亏平衡</b> —— $20 亿融资不足以独立运营，被收购是更现实的出路。</p></div>
     </div>
-    <div class="src-link rv">↗ <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/" target="_blank">blog.google · Gemini Live 3.5 Translate</a></div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/16/spacex-to-acquire-cursor-for-60b-in-stock-days-after-blockbuster-ipo/" target="_blank">techcrunch.com · SpaceX to acquire Cursor</a></div>
   </div>
   <div class="p-right">
-    <div class="p-img" style="background-image:url('https://storage.googleapis.com/gweb-uniblog-publish-prod/images/3-5_Live_Translate_hero.width-1300.png');background-position:center 30%"></div>
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2026/06/elon-nasdaq-spacex-ipo.jpg');background-position:center top"></div>
     <div class="p-tint"></div>
     <div class="p-fade"></div>
   </div>
   <div class="sn">07 / 10</div>
 </section>
 
-<!-- ═══ S8 · Apple Foundation Models ═══ -->
-<section class="slide" id="s8" style="--co:#5ac8fa;--co-bg:rgba(90,200,250,.06);--co-br:rgba(90,200,250,.18)">
+<!-- ═══ S8 · Anthropic ═══ -->
+<section class="slide" id="s8" style="--co:#ff5fa0;--co-bg:rgba(255,95,160,.07);--co-br:rgba(255,95,160,.18)">
   <div class="top-line line-in"></div>
   <div class="p-left">
     <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
-      <span class="chip chip-co">apple.dev</span>
-      <span class="chip chip-ghost">2026-06-09</span>
+      <span class="chip chip-co">anthropic</span>
+      <span class="chip chip-ghost">2026-06-16</span>
     </div>
-    <h2 class="p-title rv" style="font-size:82px">Foundation<br><span>Models</span> SDK</h2>
-    <p class="p-sub rv">// multimodal · custom_skills · xcode_agent</p>
+    <h2 class="p-title rv" style="font-size:88px">Anthropic<br><span>禁令反促销</span></h2>
+    <p class="p-sub rv">// trust · enterprise · trump_ban_effect</p>
     <div class="insight rv">
       <div class="insight-lbl">// design_implication</div>
-      <div class="insight-txt">平台提供原生 AI SDK 后，第三方差异化不在<b>模型能力</b>，而在<b>场景理解</b> —— 谁更懂用户场景，谁赢。</div>
+      <div class="insight-txt">「<b>被政府封禁</b>」演变为企业信任信号——监管争议反向强化了品牌的能力背书。</div>
     </div>
     <div class="bullets">
-      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>图片输入 + 自定义技能</b> —— 开发者可直接调用端侧 AFM，无需连接云端，隐私留本地。</p></div>
-      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>服务端执行</b> —— 复杂任务可选服务端 AFM，开发者一套 API 灵活切换本地 / 云端。</p></div>
-      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>Xcode AI Agent</b> —— 在 IDE 内自主完成多步骤开发：写代码、跑测试、修 Bug。</p></div>
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>禁令后企业销售数据反升</b> —— 联邦机构禁用后，第三方企业客户信任度反而上升。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>用户心理：「被封的才是真能干的」</b> —— 安全担忧在企业语境下转化为技术实力认可。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>Claude 13% 付费转化率领跑全行业</b> —— 差异化能力直接转化为溢价能力和定价权。</p></div>
     </div>
-    <div class="src-link rv">↗ <a href="https://developer.apple.com/documentation/foundationmodels" target="_blank">developer.apple.com · Foundation Models</a> · <a href="https://developer.apple.com/xcode/" target="_blank">Xcode AI Agent</a></div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/16/anthropics-latest-feud-with-the-trump-admin-may-actually-help-it-sales-data-suggests/" target="_blank">techcrunch.com · Anthropic feud with Trump admin</a></div>
   </div>
   <div class="p-right">
-    <div class="p-img" style="background-image:url('https://devimages-cdn.apple.com/wwdc-services/images/9B2E82C5-4DDF-4B9A-9459-328D8E297696/11252/11252_wide_900x506_2x.jpg');background-position:center center"></div>
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2026/03/Dario-Amodei-Anthropic-viva-tech.jpg');background-position:center top"></div>
     <div class="p-tint"></div>
     <div class="p-fade"></div>
   </div>
   <div class="sn">08 / 10</div>
 </section>
 
-<!-- ═══ S9 · Gemma 4 QAT ═══ -->
-<section class="slide" id="s9" style="--co:#ffd60a;--co-bg:rgba(255,214,10,.06);--co-br:rgba(255,214,10,.18)">
+<!-- ═══ S9 · Salesforce / Fin ═══ -->
+<section class="slide" id="s9" style="--co:#5aafff;--co-bg:rgba(90,174,255,.06);--co-br:rgba(90,174,255,.18)">
   <div class="top-line line-in"></div>
   <div class="p-left">
     <div class="rv" style="display:flex;gap:8px;align-items:center;margin-bottom:24px">
-      <span class="chip chip-co">google.oss</span>
-      <span class="chip chip-ghost">2026-06-04</span>
+      <span class="chip chip-co">salesforce</span>
+      <span class="chip chip-ghost">2026-06-15</span>
     </div>
-    <h2 class="p-title rv" style="font-size:104px">Gemma 4<br><span>QAT</span></h2>
-    <p class="p-sub rv">// quantization_aware_training · on-device</p>
+    <h2 class="p-title rv" style="font-size:82px">Salesforce<br><span>$36亿</span><br>收购 Fin</h2>
+    <p class="p-sub rv">// ai_customer_service · crm · m&amp;a</p>
     <div class="insight rv">
       <div class="insight-lbl">// design_implication</div>
-      <div class="insight-txt">延迟敏感和隐私敏感场景，<b>端侧模型应纳入技术选型优先评估</b> —— 它是差异化优势，不是妥协方案。</div>
+      <div class="insight-txt">企业软件进入 <b>AI 并购替代自研</b>时代——买能力比建能力更快，竞争窗口不允许慢慢自建。</div>
     </div>
     <div class="bullets">
-      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>内存降低 50%+</b> —— QAT 训练使同等性能下内存占用大幅下降，手机 / 笔记本可流畅运行。</p></div>
-      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>开源权重</b> —— 可私有化部署，企业数据完全不出本地，满足数据合规要求。</p></div>
-      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>端侧 AI 新基准</b> —— 低延迟 + 离线运行 + 隐私保护三大优势齐备，不是「削减版云端」。</p></div>
+      <div class="bullet rv"><span class="b-num">01.</span><p class="b-text"><b>收购 Intercom 旗下 Fin</b> —— Fin 是 Intercom 主要收入来源；Salesforce 直接买入客户群 + 模型。</p></div>
+      <div class="bullet rv"><span class="b-num">02.</span><p class="b-text"><b>传统 CRM 切入「AI 员工替代」市场</b> —— 价值主张从「工具」升级为「员工」——直接替代人工客服。</p></div>
+      <div class="bullet rv"><span class="b-num">03.</span><p class="b-text"><b>并购速度超越自研</b> —— $36 亿买成熟产品 vs 3~5 年自建，企业 AI 竞争窗口已不允许等待。</p></div>
     </div>
-    <div class="src-link rv">↗ <a href="https://blog.google/innovation-and-ai/technology/developers-tools/quantization-aware-training-gemma-4/" target="_blank">blog.google · Gemma 4 QAT 量化感知训练</a></div>
+    <div class="src-link rv">↗ <a href="https://techcrunch.com/2026/06/15/salesforce-acquires-ai-customer-service-platform-fin-for-3-6b/" target="_blank">techcrunch.com · Salesforce acquires Fin</a></div>
   </div>
   <div class="p-right">
-    <div class="p-img" style="background-image:url('https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Hero_Visual_Blog.width-1300.png');background-position:center center"></div>
+    <div class="p-img" style="background-image:url('https://techcrunch.com/wp-content/uploads/2024/06/GettyImages-1125951338.jpg');background-position:center center"></div>
     <div class="p-tint"></div>
     <div class="p-fade"></div>
   </div>
@@ -729,55 +735,55 @@ html,body { width:100%;height:100%;overflow:hidden;background:#020402 }
       <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
           <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_01</span>
-          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">claude fable 5</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">chatgpt &lt; 50%</span>
         </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 编程从辅助到主导——人的角色变为监督者</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">当 AI 能独立完成 50M 行代码迁移，工具核心价值不再是「提速」，而是「让人放心委托」。设计重心须从「降低使用门槛」转向「提升审查体验」——用户没能力验证输出，才是真正的产品缺陷。</div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">市场碎片化——差异化能力才是真正的护城河</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">ChatGPT 份额跌破 50% 说明用户开始根据任务在多个 AI 间迁移。Claude 13% 的付费转化率证明：真正能做到「别人做不到的事」的产品，才能在碎片化竞争中赢得高价值用户留存。抢市场份额不如深耕核心差异化能力。</div>
       </div>
 
       <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
           <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_02</span>
-          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">openai</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">copilot billing</span>
         </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">对话范式终结——委托 + 监督才是下一代交互</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">用户心智正在从「一问一答」转变为「发出任务 → 等待结果 → 必要时介入」。每个 AI 功能都需要「委托入口 + 执行进度 + 接管控制」三件套，缺少任何一环都会让用户陷入焦虑和失控感。</div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 计量时代——价值可见比成本透明更重要</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Copilot 转计量计费标志 AI 工具「无感使用」时代终结。若引入 AI 用量限制，UX 重心应放在「价值可视化」：用户需要看到「AI 帮我节省了多少时间」，而不是「我用了多少 token」——价值感知先于成本感知。</div>
       </div>
 
       <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
           <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_03</span>
-          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">apple siri</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">meta ai mode</span>
         </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 执行位置不应是用户负担——后台路由更好</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">用户无需了解任务跑在端侧还是云端，就像使用手机时感知不到 CPU 调度。本地 / 云端路由应由产品按隐私等级和延迟需求自动决策，以「保障」体现，而不是以「选项」暴露给用户。</div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">平台内 AI 搜索——可靠性是下一个关键战场</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">内容平台用 AI 做平台内搜索的核心挑战：UGC 质量无法保证。若 AI 功能从非结构化内容提取答案，必须在 UX 层设计「来源标注 + 可信度提示」——让用户清楚「这个答案来自哪里」是 AI 答案产品的基本责任。</div>
       </div>
 
       <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
           <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_04</span>
-          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">notebooklm</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">cursor $60b</span>
         </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 嵌入计算——从「文秘」升级为「研究伙伴」</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">能执行代码的 AI 可以直接操作数据、验证假设、生成可复现分析，不只是「更聪明的文字处理器」。这标志着 AI 产品价值密度的跃迁：从辅助「表达想法」进化为参与「认知过程」本身。</div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 工具并购潮——独立产品战略窗口正在关闭</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">SpaceX 收购 Cursor 说明大公司选择直接收购而非等待自研。独立 AI 工具需要建立「收购价值」（成熟客户 + 专用模型 + 独特数据）或「护城河」（难以复制的差异化能力），才能在并购浪潮中保持战略主动权。</div>
       </div>
 
       <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
           <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_05</span>
-          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">gemini live</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">android 17</span>
         </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">最好的 AI UX 是让 AI 消失——用户感受自己变强了</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Gemini 翻译让用户感受到的是「语言障碍消失了」，而不是「AI 在帮我翻译」。当用户意识到「是 AI 在帮我」时，说明产品还有摩擦待消除——真正的目标是让能力无缝融入，体验「自己变强了」。</div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">AI 下沉 OS 层——系统级集成重塑竞争边界</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Google 把 Gemini 做进 Wear OS 和 Bubble bar，意味着 AI 能力正在从「应用功能」下沉为「系统基础设施」。在产品设计时需善用平台 AI 能力，同时清晰认识哪些核心 AI 功能必须自建以保持差异化。</div>
       </div>
 
       <div class="rv" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
           <span style="font-family:var(--mono);font-size:12px;color:rgba(168,255,87,.4);letter-spacing:.5px">insight_06</span>
-          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">gemma 4 qat</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--t3);background:var(--t4);padding:2px 7px;border-radius:3px;border:1px solid var(--border)">anthropic trust</span>
         </div>
-        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">端侧 AI 不是削减版云端——低延迟 + 隐私是优势</div>
-        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Gemma 4 QAT 在性能持平的前提下内存降低 50%+，低延迟 + 离线 + 隐私三大优势同时具备。实时交互、医疗、企业私有化等场景中，端侧模型应是默认优先选项，而非云端的「退而求其次」。</div>
+        <div style="font-family:var(--serif);font-size:26px;color:var(--t1);line-height:1.2">监管争议可成信任护城河——能力背书决定定价权</div>
+        <div style="font-family:var(--sans);font-size:19px;color:var(--t2);line-height:1.6;flex:1">Anthropic 案例揭示：在 AI 领域，真实的监管压力有时会强化企业信任——监管本身证明了能力的真实性。同时 13% 的付费转化率说明差异化能力直接转化为定价权。面对争议时，能力背书的故事比公关辩护更有价值。</div>
       </div>
 
     </div>

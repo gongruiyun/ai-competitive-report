@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.06 第六期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --primary:       #0a0a0a;
+  --on-primary:    #ffffff;
+  --on-dark:       #ffffff;
+  --pink:          #ff4d8b;
+  --teal:          #1a3a3a;
+  --lavender:      #b8a4ed;
+  --peach:         #ffb084;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero ── */
+.hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 48px 40px;
+}
+/* ── Report Selector ── */
+.report-selector {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.report-selector__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-card);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 6px 14px 6px 16px;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+}
+.report-selector__trigger:hover { background: var(--surface-strong); color: var(--body); }
+.report-selector__trigger.open  { background: var(--surface-strong); color: var(--body-strong); }
+.report-selector__chevron {
+  width: 14px; height: 14px; opacity: 0.5;
+  transition: transform 0.2s; flex-shrink: 0;
+}
+.report-selector__trigger.open .report-selector__chevron { transform: rotate(180deg); opacity: 0.8; }
+.report-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0;
+  min-width: 300px; background: #fff;
+  border: 1px solid var(--hairline); border-radius: 16px;
+  padding: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  z-index: 100; opacity: 0; transform: translateY(-6px);
+  pointer-events: none; transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.report-dropdown__section-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted-soft); padding: 6px 10px 4px;
+}
+.report-dropdown__item {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 12px; border-radius: 10px;
+  cursor: pointer; text-decoration: none; color: var(--body);
+  transition: background 0.12s;
+}
+.report-dropdown__item:hover { background: var(--surface-soft); }
+.report-dropdown__item--active { background: var(--surface-card); color: var(--body-strong); }
+.report-dropdown__item-left { display: flex; flex-direction: column; gap: 2px; }
+.report-dropdown__item-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.report-dropdown__item-period { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.report-dropdown__badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; background: var(--teal); color: #fff;
+  border-radius: 9999px; padding: 2px 8px; flex-shrink: 0;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 7vw, 80px);
+  font-weight: 500; letter-spacing: -2.5px;
+  line-height: 1; color: var(--ink); max-width: 720px; margin-bottom: 16px;
+}
+.hero-sub { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+/* ── 通用容器 ── */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+/* ── Section ── */
+.section { padding: 48px 0 0; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); margin-bottom: 16px; }
+.section-title { font-family: var(--font-display); font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+
+/* ── 速览 ── */
+.flash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flash-card { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px; min-height: 200px; }
+.flash-card:nth-child(1) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: #d4e8e3;      color: var(--ink); }
+.flash-card:nth-child(3) { background: #ece8f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #d8eef8;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; }
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); color: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 9999px; padding: 4px 12px; align-self: flex-start; }
+
+/* ── 轨道 ── */
+.track { margin-top: 52px; }
+.track-label { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.track-pill { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 9999px; padding: 6px 16px; background: var(--surface-card); color: var(--muted); white-space: nowrap; }
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+
+/* ── 产品卡片 ── */
+.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.product-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: 16px; padding: 28px; transition: box-shadow 0.15s; }
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.pc-img { margin: -28px -28px 22px; height: 200px; border-radius: 15px 15px 0 0; overflow: hidden; background: var(--surface-strong); }
+.pc-img img { width: 100%; height: 100%; object-fit: cover; object-position: center center; display: block; transition: transform 0.4s ease; }
+.product-card:hover .pc-img img { transform: scale(1.03); }
+.pc-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date { margin-left: auto; font-size: 12px; color: var(--muted-soft); background: var(--surface-card); border-radius: 9999px; padding: 3px 12px; white-space: nowrap; }
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li { font-size: 14px; color: var(--body); line-height: 1.6; padding-left: 18px; position: relative; }
+.pc-list li::before { content: '·'; position: absolute; left: 4px; color: var(--muted-soft); font-size: 18px; line-height: 1.3; }
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux { margin-top: 14px; padding: 10px 12px; background: rgba(232,185,74,0.10); border-radius: 8px; border-left: 3px solid var(--ochre); font-size: 13px; color: var(--body); line-height: 1.55; }
+.pc-ux::before { content: "设计视角 · "; font-weight: 700; color: #b8860b; }
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+
+/* ── 深色 Band ── */
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub, .band-teal .pc-date  { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+
+/* ── 设计工具 Band ── */
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+/* ── 启示卡片 ── */
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #d4e8e3; }
+.insight-card:nth-child(2) { background: #d8eef8; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #faf3d8; }
+.insight-card:nth-child(5) { background: #fce4ee; }
+.insight-card:nth-child(6) { background: #dde8e5; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+
+/* ── CTA Band ── */
+.cta-band { background: var(--surface-soft); border-radius: 24px; margin: 80px 0; padding: 80px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+/* ── 页脚 ── */
+footer { background: var(--surface-soft); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer { padding: 40px 24px; }
+  .cta-band { padding: 48px 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span id="triggerLabel">云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第六期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" data-report-id="2026-06-w6" data-period-start="2026-06-11" data-period-end="2026-06-17" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第六期</span>
+          <span class="report-dropdown__item-period">2026-06-11 ~ 2026-06-17</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" data-report-id="2026-06-w5" data-period-start="2026-06-04" data-period-end="2026-06-10" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第五期</span>
+          <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" data-report-id="2026-06-w4" data-period-start="2026-05-28" data-period-end="2026-06-03" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第四期</span>
+          <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" data-report-id="2026-05-w3" data-period-start="2026-05-21" data-period-end="2026-05-27" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w2.html" data-report-id="2026-05-w2" data-period-start="2026-05-14" data-period-end="2026-05-20" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" data-report-id="2026-05-w1" data-period-start="2026-04-29" data-period-end="2026-05-13" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub"><span id="coverage-window">覆盖窗口：计算中…</span>｜阅读时长：约 5 分钟｜范围：产品动态、企业级 AI 产品 &amp; 云平台、设计工具动态、对我们的启示</p>
+</div>
+
+<div class="wrap">
+
+  <!-- ── 01 本期速览 ── -->
+  <section class="section" id="s1">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">本期速览</div>
+
+    <div class="flash-grid">
+
+      <div class="flash-card">
+        <span class="flash-card-chip">OPENAI</span>
+        <div class="flash-card-num">01</div>
+        <div class="flash-card-body"><strong>ChatGPT 市场份额首次跌破 50%——竞争格局加速分散</strong>——Sensor Tower 数据：ChatGPT 占比降至 46.4%，Gemini 27.7%，Claude 10.3%；Claude 付费转化率 13% 全行业领跑；ChatGPT 广告覆盖 17% 日活用户。</div>
+        <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/16/chatgpts-market-share-slips-below-50-for-first-time/" target="_blank">techcrunch.com · ChatGPT 市场份额</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">GOOGLE</span>
+        <div class="flash-card-num">02</div>
+        <div class="flash-card-body"><strong>Android 17 发布，Gemini 深入 Wear OS 与多任务层</strong>——新增 Bubble bar 快速多任务入口、分屏录制功能；Wear OS 夏季更新引入 Gemini 个性化部件与 Personal Intelligence；对标 Apple iOS 27 AI 升级。</div>
+        <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/16/android-17-launches-with-new-multitasking-tools-as-google-expands-gemini-features/" target="_blank">techcrunch.com · Android 17</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">META</span>
+        <div class="flash-card-num">03</div>
+        <div class="flash-card-body"><strong>Facebook AI Mode——自然语言搜索平台内容</strong>——Meta 在 Facebook 推出 AI Mode，用户可自然语言提问，AI 从 Groups / Reels / 公开帖子合成答案；同步上线 AI 换装、AI 照片预设功能。</div>
+        <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/15/metas-new-ai-mode-on-facebook-pulls-from-public-info-across-its-platforms/" target="_blank">techcrunch.com · Meta AI Mode</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">GITHUB</span>
+        <div class="flash-card-num">04</div>
+        <div class="flash-card-body"><strong>GitHub Copilot 转按 token 用量计费——AI 工具进入计量时代</strong>——6 月起从固定月订阅改为按 token 计费；理由：短对话与数小时 Agent 任务算力成本差异巨大；预览账单 5 月上线。</div>
+        <div class="flash-card-src">来源：<a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">the-decoder.com · Copilot 计费变更</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">SPACEX / XAI</span>
+        <div class="flash-card-num">05</div>
+        <div class="flash-card-body"><strong>SpaceX 以 $600 亿收购 Cursor——AI 编程工具最大并购案</strong>——SpaceX IPO 后首笔大额收购；xAI 已并入 SpaceX，AI 编程成为 $26T 市场战略核心；Cursor 原估值 $290 亿，融资 $20 亿无法盈亏平衡。</div>
+        <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/16/spacex-to-acquire-cursor-for-60b-in-stock-days-after-blockbuster-ipo/" target="_blank">techcrunch.com · SpaceX 收购 Cursor</a></div>
+      </div>
+
+      <div class="flash-card">
+        <span class="flash-card-chip">SALESFORCE</span>
+        <div class="flash-card-num">06</div>
+        <div class="flash-card-body"><strong>Salesforce 以 $36 亿收购 AI 客服平台 Fin——企业并购潮加速</strong>——Fin 是 Intercom 旗下 AI 客服核心产品，已是其主要收入来源；Salesforce 直接买入客户群 + 模型，传统 CRM 切入 AI 员工替代市场。</div>
+        <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/15/salesforce-acquires-ai-customer-service-platform-fin-for-3-6b/" target="_blank">techcrunch.com · Salesforce 收购 Fin</a></div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ── 02 产品动态 · 消费级 ── -->
+  <section class="section" id="s2">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">产品动态</div>
+
+    <div class="track">
+      <div class="track-label">
+        <span class="track-pill">AI 消费级产品</span>
+        <div class="track-label-line"></div>
+      </div>
+
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2025/04/GettyImages-2205105208.jpg" alt="ChatGPT 市场份额" loading="lazy" style="object-position: center center;"></div>
+          <div class="pc-head">
+            <span class="pc-name">ChatGPT</span>
+            <span class="pc-sub">OpenAI · 市场份额 + 广告商业化</span>
+            <span class="pc-date" data-date-start="2026-06-11" data-date-end="2026-06-17">2026.06.16</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>市场份额首次跌破 50%（Sensor Tower 数据）</b>：ChatGPT 降至 46.4%；Gemini 27.7%，Claude 10.3%；Grok / Perplexity / DeepSeek / Meta AI 合计不足 5%——竞争格局从一家独大走向多极分化。</li>
+            <li><b>广告商业化落地：5 月已覆盖 17% 日活用户</b>：OpenAI 2 月开始在 ChatGPT 投放广告，软件 / 购物 / 媒体为最大广告类别；正在向电商流量分发扩张，已向 Target / Walmart / Costco 导流。</li>
+            <li><b>Claude 付费转化率 13%，全行业领跑</b>：Anthropic 用户付费转化率高出行业均值，说明高质量差异化能力正在转化为订阅收入——投资人重点观察指标。</li>
+          </ul>
+          <div class="pc-ux">ChatGPT 市场份额跌破 50% 是本期最具战略意义的数据：它说明 AI 助手市场的用户忠诚度正在系统性下降——用户开始根据具体任务在不同助手间迁移。对我们产品的启示：差异化不再是护城河，而是入场券。Claude 13% 的付费转化率提示：能做到别人做不到的事，才能在碎片化竞争中保住高价值用户。</div>
+          <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/16/chatgpts-market-share-slips-below-50-for-first-time/" target="_blank">techcrunch.com · ChatGPT 市场份额跌破 50%</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2026/06/gemini-app-GettyImages-2276204472.jpg" alt="Android 17 + Gemini" loading="lazy" style="object-position: center center;"></div>
+          <div class="pc-head">
+            <span class="pc-name">Android 17 + Gemini</span>
+            <span class="pc-sub">Google · Wear OS · 系统级 AI 扩展</span>
+            <span class="pc-date" data-date-start="2026-06-11" data-date-end="2026-06-17">2026.06.16</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Bubble bar 多任务 UI + 分屏录制</b>：底部 Bubble bar 将最近 App 整理为气泡，快速切换多任务；新增前后摄同时录制功能，支持直接分享至 TikTok / Instagram / YouTube。</li>
+            <li><b>Wear OS 引入 Gemini Individual Intelligence</b>：夏季更新让 Pixel Watch 用户通过自然语言描述生成个性化部件；Gemini 连接 Google 日历 / Gmail / Keep 等，提供跨服务个人化建议。</li>
+            <li><b>竞争参照：Apple iOS 27 仍在追赶</b>：文章直接点名 Apple 仍在 AI 能力赶超阶段，iOS 27 AI 功能预计 9 月公开——Google 正借 Android 17 拉开系统级 AI 差距。</li>
+          </ul>
+          <div class="pc-ux">Android 17 的核心信号是：Google 把 Gemini 做进了 OS 层的基础 UI（Bubble bar 和 Wear OS 部件），而不只是一个 App。这意味着 AI 竞争的战场正在从应用层向系统层迁移。对我们产品的启示：当平台把 AI 做进底层 OS，第三方 App 可调用的原生 AI 能力将大幅丰富——在设计时需要考虑如何与系统级 AI 能力协同，而不是独立构建。</div>
+          <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/16/android-17-launches-with-new-multitasking-tools-as-google-expands-gemini-features/" target="_blank">techcrunch.com · Android 17 发布</a></div>
+        </div>
+
+        <div class="product-card wide">
+          <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2026/05/meta-apps-GettyImages-2152655816.jpg" alt="Meta Facebook AI Mode" loading="lazy" style="object-position: center center;"></div>
+          <div class="pc-head">
+            <span class="pc-name">Facebook AI Mode</span>
+            <span class="pc-sub">Meta · 平台内 AI 搜索 · AI 编辑工具</span>
+            <span class="pc-date" data-date-start="2026-06-11" data-date-end="2026-06-17">2026.06.15</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>AI Mode——自然语言搜索平台公开内容</b>：用户在 Facebook 内用自然语言提问，AI 从 Groups / Reels / 公开帖子中提取信息合成答案，返回来源可追溯的结果——绕过传统关键词搜索。</li>
+            <li><b>AI 换装与照片预设</b>：Stories 内新增「AI Edit」，虚拟试穿球队球衣、更换发型 / 服装；AI 照片预设可一键应用风格滤镜——AI 编辑工具下沉到日常内容创作场景。</li>
+            <li><b>可靠性风险：AI 汇总用户生成内容存在错误信息传播风险</b>：AI 从普通用户帖子提取内容，无人工审核过滤；与专业知识库不同，平台 UGC 的质量和准确性无法保证。</li>
+            <li><b>策略意图：用 AI 增强平台粘性 + 多元化变现</b>：AI Mode 让用户在 Facebook 内找到答案，减少跳出率；AI 功能与近期广告产品整合，形成「内容消费 → AI 答案 → 广告转化」闭环。</li>
+          </ul>
+          <div class="pc-ux">Meta AI Mode 是「内容平台用 AI 重做搜索入口」的典型案例：当用户在 Facebook 内直接得到答案，就减少了去 Google 搜索的动机。对我们产品的设计启示：内容平台将越来越多地把 AI 定位为「平台内答案引擎」，而不是独立的 AI 助手——这意味着用户的「寻找答案」行为正在从搜索引擎向内容平台内嵌 AI 转移。可靠性问题是关键痛点：当 AI 汇总非结构化 UGC 时，如何向用户清晰标注内容质量和来源，将成为平台责任的核心挑战。</div>
+          <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/15/metas-new-ai-mode-on-facebook-pulls-from-public-info-across-its-platforms/" target="_blank">techcrunch.com · Meta AI Mode on Facebook</a></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ── 企业级 AI · 深色 Band ── -->
+<div class="wrap">
+  <div class="color-band band-teal" id="s2b">
+    <div class="section-label">Section 02 · B</div>
+    <div class="section-title">企业级 AI 产品 &amp; 云平台</div>
+
+    <div class="track">
+      <div class="track-label">
+        <span class="track-pill">开发者工具 &amp; AI 并购</span>
+        <div class="track-label-line"></div>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="pc-img"><img src="https://the-decoder.com/wp-content/uploads/2023/03/github_copilot_X_gpt-4.jpg" alt="GitHub Copilot 按量计费" loading="lazy" style="object-position: center center;"></div>
+          <div class="pc-head">
+            <span class="pc-name">GitHub Copilot</span>
+            <span class="pc-sub">Microsoft · Token 计量计费</span>
+            <span class="pc-date" data-date-start="2026-06-11" data-date-end="2026-06-17">2026.06</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>6 月起转为 token 用量计费</b>：从固定月订阅改为按实际 token 消耗量付费；CPO Mario Rodriguez 给出核心理由：一句话提问 vs 数小时 Agent 任务的算力成本差异「天壤之别」。</li>
+            <li><b>5 月推出预览账单，用户开始感知 AI 使用成本</b>：首次让开发者看到自己实际使用的算力价值；预计将显著改变 Copilot 的使用行为——高频 Agent 任务用户面临较大成本压力。</li>
+            <li><b>同期确认将使用 GitHub 交互数据训练模型</b>：从 2026 年 4 月 24 日起使用 Copilot 用户交互数据改进模型——隐私与数据使用政策变更同步上线。</li>
+          </ul>
+          <div class="pc-ux">GitHub Copilot 的计量化是 AI 工具行业的重要转折：「无感使用」时代正在结束。当用户开始感受到 AI 使用成本，工具的 UX 必须变得更能让用户感知「这一次操作值不值」。对我们产品的启示：若未来产品引入 AI 计量能力，需要在 UX 层面提前设计成本感知界面——不是简单显示「已用 X token」，而是让用户清晰感受到「AI 帮我完成了什么 → 这个成本合理吗」。价值可视化比成本透明更重要。</div>
+          <div class="pc-src">来源：<a href="https://the-decoder.com/github-copilot-switches-to-token-based-billing-in-june-2026/" target="_blank">the-decoder.com · GitHub Copilot 计费变更</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2026/06/elon-nasdaq-spacex-ipo.jpg" alt="SpaceX 收购 Cursor" loading="lazy" style="object-position: center top;"></div>
+          <div class="pc-head">
+            <span class="pc-name">SpaceX 收购 Cursor</span>
+            <span class="pc-sub">SpaceX / xAI · $600 亿 · AI 编程工具</span>
+            <span class="pc-date" data-date-start="2026-06-11" data-date-end="2026-06-17">2026.06.16</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>SpaceX IPO 后首笔大额收购：Cursor $600 亿（股票）</b>：SpaceX 上市仅数日即宣布收购；上市股价从 $135 涨至 $200+，相当于平均每天增加约 16 个 Cursor 的市值。</li>
+            <li><b>xAI 已并入 SpaceX，AI 编程成为 $26T 战略核心</b>：SpaceX 对投资人描述的 TAM 中，$22.7T 为「企业应用」——Cursor 是实现这一目标的核心战略资产。</li>
+            <li><b>Cursor 估值跃升，但无法靠自身融资盈亏平衡</b>：Cursor 此前估值 $290 亿，计划额外融资 $20 亿；据消息人士透露融资额不足以让其盈亏平衡——被收购是更现实的出路。</li>
+          </ul>
+          <div class="pc-ux">SpaceX 收购 Cursor 是 AI 编程工具市场的重要信号：这个赛道已经从「创业机会」升级为「大公司战略资产」。对独立 AI 工具创业者的警示：若核心能力能被大公司直接并购整合，靠融资独立生存的时间窗口正在快速关闭。对我们产品的启示：需要思考哪些 AI 工具能力应该自建（差异化护城河），哪些可以整合外部资源——在并购潮中保持核心差异化能力的稀缺性。</div>
+          <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/16/spacex-to-acquire-cursor-for-60b-in-stock-days-after-blockbuster-ipo/" target="_blank">techcrunch.com · SpaceX 以 $600 亿收购 Cursor</a></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── 设计工具 / 战略动态 ── -->
+<div class="wrap">
+  <div class="band-surface" id="s3">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">设计工具 &amp; 战略动态</div>
+
+    <div class="track">
+      <div class="track-label">
+        <span class="track-pill">品牌战略 &amp; 企业 AI 并购</span>
+        <div class="track-label-line"></div>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2026/03/Dario-Amodei-Anthropic-viva-tech.jpg" alt="Anthropic 销售增长" loading="lazy" style="object-position: center top;"></div>
+          <div class="pc-head">
+            <span class="pc-name">Anthropic</span>
+            <span class="pc-sub">政府禁用争议 · 企业销售增长</span>
+            <span class="pc-date" data-date-start="2026-06-11" data-date-end="2026-06-17">2026.06.16</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Trump 政府禁令后，企业端销售反升</b>：联邦机构禁止使用 Anthropic 模型后，第三方企业客户信任度反而上升——禁令成为「能力背书」而非利空。</li>
+            <li><b>「被政府封禁」演变为企业信任信号</b>：用户逻辑："政府要封的，一定是真能干事的"——安全担忧在企业客户语境下转化为技术实力认可。</li>
+            <li><b>Claude 13% 付费转化率，差异化能力带来溢价</b>：Sensor Tower 数据显示 Claude 是全行业付费转化率最高的 AI 助手，说明差异化能力直接转化为意愿付费。</li>
+          </ul>
+          <div class="pc-ux">Anthropic 政府禁用事件的「反转效应」揭示了一个反直觉的品牌规律：在 AI 领域，监管压力在某些情境下会强化（而非削弱）企业客户的信任——因为监管本身证明了能力的真实性。对我们产品的启示：面对监管或争议时，如何把「我们做到了什么」清晰传递给企业客户，比公关辩护更有价值。差异化能力加上真实案例，才是最强的信任建立手段。</div>
+          <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/16/anthropics-latest-feud-with-the-trump-admin-may-actually-help-it-sales-data-suggests/" target="_blank">techcrunch.com · Anthropic 政府禁用争议</a></div>
+        </div>
+
+        <div class="product-card">
+          <div class="pc-img"><img src="https://techcrunch.com/wp-content/uploads/2024/06/GettyImages-1125951338.jpg" alt="Salesforce 收购 Fin" loading="lazy" style="object-position: center center;"></div>
+          <div class="pc-head">
+            <span class="pc-name">Salesforce + Fin</span>
+            <span class="pc-sub">$36 亿收购 · AI 客服 · 企业 SaaS 并购</span>
+            <span class="pc-date" data-date-start="2026-06-11" data-date-end="2026-06-17">2026.06.15</span>
+          </div>
+          <ul class="pc-list">
+            <li><b>Salesforce 以 $36 亿收购 Intercom 旗下 AI 客服平台 Fin</b>：Fin 是 Intercom 当前主要收入来源，也是其 AI 转型的核心产品；Salesforce 直接买入成熟的企业客户群 + 专用 AI 模型。</li>
+            <li><b>传统 CRM 通过收购切入「AI 员工替代」市场</b>：Salesforce 不再只做 CRM 软件，而是通过 AI 客服直接取代人工客服岗位——价值主张从「工具」升级为「员工」。</li>
+            <li><b>并购速度快于自研：买能力比建能力更快</b>：Salesforce 选择花 $36 亿买一个成熟产品，而不是花 3~5 年自研——说明企业 AI 工具的竞争窗口已经不允许慢慢自建。</li>
+          </ul>
+          <div class="pc-ux">Salesforce 收购 Fin 是「企业 AI SaaS 整合」趋势的典型案例：大型传统 SaaS 平台通过并购获取 AI 能力，而不是等待自研成熟。对我们产品的启示：当产品的 AI 能力达到一定质量门槛，很可能进入大平台的并购视野——这对于独立 AI 工具既是机会，也是压力。更重要的是：如何在被整合之前，用差异化能力建立足够深的护城河？</div>
+          <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/15/salesforce-acquires-ai-customer-service-platform-fin-for-3-6b/" target="_blank">techcrunch.com · Salesforce 收购 Fin</a></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="wrap">
+  <section class="section" id="s4">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">对我们的启示</div>
+
+    <div class="insight-grid">
+
+      <div class="insight-card">
+        <div class="in-num">启示 01</div>
+        <div class="in-trigger">ChatGPT &lt; 50% · Claude 13% 转化率</div>
+        <div class="in-title">市场份额碎片化——差异化能力才是真正的护城河</div>
+        <div class="in-body">ChatGPT 市场份额跌破 50% 是 AI 助手行业的结构性转变信号：用户不再只用一个 AI，而是根据任务在多个 AI 间迁移。Claude 13% 的付费转化率说明，真正能做到「别人做不到的事」的产品，才能在碎片化竞争中赢得高价值用户的留存和付费。对我们产品的启示：抢市场份额不如深耕核心差异化能力——让用户在某类关键任务上「离不开你」，比什么都重要。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 02</div>
+        <div class="in-trigger">GitHub Copilot · Token 计量计费</div>
+        <div class="in-title">AI 工具进入计量时代——UX 必须让价值而非成本可见</div>
+        <div class="in-body">GitHub Copilot 转为 token 计费标志着 AI 工具「无感使用」时代的终结：用户开始感受到 AI 的实际使用成本。但研究表明，用户愿意为「有明确价值产出」的服务付费，而对「搞不清楚花了多少」的服务感到焦虑。对我们产品的设计原则：若引入 AI 用量限制或计费，UX 的重心应放在「价值可视化」而非「成本透明」——用户需要看到的是「AI 帮我节省了多少时间」，而不是「我用了多少 token」。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 03</div>
+        <div class="in-trigger">Meta Facebook AI Mode · 内容平台</div>
+        <div class="in-title">内容平台争夺 AI 答案入口——可靠性是下一个关键战场</div>
+        <div class="in-body">Meta AI Mode 的核心意图是让用户在 Facebook 内直接得到答案，减少跳出到搜索引擎的动机。但这带来了一个新问题：当 AI 汇总非结构化 UGC 时，如何保证答案可靠？这将成为内容平台 AI 化的核心挑战。对我们产品的启示：若 AI 功能需要从非结构化内容中提取答案，必须在 UX 层设计清晰的「来源标注 + 可信度提示」机制——让用户知道这个答案来自哪里、可信程度如何，是 AI 答案产品的基本责任。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 04</div>
+        <div class="in-trigger">SpaceX $600 亿收购 Cursor · AI 编程</div>
+        <div class="in-title">AI 工具并购潮——独立产品的战略价值窗口正在关闭</div>
+        <div class="in-body">SpaceX 收购 Cursor 说明，一旦 AI 工具证明了其价值，大公司会选择直接收购而不是等待自研成熟。这对独立 AI 工具产品意味着：被并购的可能性真实存在，同时也意味着独立竞争的时间窗口有限。对我们产品建设策略的启示：需要在关键赛道上建立「收购价值」（成熟的企业客户、专用模型、独特数据）或「护城河」（难以复制的差异化能力），让自己在并购浪潮中保持战略主动权。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 05</div>
+        <div class="in-trigger">Android 17 · Wear OS · Gemini 系统级集成</div>
+        <div class="in-title">AI 从 App 层下沉到 OS 层——系统级集成重塑竞争边界</div>
+        <div class="in-body">Google 把 Gemini 做进 Wear OS 部件、Android Bubble bar 和跨应用个人化，意味着 AI 能力正在从「应用功能」下沉为「系统基础设施」。苹果也在通过 iOS 27 追赶这一趋势。对我们产品的长期视角：当平台把 AI 做进 OS 底层，第三方 App 可调用的原生 AI 能力将大幅丰富，同时平台自带 AI 功能也可能直接竞争。在产品设计时，既要善用平台 AI 能力，也要清晰认识哪些核心 AI 功能必须自建。</div>
+      </div>
+
+      <div class="insight-card">
+        <div class="in-num">启示 06</div>
+        <div class="in-trigger">Anthropic · 政府禁用 → 企业信任上升</div>
+        <div class="in-title">监管压力可成信任护城河——差异化能力决定定价权</div>
+        <div class="in-body">Anthropic 的案例揭示了一个反直觉规律：在 AI 领域，真实的监管压力（而非负面公关）在某些语境下会强化企业客户的信任——因为监管本身证明了能力的真实性和影响力。同时，13% 的付费转化率是另一个重要信号：差异化能力直接转化为定价权。对我们产品的启示：不要把监管和争议单纯视为风险，在透明沟通的前提下，能力背书的故事往往比公关稿更有说服力。</div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div>
+      <h2>下一期同步<br>持续关注</h2>
+      <p>每周更新，覆盖全产品线最新动态。</p>
+    </div>
+    <div class="cta-band-meta">
+      云基础 &amp; VnE 团队<br>
+      数据来源：各产品官方 Changelog<br>
+      TechCrunch · The Decoder · Sensor Tower · Anthropic News
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第六期</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var activeItem = document.querySelector('.report-dropdown__item--active[data-period-start]');
+    if (activeItem) {
+      document.getElementById('coverage-window').textContent =
+        '覆盖窗口：' + activeItem.dataset.periodStart + ' ~ ' + activeItem.dataset.periodEnd;
+    }
+
+    var trigger = document.getElementById('reportTrigger');
+    var dropdown = document.getElementById('reportDropdown');
+    var selector = document.getElementById('reportSelector');
+
+    function openDropdown() {
+      trigger.classList.add('open');
+      dropdown.classList.add('open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+    function closeDropdown() {
+      trigger.classList.remove('open');
+      dropdown.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdown.classList.contains('open') ? closeDropdown() : openDropdown();
+    });
+
+    dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        var href = item.getAttribute('href');
+        if (href && href !== '#') {
+          window.location.href = href;
+        } else {
+          closeDropdown();
+        }
+      });
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!selector.contains(e.target)) closeDropdown();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeDropdown();
+    });
+  });
+</script>
+</body>
+</html>
