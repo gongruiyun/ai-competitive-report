@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.06 第七期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --on-dark:       #ffffff;
+  --teal:          #1a3a3a;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero { max-width: 1200px; margin: 0 auto; padding: 56px 48px 40px; }
+
+.report-selector { position: relative; display: inline-block; margin-bottom: 20px; }
+.report-selector__trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-card); color: var(--muted);
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  border-radius: 9999px; padding: 6px 14px 6px 16px;
+  cursor: pointer; border: none; font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s; user-select: none;
+}
+.report-selector__trigger:hover { background: var(--surface-strong); color: var(--body); }
+.report-selector__trigger.open  { background: var(--surface-strong); color: var(--body-strong); }
+.report-selector__chevron { width: 14px; height: 14px; opacity: 0.5; transition: transform 0.2s; flex-shrink: 0; }
+.report-selector__trigger.open .report-selector__chevron { transform: rotate(180deg); opacity: 0.8; }
+.report-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 300px; background: #fff;
+  border: 1px solid var(--hairline); border-radius: 16px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10); z-index: 100;
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.report-dropdown__section-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-soft); padding: 6px 10px 4px; }
+.report-dropdown__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none;
+  color: var(--body); transition: background 0.12s;
+}
+.report-dropdown__item:hover { background: var(--surface-soft); }
+.report-dropdown__item--active { background: var(--surface-card); color: var(--body-strong); }
+.report-dropdown__item-left { display: flex; flex-direction: column; gap: 2px; }
+.report-dropdown__item-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.report-dropdown__item-period { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.report-dropdown__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; background: var(--teal); color: #fff; border-radius: 9999px; padding: 2px 8px; flex-shrink: 0; }
+
+.hero h1 { font-size: clamp(52px, 7vw, 80px); font-weight: 500; letter-spacing: -2.5px; line-height: 1; color: var(--ink); max-width: 720px; margin-bottom: 16px; }
+.hero-sub { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+.section { padding: 48px 0 0; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); margin-bottom: 16px; }
+.section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+.section-note { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+.flash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flash-card { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px; min-height: 210px; }
+.flash-card:nth-child(1) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: #d4e8e3;      color: var(--ink); }
+.flash-card:nth-child(3) { background: #ece8f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #d8eef8;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; }
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); color: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 9999px; padding: 4px 12px; align-self: flex-start; }
+
+.track { margin-top: 52px; }
+.track-label { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.track-pill { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 9999px; padding: 6px 16px; background: var(--surface-card); color: var(--muted); white-space: nowrap; }
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+.track-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.product-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: 16px; padding: 28px; transition: box-shadow 0.15s; }
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.product-card.empty { border-style: dashed; background: var(--surface-soft); }
+.pc-img { margin: -28px -28px 22px; height: 200px; border-radius: 15px 15px 0 0; overflow: hidden; background: var(--surface-strong); }
+.pc-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.4s ease; }
+.product-card:hover .pc-img img { transform: scale(1.03); }
+.pc-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date { margin-left: auto; font-size: 12px; color: var(--muted-soft); background: var(--surface-card); border-radius: 9999px; padding: 3px 12px; white-space: nowrap; }
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li { font-size: 14px; color: var(--body); line-height: 1.6; padding-left: 18px; position: relative; }
+.pc-list li::before { content: '·'; position: absolute; left: 4px; color: var(--muted-soft); font-size: 18px; line-height: 1.3; }
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux { margin-top: 14px; padding: 10px 12px; background: rgba(232,185,74,0.10); border-radius: 8px; border-left: 3px solid var(--ochre); font-size: 13px; color: var(--body); line-height: 1.55; }
+.pc-ux::before { content: "设计视角 · "; font-weight: 700; color: #b8860b; }
+.pc-empty-note { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .section-note { color: rgba(255,255,255,0.4); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .track-desc { color: rgba(255,255,255,0.35); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card.empty { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub, .band-teal .pc-date { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+.band-teal .pc-empty-note { color: rgba(255,255,255,0.4); }
+
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #d4e8e3; }
+.insight-card:nth-child(2) { background: #d8eef8; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #faf3d8; }
+.insight-card:nth-child(5) { background: #fce4ee; }
+.insight-card:nth-child(6) { background: #dde8e5; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.5; margin-bottom: 12px; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+
+.cta-band { background: var(--surface-soft); border-radius: 24px; margin: 80px 0; padding: 80px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+footer { background: var(--surface-soft); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer, .cta-band { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第七期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第七期</span>
+          <span class="report-dropdown__item-period">2026-06-18 ~ 2026-06-24</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第六期</span>
+          <span class="report-dropdown__item-period">2026-06-11 ~ 2026-06-17</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第五期</span>
+          <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第四期</span>
+          <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub">覆盖窗口：2026-06-18 ~ 2026-06-24｜阅读时长：约 5 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示</p>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 板块一 · 本期速览 ═══ -->
+<section class="section" id="s1">
+  <div class="section-label">板块一</div>
+  <div class="section-title">本期速览</div>
+
+  <div class="flash-grid">
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE · ANTHROPIC</span>
+      <div class="flash-card-num">01</div>
+      <div class="flash-card-body"><strong>Claude Tag 进驻 Slack</strong>——AI 以「同事」身份常驻工作区，ambient 模式持续跟进频道上下文、自动学习团队知识；@Claude 可分配任务并拆解执行。</div>
+      <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/23/anthropics-claude-tag-is-learning-your-company-one-slack-message-at-a-time/" target="_blank">techcrunch.com · Claude Tag</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">GEMINI · GOOGLE</span>
+      <div class="flash-card-num">02</div>
+      <div class="flash-card-body"><strong>Gemini 自动修复 Sheets 公式</strong>——错误单元格点击时弹出「Fix」按钮，Gemini 在侧边栏诊断并提案，一键接受。AI 介入时机从「主动调用」转为「上下文触发」。</div>
+      <div class="flash-card-src">来源：<a href="https://www.theverge.com/tech/954794/gemini-ai-can-fix-your-broken-formulas-in-google-sheets-now" target="_blank">theverge.com · Gemini Sheets</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">ADOBE · FIREFLY</span>
+      <div class="flash-card-num">03</div>
+      <div class="flash-card-body"><strong>Adobe Firefly Elements + Projects</strong>——角色/场景/对象可命名保存并在后续生成中复用（Elements）；跨会话持续工作（Projects）。生成式 UI 终于有了持久状态。</div>
+      <div class="flash-card-src">来源：<a href="https://www.theverge.com/tech/952104/adobe-firefly-ai-agent-elements-projects-update" target="_blank">theverge.com · Adobe Firefly</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">FIGMA · RUNWAY</span>
+      <div class="flash-card-num">04</div>
+      <div class="flash-card-body"><strong>Runway Aleph 2.0 进入 Figma Weave</strong>——设计画布内支持逐帧视频导演：参考图引导风格、最长 30 秒、关键帧修改跨帧保持一致。视频生成首次用「设计迭代」范式替代黑盒生成。</div>
+      <div class="flash-card-src">来源：<a href="https://www.figma.com/blog/direct-every-frame-with-runway-aleph-2/" target="_blank">figma.com/blog · Runway Aleph 2.0</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">APPLE · IOS 27</span>
+      <div class="flash-card-num">05</div>
+      <div class="flash-card-body"><strong>iOS 27 系统级实用 AI 功能</strong>——AFM Framework 开放给开发者；System Orchestrator 跨 App 全系统操作；AI 功能从 Siri 一点延伸至整个操作系统。</div>
+      <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/21/beyond-siri-here-are-the-practical-ai-features-coming-to-your-iphone-in-ios-27/" target="_blank">techcrunch.com · iOS 27 AI 功能</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">GOOGLE · WORKSPACE</span>
+      <div class="flash-card-num">06</div>
+      <div class="flash-card-body"><strong>Google Docs AI 关闭指南引发热议</strong>——AI 功能以底栏+悬浮提示强制曝光，关闭路径深埋设置。「如何关掉 AI」成为用户高频搜索，控制权设计进入讨论焦点。</div>
+      <div class="flash-card-src">来源：<a href="https://techcrunch.com/2026/06/18/how-to-turn-off-ai-in-your-google-docs/" target="_blank">techcrunch.com · Google Docs AI 关闭</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 产品动态 · 消费级 ═══ -->
+<section class="section" id="s2">
+  <div class="section-label">板块二</div>
+  <div class="section-title">产品动态</div>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">AI 消费级产品</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Claude · ChatGPT · Gemini · Kimi · DeepSeek · MiniMax — UX 变化与功能发布</p>
+    <div class="product-grid">
+
+      <!-- Claude -->
+      <div class="product-card wide">
+        <div class="pc-img">
+          <img src="https://techcrunch.com/wp-content/uploads/2026/06/Claude-Tag.png" alt="Claude Tag in Slack" loading="lazy" style="object-position: center top;">
+        </div>
+        <div class="pc-head">
+          <span class="pc-name">Claude</span>
+          <span class="pc-sub">Anthropic</span>
+          <span class="pc-date">2026.06.23</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Claude Tag：常驻 Slack 的 AI 同事</b> —— 每个 Slack 频道都可以有一个 Claude 身份；用户可 @Claude 分配任务，也可让它以 ambient 模式持续跟进频道对话，主动积累团队上下文与机构知识。</li>
+          <li><b>Ambient 模式 vs. Task 模式</b> —— ambient 模式下 Claude 静默跟进、不打扰，随时可被唤醒；task 模式下 Claude 将任务拆解成阶段，在 Slack 线程中透明展示执行进度，所有人可见、可介入。</li>
+          <li><b>组织知识积累</b> —— 同一 Claude 身份跨成员共享，上一位同事的对话结果下一位可直接接续；管理员配置 Claude 可访问的工具与数据范围，合规与透明双向保障。</li>
+        </ul>
+        <div class="pc-ux">Claude Tag 揭示了企业 Agent UX 的核心范式：AI 不再是一次性工具，而是有记忆的「同事」——设计任何团队 AI 功能时，需要明确 AI 是「静默感知/按需唤醒」还是「主动汇报/任务执行」，两种模式的交互入口、通知密度、数据可见性设计完全不同。</div>
+        <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/23/anthropics-claude-tag-is-learning-your-company-one-slack-message-at-a-time/" target="_blank">techcrunch.com · Anthropic's Claude Tag is learning your company, one Slack message at a time</a></div>
+      </div>
+
+      <!-- ChatGPT -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT</span>
+          <span class="pc-sub">OpenAI</span>
+        </div>
+        <p class="pc-empty-note">本期暂无重大 UX 更新。OpenAI 本周发布了开源安全倡议（使用 AI 检测修复开源漏洞），属于基础设施层面，暂无直接的产品交互变化。</p>
+      </div>
+
+      <!-- Gemini -->
+      <div class="product-card">
+        <div class="pc-head">
+          <span class="pc-name">Gemini</span>
+          <span class="pc-sub">Google</span>
+          <span class="pc-date">2026.06.23 · 06.18</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Sheets 公式自动修复</b> —— Workspace 用户点击错误单元格 → 界面弹出「Fix」按钮 → Gemini 在侧边栏诊断原因并呈现修复方案 → 一键接受应用。把 AI 从「你去找 AI」变成「AI 在你需要的地方等你」。</li>
+          <li><b>Google Docs AI 强制曝光引发反弹</b> —— AI 写作建议以底栏 + 光标悬浮两种形式出现，关闭路径深埋在 Workspace 设置中，TechCrunch 专题指引引发大量转发，「如何关掉 AI」成为本周高搜词。</li>
+        </ul>
+        <div class="pc-ux">两个案例对照鲜明：Sheets 是「对的时机、对的地方」的 inline AI 设计典范；Docs 是「强制曝光 + 关闭路径不清晰」的负面教材。同一团队、同一周，形成了最直接的 UX 设计对比实验。</div>
+        <div class="pc-src">来源：<a href="https://www.theverge.com/tech/954794/gemini-ai-can-fix-your-broken-formulas-in-google-sheets-now" target="_blank">theverge.com · Gemini Sheets 公式修复</a> · <a href="https://techcrunch.com/2026/06/18/how-to-turn-off-ai-in-your-google-docs/" target="_blank">techcrunch.com · Google Docs AI 关闭指引</a></div>
+      </div>
+
+      <!-- Kimi / DeepSeek / MiniMax -->
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Kimi · DeepSeek · MiniMax</span>
+        </div>
+        <p class="pc-empty-note">本期暂无重大更新。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 企业级 AI ═══ -->
+<div class="color-band band-teal">
+  <div class="section-label">板块二（续）</div>
+  <div class="section-title">企业级 AI 产品</div>
+  <p class="section-note">ChatGPT Enterprise · Claude Enterprise · Gemini for Workspace — UX 变化与团队协作</p>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">企业级 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <div class="product-grid">
+
+      <!-- Claude Enterprise -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude Enterprise · Claude Tag</span>
+          <span class="pc-sub">Anthropic</span>
+          <span class="pc-date">2026.06.23</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>企业 Slack 深度集成</b> —— 系统管理员配置 Claude 可访问的工具（代码库、销售数据、文档）和数据范围；Claude 以统一身份出现，任何团队成员均可查看 Claude 的工作历史并接续对话。</li>
+          <li><b>透明执行 + 共享可见性</b> —— Claude 在 Slack 线程中拆解任务、逐步汇报，全频道可见执行状态；任何人可随时介入、接管或修改，避免「黑盒 Agent」的信任问题。</li>
+          <li><b>组织知识沉淀</b> —— 随着 Claude 持续跟进频道，它积累的团队知识可被所有成员共享，形成可持续增长的「AI 知识库」，而非每次重新上下文。</li>
+        </ul>
+        <div class="pc-ux">企业 AI 产品的核心 UX 挑战：如何让 AI 的工作对团队「透明可信」？Claude Tag 的答案是「公开执行 + 共享历史 + 可随时介入」——这三点是企业级 Agent 与消费级 Agent UX 设计的本质区别。</div>
+        <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/23/anthropics-claude-tag-is-learning-your-company-one-slack-message-at-a-time/" target="_blank">techcrunch.com · Claude Tag enterprise Slack integration</a></div>
+      </div>
+
+      <!-- Gemini Workspace -->
+      <div class="product-card">
+        <div class="pc-head">
+          <span class="pc-name">Gemini for Workspace</span>
+          <span class="pc-sub">Google</span>
+          <span class="pc-date">2026.06.23</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Sheets inline AI 修复</b> —— 面向 Workspace 企业用户首先推出；将 AI 能力嵌入日常办公工具的错误处理流程，而非要求用户主动切换到 AI 入口。</li>
+          <li><b>触发点设计的企业意义</b> —— 在企业场景下，AI 在「用户遇到问题的那一刻」出现，而非要求员工主动学习使用新工具，大幅降低采纳摩擦。</li>
+        </ul>
+        <div class="pc-ux">「AI 在哪里出现」比「AI 能做什么」更决定企业采纳率——把 AI 嵌入员工已有的错误处理路径，是企业产品提升 AI 功能渗透率最高效的设计选择。</div>
+        <div class="pc-src">来源：<a href="https://www.theverge.com/tech/954794/gemini-ai-can-fix-your-broken-formulas-in-google-sheets-now" target="_blank">theverge.com · Gemini fixes broken formulas in Google Sheets</a></div>
+      </div>
+
+      <!-- ChatGPT Enterprise -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT Enterprise · Gemini Workspace（其余）</span>
+        </div>
+        <p class="pc-empty-note">本期暂无重大 UX 更新。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">云厂商 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Google Cloud · Azure AI · AWS Bedrock — 企业控制台 UX 更新</p>
+    <div class="product-grid">
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Google Cloud · Azure AI · AWS Bedrock</span>
+        </div>
+        <p class="pc-empty-note">本期暂无重大企业控制台 UX 更新。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块三 · 设计工具动态 ═══ -->
+<div class="band-surface">
+  <div class="section-label">板块三</div>
+  <div class="section-title">设计工具动态</div>
+
+  <!-- 设计主力工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">设计主力工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Figma · Adobe CC — AI 功能迭代与新交互范式</p>
+    <div class="product-grid">
+
+      <!-- Figma -->
+      <div class="product-card">
+        <div class="pc-img">
+          <img src="https://cdn.sanity.io/images/599r6htc/regionalized/bbbd715863ae9596492a6b6eda14af49a9b802de-2400x1260.png?w=1200&q=70&fit=max&auto=format" alt="Figma Weave + Runway Aleph 2.0" loading="lazy" style="object-position: center center;">
+        </div>
+        <div class="pc-head">
+          <span class="pc-name">Figma Weave</span>
+          <span class="pc-sub">Figma · Runway</span>
+          <span class="pc-date">2026.06.18</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Runway Aleph 2.0 集成 Figma Weave</b> —— 设计画布内支持视频创作导演：带入参考图影响整体画面风格，最长 30 秒、关键帧编辑跨帧保持角色/场景一致性。</li>
+          <li><b>「设计迭代」范式替代黑盒生成</b> —— 每次修改可预览、可撤销，逐步决策而非一次性生成；将视频创作从「黑盒输出」转变为「可控的渐进式创作流程」。</li>
+          <li><b>Figma 从静态设计工具延伸为多模态创意画布</b> —— 设计师不再需要离开 Figma 就能完成从静帧到动态视频的全链路创作，工具边界进一步扩展。</li>
+        </ul>
+        <div class="pc-ux">视频生成工具的关键 UX 进化：不是「生成更好的视频」，而是「让创作过程像设计一样可控」——参考图引导 + 逐帧决策 + 可撤销修改，是生成式工具从「实验性玩具」走向「专业工作流」的设计路径。</div>
+        <div class="pc-src">来源：<a href="https://www.figma.com/blog/direct-every-frame-with-runway-aleph-2/" target="_blank">figma.com/blog · Direct Every Frame with Runway Aleph 2.0</a></div>
+      </div>
+
+      <!-- Adobe Firefly -->
+      <div class="product-card">
+        <div class="pc-img">
+          <img src="https://platform.theverge.com/wp-content/uploads/sites/2/2026/06/Adobe-Firefly-AI-studio-updates-lede.jpg?quality=90&strip=all&crop=0%2C10.732984293194%2C100%2C78.534031413613&w=1200" alt="Adobe Firefly AI Studio Elements Projects" loading="lazy" style="object-position: center center;">
+        </div>
+        <div class="pc-head">
+          <span class="pc-name">Adobe Firefly AI Studio</span>
+          <span class="pc-sub">Adobe</span>
+          <span class="pc-date">2026.06.18</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Elements：可复用资产库</b> —— 已创建的角色、场景、对象可以命名保存为资产，在后续任意生成中直接引用，解决 AI 生成「每次重头、无法一致」的核心痛点。</li>
+          <li><b>Projects：跨会话工作流</b> —— 资产、生成物、创作上下文统一归档；关闭再打开从同一状态继续工作，结束了生成式 AI「每次无状态」的体验断裂。</li>
+          <li><b>AI 助手生成 logo + 视频草切</b> —— Firefly AI 助手扩展支持品牌 logo 生成和视频片段拼接成草稿，创作链条进一步延伸。</li>
+        </ul>
+        <div class="pc-ux">生成式 UI 产品的成熟标志：从「每次从零生成」进化为「带记忆的持续创作」——Elements（资产复用）+ Projects（会话持久化）是让 AI 创作工具从「实验性体验」变为「专业工作室」的两个核心 UX 设计决策。</div>
+        <div class="pc-src">来源：<a href="https://www.theverge.com/tech/952104/adobe-firefly-ai-agent-elements-projects-update" target="_blank">theverge.com · Adobe's redesigned AI studio remembers what your creations look like</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AI 原生设计工具 -->
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">AI 原生设计工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Claude Artifacts · v0 by Vercel · Galileo AI · Lovable — 描述即生成的 UX 体验</p>
+    <div class="product-grid">
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Claude Artifacts · v0 · Lovable · Galileo AI</span>
+        </div>
+        <p class="pc-empty-note">本期暂无重大更新。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 效率工具 -->
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">设计师高频效率工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Cursor · Notion AI · Canva AI — 值得关注的新功能与交互设计</p>
+    <div class="product-grid">
+
+      <!-- Cursor / Agent Loop -->
+      <div class="product-card wide">
+        <div class="pc-img">
+          <img src="https://techcrunch.com/wp-content/uploads/2026/06/Screenshot-2026-06-22-at-3.44.39-PM.jpg" alt="AI Agent Loop - Cursor" loading="lazy" style="object-position: center top;">
+        </div>
+        <div class="pc-head">
+          <span class="pc-name">Cursor · AI Agent Loop</span>
+          <span class="pc-sub">效率工具生态</span>
+          <span class="pc-date">2026.06.22</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Agent Loop 范式</b> —— Cursor CEO Arash Ferdowsi 公开描述三阶段演进：人写代码 → Agent 写代码 → Agent 驱动 Agent 写代码；多个 Agent 在后台持续循环（架构优化、代码去重、自动提 PR），无需人工干预。</li>
+          <li><b>后台自主工作的 UX 挑战</b> —— 当 Agent 在人不在场时持续工作并直接提交 PR，「可中断性」「可审查性」「可回滚性」成为 Agent 产品的核心 UX 约束，而非可选功能。</li>
+          <li><b>对设计工具生态的信号</b> —— Figma MCP Server（Agent 直接在画布上操作）和 Agent Loop 所描述的范式正在汇合——设计工具也将面临「Agent 在后台自主设计」的 UX 设计命题。</li>
+        </ul>
+        <div class="pc-ux">Agent Loop 让「监督界面」从加分项变成必选项：当 Agent 自主在后台循环工作，产品必须提供一个清晰的「当前在做什么、做了什么、可以撤销什么」的控制面板——否则用户会因失去掌控感而放弃使用。</div>
+        <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/22/the-ai-world-is-getting-loopy/" target="_blank">techcrunch.com · The AI world is getting 'loopy'</a></div>
+      </div>
+
+      <!-- iOS 27 -->
+      <div class="product-card">
+        <div class="pc-img">
+          <img src="https://techcrunch.com/wp-content/uploads/2026/01/tim-cook-iphone-GettyImages-2234563479.jpg" alt="iOS 27 AI features" loading="lazy" style="object-position: center 30%;">
+        </div>
+        <div class="pc-head">
+          <span class="pc-name">iOS 27 系统级 AI</span>
+          <span class="pc-sub">Apple</span>
+          <span class="pc-date">2026.06.21</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>超越 Siri 的实用 AI 功能</b> —— System Orchestrator 可跨 App 全系统操作；AFM Framework 开放给开发者调用本地模型，AI 能力首次从系统级延伸至第三方 App。</li>
+          <li><b>开发者 API 开放的设计含义</b> —— 设计师在 iOS 上构建 AI 功能时，可以调用系统级 AI 能力而非完全自建，但同时需要设计「系统 AI 与自建 AI」的能力边界与 UI 一致性。</li>
+        </ul>
+        <div class="pc-ux">平台级 AI API 开放对设计师的实际影响：评估哪些 AI 功能可以「委托」给系统层（System Orchestrator / AFM），哪些必须自建以保持产品差异化，是 iOS 27 时代 AI 功能选型的核心决策框架。</div>
+        <div class="pc-src">来源：<a href="https://techcrunch.com/2026/06/21/beyond-siri-here-are-the-practical-ai-features-coming-to-your-iphone-in-ios-27/" target="_blank">techcrunch.com · Beyond Siri: practical AI features in iOS 27</a></div>
+      </div>
+
+      <!-- Notion / Canva -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Notion AI · Canva AI</span>
+        </div>
+        <p class="pc-empty-note">本期暂无重大更新。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块四 · 对我们的启示 ═══ -->
+<section class="section" id="s4" style="padding-bottom: 0;">
+  <div class="section-label">板块四</div>
+  <div class="section-title">对我们的启示</div>
+  <p class="section-note">从本期产品动态中提炼的 6 条具体、可执行的设计建议</p>
+
+  <div class="insight-grid">
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 01</div>
+      <div class="in-trigger">↗ Claude Tag ambient mode</div>
+      <div class="in-title">设计 AI 的「环境感知」模式：静默跟进，按需唤醒</div>
+      <div class="in-body">Claude Tag 的 ambient 模式揭示了一种新的 Agent UX 原语：AI 不等指令，而是持续感知上下文、在合适时机主动反馈。设计 AI 功能时，先定义它是「问才答」（被动模式）还是「持续观察」（环境感知模式）——两种模式的通知密度、权限设计、用户控制逻辑完全不同，不能混用。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 02</div>
+      <div class="in-trigger">↗ Gemini Sheets 公式修复</div>
+      <div class="in-title">操作触发型 AI：把 AI 放在用户「需要帮助的那一刻」</div>
+      <div class="in-body">Gemini Sheets 的核心设计决策不是「做了什么 AI 功能」，而是「在哪里触发」——错误发生的那一刻弹出修复提案，把 AI 从侧边栏工具变成流程中的自然节点。设计 AI 功能时问：用户在哪个操作步骤最需要帮助？把 AI 入口放在那里，而不是放在「工具栏」。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 03</div>
+      <div class="in-trigger">↗ Adobe Firefly Elements + Projects</div>
+      <div class="in-title">生成式 UI 的持久状态：资产复用 + 会话持久化</div>
+      <div class="in-body">Adobe Firefly 用 Elements（角色/场景资产库）+ Projects（跨会话上下文）解决了生成式工具最大的 UX 痛点：「每次从零开始，无法保持一致性」。任何生成式 AI 功能，在设计之初就需要规划：用户创建的内容如何保存？如何在下次使用时直接复用？没有持久状态的 AI 生成工具，用户黏性极低。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 04</div>
+      <div class="in-trigger">↗ Google Docs AI 关闭指南</div>
+      <div class="in-title">AI 功能的控制权设计：关闭路径与开启路径一样重要</div>
+      <div class="in-body">Google Docs 的案例证明：当 AI 功能强制曝光而关闭路径不清晰，用户的反应不是「适应」而是「搜索如何关掉它」。设计 AI 功能时，「关闭/跳过」的入口应与功能本身同等可见；用户拒绝 AI 建议的操作应该简单到一个手势。控制感是信任的前提，不是可选项。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 05</div>
+      <div class="in-trigger">↗ Figma Weave + Runway Aleph 2.0</div>
+      <div class="in-title">生成式工具的「设计范式」：可撤销 + 逐步决策 + 参考约束</div>
+      <div class="in-body">Runway Aleph 2.0 在 Figma 中的 UX 设计——参考图引导风格、每次修改可预览可撤销、逐帧决策——正是把生成式工具从「赌博式一次性输出」变为「像设计一样可控的迭代流程」的关键。任何生成式功能都应具备：可以约束生成方向（参考输入）、可以逐步验证（分阶段预览）、可以局部修改（不全盘重来）。</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 06</div>
+      <div class="in-trigger">↗ Cursor CEO · Agent Loop</div>
+      <div class="in-title">Agent 自主工作时，监督界面是产品的核心功能</div>
+      <div class="in-body">当 Agent 在后台自主循环工作（优化架构、提交 PR、修改设计），「监督界面」从附加功能变成核心功能：用户需要清楚地看到 Agent 当前在做什么、已经做了什么、有什么可以撤销。设计 Agent 类产品的最小标准：一个清晰的「Activity Log」+ 明显的「暂停/撤销」入口，缺一不可。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-band">
+  <div>
+    <h2>下期预告</h2>
+    <p>覆盖窗口：2026-06-25 ~ 2026-07-01 · 下周三发布</p>
+  </div>
+  <div class="cta-band-meta">
+    云基础 &amp; VnE 团队<br>
+    AI 产品 UX 观察报告 · 第七期<br>
+    仅供设计大团队内部参考
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第七期</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger = document.getElementById('reportTrigger');
+  var dropdown = document.getElementById('reportDropdown');
+  var selector = document.getElementById('reportSelector');
+  function open() { trigger.classList.add('open'); dropdown.classList.add('open'); trigger.setAttribute('aria-expanded','true'); }
+  function close() { trigger.classList.remove('open'); dropdown.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); }
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); dropdown.classList.contains('open') ? close() : open(); });
+  dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href !== '#') { e.preventDefault(); window.location.href = href; } else { close(); }
+    });
+  });
+  document.addEventListener('click', function(e) { if (!selector.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+});
+</script>
+</body>
+</html>
