@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 产品 UX 观察报告 · 2026.06 第八期</title>
+<title>AI 产品 UX 观察报告 · 2026.06~07 第八期</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -193,25 +193,19 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
 <div class="hero">
   <div class="report-selector" id="reportSelector">
     <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
-      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第八期</span>
+      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06~07 第八期</span>
       <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none">
         <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
     <div class="report-dropdown" id="reportDropdown" role="listbox">
       <div class="report-dropdown__section-title">选择期次</div>
-      <a class="report-dropdown__item" href="ai-competitive-report-2026-07-w1.html" role="option" aria-selected="false">
-        <div class="report-dropdown__item-left">
-          <span class="report-dropdown__item-label">2026.07 第九期</span>
-          <span class="report-dropdown__item-period">2026-07-02 ~ 2026-07-08</span>
-        </div>
-        <span class="report-dropdown__badge">最新</span>
-      </a>
       <a class="report-dropdown__item report-dropdown__item--active" href="#" role="option" aria-selected="true">
         <div class="report-dropdown__item-left">
-          <span class="report-dropdown__item-label">2026.06 第八期</span>
-          <span class="report-dropdown__item-period">2026-06-25 ~ 2026-07-01</span>
+          <span class="report-dropdown__item-label">2026.06~07 第八期</span>
+          <span class="report-dropdown__item-period">2026-06-25 ~ 2026-07-08</span>
         </div>
+        <span class="report-dropdown__badge">最新</span>
       </a>
       <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w2.html" role="option" aria-selected="false">
         <div class="report-dropdown__item-left">
@@ -258,7 +252,7 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
     </div>
   </div>
   <h1>AI 产品 UX 观察报告</h1>
-  <p class="hero-sub">覆盖窗口：2026-06-25 ~ 2026-07-01｜阅读时长：约 5 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示</p>
+  <p class="hero-sub">覆盖窗口：2026-06-25 ~ 2026-07-08｜阅读时长：约 7 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示｜双周合幰版</p>
 </div>
 
 <div class="wrap">
@@ -271,38 +265,38 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
   <div class="flash-grid">
 
     <div class="flash-card">
-      <span class="flash-card-chip">FIGMA · CONFIG 2026</span>
-      <div class="flash-card-num">01</div>
-      <div class="flash-card-body"><strong>Figma Config 2026 全面 AI 化</strong>——Motion、3D transforms、Shaders、Code Layers 首次进入协作画布；Agent Skills 支持通过 prompt 自定义可复用工具，并连接 Notion / GitHub 等外部数据源。</div>
-      <div class="flash-card-src">来源：<a href="https://www.figma.com/whats-new/" target="_blank">figma.com/whats-new · Config 2026</a></div>
-    </div>
-
-    <div class="flash-card">
       <span class="flash-card-chip">CLAUDE · SONNET 5</span>
-      <div class="flash-card-num">02</div>
+      <div class="flash-card-num">01</div>
       <div class="flash-card-body"><strong>Claude Sonnet 5 发布 · Effort Control</strong>——1M token 上下文；用户可手动调 effort 档位在成本与性能间权衡；引入价 $2/$10 每百万 token 至 8/31，之后 $3/$15。Free / Pro 首日默认启用。</div>
-      <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Sonnet 5</a></div>
+      <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news/claude-sonnet-5" target="_blank">anthropic.com/news · Claude Sonnet 5</a></div>
     </div>
 
     <div class="flash-card">
-      <span class="flash-card-chip">CHATGPT · OPENAI</span>
+      <span class="flash-card-chip">GPT-5.6 · SOL / TERRA / LUNA</span>
+      <div class="flash-card-num">02</div>
+      <div class="flash-card-body"><strong>GPT-5.6 三档意象化命名首预览</strong>——OpenAI 用 Sol / Terra / Luna 替代传统「Ultra / Pro / Mini」；7 月 7 日 CAISI（美商务部）审批完成后进入更大范围预览。「模型档位」从工程术语走向日常意象。</div>
+      <div class="flash-card-src">来源：<a href="https://openai.com/index/previewing-gpt-5-6-sol/" target="_blank">openai.com · GPT-5.6 Sol Preview</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE × AWS · 双通道</span>
       <div class="flash-card-num">03</div>
-      <div class="flash-card-body"><strong>Codex Remote 全量开放</strong>——手机端 App 可启动/继续 Mac / Windows 主机上的编码任务，用 QR 一对一配对建立可信通道，Agent 的「控制舱」从桌面挪到口袋里。</div>
-      <div class="flash-card-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · Release Notes 2026-06-25</a></div>
+      <div class="flash-card-body"><strong>Claude 采购通道正式分裂</strong>——同一款 Sonnet 5 用户可从 Anthropic 直购或通过 AWS Bedrock / apps gateway 采购；企业管理员可用 AWS IAM 直接治理 Claude 消费，「AI 消费管控」进入企业标准工具箱。</div>
+      <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/machine-learning/introducing-claude-apps-gateway-for-aws/" target="_blank">AWS Blogs · apps gateway</a> · <a href="https://www.anthropic.com/news/claude-sonnet-5" target="_blank">anthropic.com · Sonnet 5</a></div>
     </div>
 
     <div class="flash-card">
-      <span class="flash-card-chip">CHATGPT · MEMORY</span>
+      <span class="flash-card-chip">FIGMA · CONFIG 2026</span>
       <div class="flash-card-num">04</div>
-      <div class="flash-card-body"><strong>ChatGPT 记忆全面可视化</strong>——个性化回答下方新增 Sources 面板，显示引用的 memory / 历史对话 / 自定义指令；用户可修改、删除、标记不相关或一键关闭。Enterprise 6/25、Business 6/26 分批上线。</div>
-      <div class="flash-card-src">来源：<a href="https://openai.com/index/" target="_blank">openai.com · Memory Dreaming</a></div>
+      <div class="flash-card-body"><strong>Figma Config 2026 全面 AI 化</strong>——Motion、3D transforms、Shaders、Code Layers 首次进入协作画布；Agent Skills 支持 prompt 自定义工具，连接 Notion / GitHub 等外部数据源。</div>
+      <div class="flash-card-src">来源：<a href="https://www.figma.com/blog/config-2026-recap/" target="_blank">figma.com/blog · Config 2026 Recap</a></div>
     </div>
 
     <div class="flash-card">
-      <span class="flash-card-chip">CLAUDE · SCIENCE</span>
+      <span class="flash-card-chip">META · MUSE IMAGE</span>
       <div class="flash-card-num">05</div>
-      <div class="flash-card-body"><strong>Claude Science 发布</strong>——面向生命科学的垂直 AI Workbench；PubMed / Jupyter / R / HPC 集成到单一 app；60+ 预配置 skill；Actor-Critic 双 Agent 互相校验；原生渲染 3D 蛋白结构与基因组浏览器。</div>
-      <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Science</a></div>
+      <div class="flash-card-body"><strong>Meta Muse Image 内嵌 IG / WhatsApp</strong>——7 月 7 日上线,直接在私信与故事流内生成图像;生成式 AI 不再作为独立产品,而是「即时消息中的一个按钮」。</div>
+      <div class="flash-card-src">来源：<a href="https://ai.meta.com/blog/introducing-muse-image-muse-video-msl/" target="_blank">ai.meta.com · Muse Image</a></div>
     </div>
 
     <div class="flash-card">
@@ -333,15 +327,17 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
         <div class="pc-head">
           <span class="pc-name">Claude</span>
           <span class="pc-sub">Anthropic</span>
-          <span class="pc-date">2026.06.30</span>
+          <span class="pc-date">2026.06.30 ~ 07.08</span>
         </div>
         <ul class="pc-list">
           <li><b>Claude Sonnet 5 首发</b>（06.30）—— 1M token 上下文；引入 <b>Effort Control</b>：用户手动选择「更快」或「更深思考」，在成本与性能间自主平衡；引入价 $2/$10 每百万 token 保持至 8/31，之后恢复 $3/$15。Free / Pro 首日即默认使用；Max / Team / Enterprise 同步开启。</li>
           <li><b>Fable 5 / Mythos 5 重新部署</b>（06.30）—— 美国政府批准后 Anthropic 恢复顶级模型访问；改进的安全分类器阻断 99% 借由 jailbreak 生成漏洞利用代码的行为；与 Amazon / Microsoft / Google 共同发布行业级 <b>Jailbreak Severity Framework</b>。</li>
           <li><b>Claude Science 独立 App</b>（06.30）—— 面向制药与生命科学研究的垂直 AI Workbench；PubMed 检索、Jupyter Notebook、R 会话、HPC 集群终端合并到单一界面；60+ 预配置科研 skill；协调 Agent + reviewer Agent 双 Agent 架构自动校验计算与引用；原生渲染 3D 蛋白结构。</li>
+          <li><b>Sonnet 5 登陆 AWS Bedrock</b>（07.03）—— 通过 AWS 通道上架 Bedrock 与 AWS Claude Platform；企业客户在既有 IAM / VPC / KMS 体系内直接调用，无需额外接入 Anthropic API。同一款模型出现两条采购通道。</li>
+          <li><b>Claude apps gateway for AWS</b>（07.08）—— AWS 上线企业级统一网关，把 Claude Code / Claude Desktop 的访问、成本与策略聚合到一个控制面；管理员可按团队分配 token 额度、细粒度审计每次对话与工具调用、对敏感场景一键禁用。「AI 消费管控」正在成为企业标准工具箱。</li>
         </ul>
-        <div class="pc-ux">Anthropic 用 Claude Science 亲手示范了一件事:<b>面向科研这种"高专业度、强流程"的场景,别把 AI 塞回主 app 里当一个新按钮,应该独立成 workbench</b>——用户预期、组件库、导航、审计路径全都不一样,共用一个信息架构反而拧巴。第二条:<b>付费引入价一定要给"具体锚点"</b>,"$2/$10 保持至 8/31"比"限时优惠"焦虑感低 3 倍,用户可以把日期写进日历,而不是每天怀疑是不是错过了。<span class="pc-ux-token">Effort Control 用 chip 而非 slider(连续区间→离散两态);引入价 "$X 保持至 MM/DD" 精确日期;垂直场景独立 workbench(三栏:资源/画布/上下文)。</span></div>
-        <div class="pc-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Sonnet 5 &amp; Claude Science &amp; Fable 5</a></div>
+        <div class="pc-ux">双周合幰后 Claude 给出三条可复用的产品设计原则:<b>① 高专业度垂直场景要独立成 workbench,不是塞回主 app</b>——Science 独立 App 的组件库、导航、审计路径与通用 chat 完全不一样,共用一个信息架构反而拧巴。<b>② 双通道分发下"模型来源"必须可见</b>——当 Sonnet 5 既能从 Anthropic 直购、也能经 AWS Bedrock 采购,用户会误以为是两款不同模型;在 model picker 右侧标注"via AWS"这类小 chip,比藏在设置里更能减少误判。<b>③ 消费透明化前置到使用界面,不留给出账日</b>——把「本团队本月余额」进度条直接放在编辑器顶栏,让用户在写代码时就能感受到消耗节奏,是企业级 AI 工具的基础礼貌。<span class="pc-ux-token">Effort Control 用 chip 而非 slider(连续区间→离散两态);Science 三栏 workbench(资源/画布/上下文);来源 chip 12px muted-soft 紧贴 model picker 右侧;额度进度条阶梯 &lt;60%绿 / 60~85%琥珀 / &gt;85%红;工具调用抽屉三段结构(input JSON / output JSON / duration)。</span></div>
+        <div class="pc-src">来源：<a href="https://www.anthropic.com/news/claude-sonnet-5" target="_blank">anthropic.com/news · Sonnet 5 &amp; Science &amp; Fable 5</a> · <a href="https://aws.amazon.com/blogs/machine-learning/introducing-claude-apps-gateway-for-aws/" target="_blank">AWS Blogs · apps gateway</a></div>
       </div>
 
       <!-- ChatGPT -->
@@ -349,16 +345,17 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
         <div class="pc-head">
           <span class="pc-name">ChatGPT</span>
           <span class="pc-sub">OpenAI</span>
-          <span class="pc-date">2026.06.25 ~ 06.26</span>
+          <span class="pc-date">2026.06.25 ~ 07.07</span>
         </div>
         <ul class="pc-list">
           <li><b>Codex Remote GA</b>（06.25）—— 手机 App 启动 / 审批远程 Mac 或 Windows 上的编码任务；QR 一对一配对建立可信通道；登出即断开 Remote Control，配对不丢失。Agent 的「监督界面」正式向移动端迁移。</li>
           <li><b>Memory 全面重构</b>（06.25，Enterprise 起）—— 个性化回答下新增 Sources 面板，显示引用的记忆 / 历史对话 / 自定义指令；用户可修改内容、删除引用、标记为不相关或一键回退到旧版 Saved memories。</li>
           <li><b>模型选择器简化</b>（06.26）—— 6 档：Instant / Medium / High / Extra High / Pro Standard / Pro Extended；Thinking Light 下线；Instant 可自动切换到 Medium。选项决策从「选模型」变为「选努力度」。</li>
           <li><b>Personal Finance 扩展</b>（06.26）—— Plus 用户可用（美国 web + iOS），Pro/Plus Android 端也开放；连接账户后建立仪表盘并支持上下文提问。</li>
+          <li><b>GPT-5.6 Sol / Terra / Luna 首预览</b>（07.07）—— OpenAI 用 Sol（旗舰）/ Terra（平衡）/ Luna（轻量）三档意象化命名替代传统「Ultra / Pro / Mini」；CAISI（美商务部）审批完成后，Sol 首次向更大范围可信合作伙伴开放预览。「模型档位」从工程术语走向日常意象；「模型发布节奏」不再由产品经理独立决定。</li>
         </ul>
-        <div class="pc-ux">这一周 ChatGPT 端上有一条最直接的启示:<b>AI 输出不该默认都长成"气泡消息"</b>。Personal Finance 用仪表盘、Memory 用 Popover 面板、Codex 用状态卡片——同一个模型,四五种输出形态,靠"内容类型 → 组件类型"的映射来决定用什么容器,而不是全都塞进对话框。第二条:<b>企业级模型选择器要"隐藏"而不是"置灰"</b>。看得到用不了会让企业 IT 觉得"你在推销",隐藏则给 IT 完整的治理感——他们决定用户看到什么。<span class="pc-ux-token">Codex Remote 用 QR 配对(移动端信任建立最小交互);Memory Sources 用 Popover 而非 Modal;6 档 picker 无权限档「隐藏 vs 置灰」;Personal Finance 用仪表盘卡片而非气泡消息。</span></div>
-        <div class="pc-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · ChatGPT Release Notes</a> · <a href="https://openai.com/index/" target="_blank">openai.com/index · Memory Dreaming</a></div>
+        <div class="pc-ux">双周合幰后 ChatGPT 端上有三条最直接的启示:<b>① AI 输出不该默认都长成"气泡消息"</b>——Personal Finance 用仪表盘、Memory 用 Popover 面板、Codex 用状态卡片,同一个模型四五种输出形态,靠"内容类型 → 组件类型"的映射决定容器,而不是全都塞进对话框。<b>② 企业级模型选择器要"隐藏"而不是"置灰"</b>——看得到用不了会让企业 IT 觉得"你在推销",隐藏则给 IT 完整的治理感。<b>③ 政府 gating 常态化以后,档位卡片必须留一个"审批状态位"</b>——被 gating 的档位不隐藏、不置灰,而是保留可点、告诉用户"预计 X 天后开放",让企业 IT 觉得"可预期"。<span class="pc-ux-token">Codex Remote QR 配对(移动端信任建立最小交互);Memory Sources 用 Popover 而非 Modal;6 档 picker 无权限档「隐藏 vs 置灰」;三档命名 Sol/Terra/Luna 首字母大写 + 全小写显示;档位左上 12px 状态点(绿=已开放 / 琥珀=预审中含倒计时 / 灰锁=政府 gating);档位图标 20px 网格 靠形态而非色块区分。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · ChatGPT Release Notes</a> · <a href="https://openai.com/index/previewing-gpt-5-6-sol/" target="_blank">openai.com/index · GPT-5.6 Sol Preview</a></div>
       </div>
 
       <!-- Gemini -->
@@ -401,24 +398,44 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
     </div>
     <div class="product-grid">
 
+      <!-- Claude Enterprise · via AWS -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude Enterprise · via AWS</span>
+          <span class="pc-sub">Anthropic × AWS</span>
+          <span class="pc-date">2026.06.30 ~ 07.08</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Claude Science 面向企业发布</b>（06.30）—— 生命科学垂直 AI Workbench；PubMed / Jupyter / R / HPC 集成到单一界面；Actor-Critic 双 Agent 架构校验计算与引用；Pro / Max / Team / Enterprise 均可开通 beta。</li>
+          <li><b>Jailbreak Severity Framework</b>（06.30）—— 与 Amazon / Microsoft / Google 共建的行业级安全分级标准同步落地企业席位，为 IT 管理员提供跨厂商一致的越狱严重度评估口径。</li>
+          <li><b>Sonnet 5 on AWS Bedrock</b>（07.03）—— 企业客户可在 Bedrock 与 AWS Claude Platform 直接调用 Sonnet 5，主打编码 + 代理任务；把「Anthropic 最强 Sonnet」的接入方式统一到「云厂商既有权限体系」内，绕过额外的合规审批与账户对接。</li>
+          <li><b>Claude apps gateway for AWS</b>（07.08）—— AWS 上线企业级统一网关，用来管控 Claude Code / Claude Desktop：<b>按团队分配 token 额度</b>、<b>细粒度审计每次对话与工具调用</b>、<b>对敏感场景一键禁用</b>；管理员不再依赖 Anthropic Console，而是从 AWS IAM 直接治理 Claude 消费。</li>
+          <li><b>企业侧的行为改变</b> —— 「买 Claude」正式变为「向云厂商采购 Claude 服务」，与「向 Anthropic 直购」并行；Claude 分发面从 SaaS 单点扩展成 SaaS + 云平台双通道。</li>
+        </ul>
+        <div class="pc-ux">Claude 从「向 Anthropic 直购」进入「SaaS + 云平台双通道」后,企业界面得学两条产品设计原则:<b>① 用户此刻属于哪个组织实例必须一目了然</b>——同一员工可能同时被拉进 Anthropic 直购和 AWS 采购两个组织,顶栏必须永远告诉他"你现在在哪儿",否则会话数据、权限、消费归属都会混乱。<b>② 双通道意味着不能锁死切换路径</b>——设置底部要保留一个 muted 的「切回另一通道」链接,即使 99% 的用户不会用,也是"你随时能走"的心理安全感;企业 IT 尤其对此敏感。第三条:<b>Reviewer 卡三态是"高专业度 workbench"的信任建设标配</b>——Actor-Critic 双 Agent 把每次计算和引用都挂一张"已复核 / 疑问 / 未复核"reviewer 卡,做金融、法务、医药这类严肃场景时可以直接抄。<span class="pc-ux-token">顶栏「Org · AWS-XXXX」12px muted-soft chip;工具调用行右侧 hover 出 Popover(不用 Modal);「一键切回 Anthropic 直购」muted 链接放设置抽屉底部;Reviewer 卡三态(已复核绿/疑问琥珀/未复核灰);Science 三栏 workbench + ⌘K 场景分组面板(替代 60+ 按钮墙)。</span></div>
+        <div class="pc-src">来源：<a href="https://www.anthropic.com/news/claude-sonnet-5" target="_blank">anthropic.com/news · Sonnet 5 &amp; Science &amp; Enterprise 双通道</a> · <a href="https://aws.amazon.com/blogs/machine-learning/introducing-claude-apps-gateway-for-aws/" target="_blank">AWS Blogs · apps gateway</a></div>
+      </div>
+
       <!-- ChatGPT Enterprise -->
       <div class="product-card wide">
         <div class="pc-head">
           <span class="pc-name">ChatGPT Enterprise / Edu / Business</span>
           <span class="pc-sub">OpenAI</span>
-          <span class="pc-date">2026.06.25 ~ 06.26</span>
+          <span class="pc-date">2026.06.25 ~ 07.07</span>
         </div>
         <ul class="pc-list">
-          <li><b>可视化 Memory + Sources 面板</b> —— 个性化回答下方标注引用来源；用户可点击每条 memory / 历史对话查看原文、修改、删除或标记为不相关，也可一键退回到旧版 Saved memories。企业版首推 2 周 early access，之后默认打开。</li>
-          <li><b>Plugin 管理进驻 Workspace 设置</b> —— 管理员可按角色、状态、类别搜索并配置插件；可强制默认安装或限定可安装范围，「AI 生态治理」终于有了一站式界面。</li>
-          <li><b>模型选择器统一简化</b> —— Enterprise / Edu 与消费级同步使用 6 档；Reasoning Model Access / Pro Model Access 两个开关分别控制思考模型与 Pro 模型的可用性，隐藏用户无权限使用的档位。</li>
+          <li><b>可视化 Memory + Sources 面板</b>（06.25）—— 个性化回答下方标注引用来源；用户可点击每条 memory / 历史对话查看原文、修改、删除或标记为不相关，也可一键退回到旧版 Saved memories。企业版首推 2 周 early access，之后默认打开。</li>
+          <li><b>Plugin 管理进驻 Workspace 设置</b>（06.25）—— 管理员可按角色、状态、类别搜索并配置插件；可强制默认安装或限定可安装范围，「AI 生态治理」终于有了一站式界面。</li>
+          <li><b>模型选择器统一简化</b>（06.26）—— Enterprise / Edu 与消费级同步使用 6 档；Reasoning Model Access / Pro Model Access 两个开关分别控制思考模型与 Pro 模型的可用性，隐藏用户无权限使用的档位。</li>
+          <li><b>GPT-5.6 三档命名 Enterprise 落地</b>（07.07）—— Enterprise 席位将首批获得 Sol / Terra / Luna；企业管理员可通过 Reasoning / Pro Model Access 分别控制哪些席位可用最高档，隐藏用户无权限使用的档位。</li>
+          <li><b>CAISI 审批完成 → 企业侧首批解锁</b>（07.07）—— OpenAI 官方 Sol 预览页说明:covered 模型在向可信合作伙伴发布前需完成 CAISI 审核期；Enterprise 客户成为最早的合规验证对象。「AI 采购」从纯技术评估进化为「安全 / 合规双轨审批」。</li>
         </ul>
-        <div class="pc-ux">这一周的启示很清晰:<b>企业级 AI 产品的核心不是"更多设置",而是设置的可组合性</b>。ChatGPT Enterprise 比消费版多出的东西——Sources 的审计视图、Plugin 的双开关、权限档的隐藏机制——每一个都不是"新按钮",而是可以被组合成不同角色配置的"设置原子"。第二条:<b>企业级审计不能只显示"引用了什么",还得显示"谁在什么时间怎么改的"</b>——Sources 面板的 timestamp / 编辑者 / 权限来源三列是 SOC 2 / ISO 27001 合规审查的最低要求,消费端可以省,企业端不能。<span class="pc-ux-token">Sources 审计视图三列:timestamp / 编辑者 / 权限来源;Plugin 双开关:可安装(Allow) + 强制默认(Push);模型档「隐藏而非置灰」;Reasoning 与 Pro 两类档独立开关。</span></div>
-        <div class="pc-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · ChatGPT Enterprise &amp; Edu Release Notes</a></div>
+        <div class="pc-ux">双周合幰后企业级 ChatGPT 有三条设计原则:<b>① 企业级 AI 产品的核心不是"更多设置",而是设置的可组合性</b>——Sources 的审计视图、Plugin 的双开关、权限档的隐藏机制,每一个都不是"新按钮",而是可组合成不同角色配置的"设置原子"。<b>② 企业级审计不能只显示"引用了什么",还得显示"谁在什么时间怎么改的"</b>——Sources 面板的 timestamp / 编辑者 / 权限来源三列是 SOC 2 / ISO 27001 合规审查的最低要求。<b>③ 政府 gating 常态化以后,「角色 × 档位」是可组合权限,不再"席位 = 档位"硬绑定</b>——普通员工 / VIP / 研究员在同一个工作区里能用不同档,组件形态应该是 List Row + 复选框而不是下拉。<span class="pc-ux-token">Sources 审计三列:timestamp / 编辑者 / 权限来源;Plugin 双开关(Allow + Push);模型档「隐藏而非置灰」;Reasoning / Pro Model Access 走 List Row 形态;能力清单每行状态点 8~10px;倒计时天数用 tabular-nums 排版;灰锁档保留「订阅通知」入口。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · ChatGPT Enterprise &amp; Edu Release Notes</a> · <a href="https://openai.com/index/previewing-gpt-5-6-sol/" target="_blank">openai.com/index · GPT-5.6 Sol Preview</a></div>
       </div>
 
       <!-- Gemini for Workspace -->
-      <div class="product-card">
+      <div class="product-card wide">
         <div class="pc-head">
           <span class="pc-name">Gemini for Workspace</span>
           <span class="pc-sub">Google</span>
@@ -428,24 +445,8 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
           <li><b>Study Notebooks 面向教育版</b>（06.25）—— Workspace for Education 用户可在 Gemini 中把课程材料一键生成为诊断测试、阶段性测验和进度仪表盘，与 NotebookLM 双向共享上下文。</li>
           <li><b>Business Notebooks 直连 Google Business Profile</b>（07.01）—— 中小企业管理员可在 Gemini 中直接查询商家数据（曝光、导航、通话、客户互动），并让 Gemini 生成品牌口吻的评论回复。</li>
         </ul>
-        <div class="pc-ux">Gemini for Workspace 打了个样:<b>B 端 AI 助手的默认状态不该是空对话框,而是"已经帮你想好了 3 件事"的待办清单</b>——OAuth 一完成就在首屏浮出建议,不等用户提问。这一步反过来说明,过去 5 年做 SaaS AI 的默认状态"输入你想问什么"是懒惰的产品设计,把工作推给了用户。第二条:<b>主动内容必须带"品牌口吻"参数</b>——通用 AI 文案配上商家专属人设会立刻违和,评论回复、SMS 草稿、邮件模板都要在设置里给出「公司名 + 语气 + 禁词」三档,写进 prompt 而不是让用户手改。<span class="pc-ux-token">OAuth 后主动扫描 → 首屏 3 张待办卡;CTA 用「生成」而非「查看」(降一次点击);Tone token:公司名 / 语气(正式/亲切) / 禁词表 三档;建议卡片一次不超过 5 张(防溢出)。</span></div>
+        <div class="pc-ux">Gemini for Workspace 打了个样:<b>B 端 AI 助手的默认状态不该是空对话框,而是"已经帮你想好了 3 件事"的待办清单</b>——OAuth 一完成就在首屏浮出建议,不等用户提问。这一步反过来说明过去 5 年做 SaaS AI 的默认状态"输入你想问什么"是懒惰的产品设计,把工作推给了用户。第二条:<b>主动内容必须带"品牌口吻"参数</b>——通用 AI 文案配上商家专属人设会立刻违和,评论回复、SMS 草稿、邮件模板都要在设置里给出「公司名 + 语气 + 禁词」三档,写进 prompt 而不是让用户手改。<span class="pc-ux-token">OAuth 后主动扫描 → 首屏 3 张待办卡;CTA 用「生成」而非「查看」(降一次点击);Tone token:公司名 / 语气(正式/亲切) / 禁词表 三档;建议卡片一次不超过 5 张(防溢出)。</span></div>
         <div class="pc-src">来源：<a href="https://blog.google/" target="_blank">blog.google · Study &amp; Business Notebooks</a></div>
-      </div>
-
-      <!-- Claude Enterprise -->
-      <div class="product-card">
-        <div class="pc-head">
-          <span class="pc-name">Claude Enterprise / Science</span>
-          <span class="pc-sub">Anthropic</span>
-          <span class="pc-date">2026.06.30</span>
-        </div>
-        <ul class="pc-list">
-          <li><b>Claude Science 面向企业发布</b> —— 生命科学垂直 AI Workbench；PubMed / Jupyter / R / HPC 集成到单一界面；Actor-Critic 双 Agent 架构校验计算与引用；Pro / Max / Team / Enterprise 均可开通 beta。</li>
-          <li><b>Fable 5 / Mythos 5 恢复</b> —— 美国政府批准后重新部署；AWS / Google Cloud / Microsoft Foundry 三条通道分阶段恢复；Enterprise 客户在过渡期内额度稳定。</li>
-          <li><b>Jailbreak Severity Framework</b> —— 与 Amazon / Microsoft / Google 共建的行业级安全分级标准同步落地企业席位，为 IT 管理员提供跨厂商一致的越狱严重度评估口径。</li>
-        </ul>
-        <div class="pc-ux">Claude Science 给了垂直行业 AI 一条清晰的信任建设路径:<b>不是靠"更强的模型",而是靠"可见的校验流程"</b>——Actor-Critic 双 Agent 把每一次计算和引用都挂一张"reviewer 卡"给你看,用户永远知道"哪些结果被复核过、哪些还没"。这一点做管理、金融、法务这类高专业度产品时可以直接抄。第二条:<b>技能超过 20 个就该用命令面板,不要展开面板</b>——垂直场景动不动 60+ 技能,如果全部铺开成按钮列表,用户既扫不过来也记不住;⌘K 打开 + 场景分组 + 快捷输入,是替代"按钮墙"的正确形态。<span class="pc-ux-token">三栏 workbench:PubMed/Jupyter/R 资源列 / Notebook 画布 / Agent 上下文抽屉;⌘K 面板 + 场景分组(不是按钮列表);Reviewer 卡三态:已复核绿 / 疑问琥珀 / 未复核灰;每个计算/引用旁挂一张 reviewer 卡。</span></div>
-        <div class="pc-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Science &amp; Fable 5</a></div>
       </div>
 
     </div>
@@ -456,13 +457,28 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
       <span class="track-pill">云厂商 AI 平台</span>
       <div class="track-label-line"></div>
     </div>
-    <p class="track-desc">Google Cloud · Azure AI · AWS Bedrock — 企业控制台 UX 更新</p>
+    <p class="track-desc">AWS Bedrock · Azure AI · Google Cloud — 企业控制台 UX 更新</p>
     <div class="product-grid">
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">AWS · Bedrock &amp; apps gateway</span>
+          <span class="pc-sub">Amazon Web Services</span>
+          <span class="pc-date">2026.07.03 ~ 07.08</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Claude Sonnet 5 通过 Bedrock 上架</b>（07.03）—— AWS 把 Anthropic 最新 Sonnet 直接纳入 Bedrock 模型目录，企业无需额外账号即可使用；对 AWS 客户而言，「模型选型」变成 Bedrock 控制台里一个选择器动作，且计费与既有 AWS 账单合流。</li>
+          <li><b>Claude apps gateway for AWS 发布</b>（07.08）—— 一个专用网关把 Claude Code / Desktop 的访问、成本与策略聚合起来；配套 CloudWatch 指标与 IAM 精细化权限，直接对齐 AWS 客户熟悉的运维语言。</li>
+          <li><b>企业管控 UX 的 AWS 化</b> —— 「AI 应用消费」被切齐到 AWS 通用治理模式(IAM 权限 + CloudTrail 审计 + Budgets 预算 + Service Quotas 配额);企业管理员用「治理 EC2 / S3 的经验」来治理 Claude。</li>
+        </ul>
+        <div class="pc-ux">B 端 AI 控制台的两条产品设计原则,直接决定采购摩擦系数:<b>① 与其自造治理组件,不如直接对齐云厂商已有的 UX 语言</b>——权限用 AWS 的 IAM Row 而不是自己发明"角色矩阵"、审计用 CloudTrail Log Table 而不是自制审计视图;每个 AWS 老员工都懂这套,学习成本几乎为零,销售就少一段"教学话术"。<b>② 治理组件的路径要延续既有习惯</b>——「申请提额」直接跳工单流,不让管理员在后台改数字;「超预算」发 SNS 通知不发邮件——这不是技术选择,是"和企业客户的既有工作流合流"。<span class="pc-ux-token">对照表:权限 = IAM Row(principal + action + resource 三列);审计 = CloudTrail Log Table(时间 · 用户 · 操作 · 资源四列 + 详情抽屉);预算 = Budgets Chart(柱状 + 红/琥珀/绿阈值线);配额 = Service Quotas Row + 「申请提额」跳工单按钮。</span></div>
+        <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/machine-learning/introducing-claude-apps-gateway-for-aws/" target="_blank">AWS Blogs · apps gateway</a> · <a href="https://aws.amazon.com/blogs/aws/top-announcements-of-the-aws-summit-in-new-york-2026/" target="_blank">AWS Summit NY · Sonnet 5</a></div>
+      </div>
+
       <div class="product-card empty" style="grid-column: span 2;">
         <div class="pc-head">
-          <span class="pc-name">Google Cloud · Azure AI · AWS Bedrock</span>
+          <span class="pc-name">Azure AI · Google Cloud AI</span>
         </div>
-        <p class="pc-empty-note">本期无重大控制台 UX 更新。Anthropic 恢复 Fable 5 在 AWS / Google Cloud / Microsoft Foundry 通道的部署，属于模型层重新上线，非平台 UX 变化。</p>
+        <p class="pc-empty-note">本周窗口内 azure.microsoft.com/blog 与 blog.google 云控制台版块均无面向企业管理员的 UX 更新公告。Anthropic Fable 5 在 Microsoft Foundry / Google Cloud 的重新部署属模型层恢复，非平台 UX 变化。</p>
       </div>
     </div>
   </div>
@@ -538,21 +554,43 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
     </div>
   </div>
 
-  <!-- 效率工具 -->
+  <!-- AI 原生入口 -->
   <div class="track" style="margin-top: 48px;">
     <div class="track-label">
-      <span class="track-pill">设计师高频效率工具</span>
+      <span class="track-pill">AI 原生入口</span>
       <div class="track-label-line"></div>
     </div>
-    <p class="track-desc">Cursor · Notion AI · Canva AI — 值得关注的新功能与交互设计</p>
+    <p class="track-desc">Meta · Notion · Microsoft — 用户直接接触 AI 的新界面</p>
     <div class="product-grid">
 
-      <!-- 效率工具本周 empty state -->
-      <div class="product-card empty" style="grid-column: span 2;">
+      <!-- Meta Muse Image -->
+      <div class="product-card wide">
         <div class="pc-head">
-          <span class="pc-name">Cursor · Notion AI · Canva AI</span>
+          <span class="pc-name">Meta · Muse Image</span>
+          <span class="pc-sub">Meta</span>
+          <span class="pc-date">2026.07.07</span>
         </div>
-        <p class="pc-empty-note">本期设计师高频效率工具无经官方渠道确认的 UX 相关重大更新。设计师视角上，本期真正值得关注的效率类事件已集中在上一小节的「Claude Code &amp; ChatGPT Codex Remote」跨厂商对照卡片中——Agent 型编码工具正在成为设计-研发协作链路的新枢纽。</p>
+        <ul class="pc-list">
+          <li><b>Muse Image 发布并内嵌至 Instagram / WhatsApp</b> —— 用户可在私信、故事流、Reels 编辑器内直接生成图像，无需切换到独立生成器；生成式 AI 变成「即时消息中的一个按钮」。</li>
+          <li><b>「AI 作为交互控件」而非「AI 作为独立产品」</b> —— Meta 的策略是让 AI 消隐在最贴身的日常场景里，用户不必知道自己在「用 AI」；发送按钮旁的一个 icon 就是完整入口。</li>
+        </ul>
+        <div class="pc-ux">Meta 把 AI「消隐进消息流」的两条产品设计原则:<b>① AI 触发点越小越安静越好,不要新增顶栏或 tab</b>——一个输入框旁边的星芒 icon 比在导航加"AI 助手"入口更符合"隐入按钮"策略;用户不需要意识到自己在用 AI,AI 就应该像发送键一样是"自然的"。<b>② 隐入的代价是必须保留可溯源</b>——每张生成图右下角固定的低透水印是必要的,即便看起来很轻,也让整个产物在被转发、被截图、被误认为"真实照片"的时候不至于失控。设计侧要谨慎:不要把这个入口做成 FAB 那种"主功能"的份量,它就是一个 24px 的按钮。<span class="pc-ux-token">AI 触发键 24px 星芒 icon 放在输入框右侧(+ 号旁,不做 FAB);生成中态用消息气泡"渐变霓虹描边"表示进行,避免打断聊天流;水印规格 8px 字号 · 10% 透明度 · 固定右下角;长按弹 sheet 三选项「重生成 / 换风格 / 举报」。</span></div>
+        <div class="pc-src">来源：<a href="https://ai.meta.com/blog/introducing-muse-image-muse-video-msl/" target="_blank">ai.meta.com · Muse Image</a> · <a href="https://techcrunch.com/2026/07/07/meta-rolls-out-muse-a-new-ai-image-generator/" target="_blank">TechCrunch · Muse</a></div>
+      </div>
+
+      <!-- Notion Agents App / Microsoft Aion 空态 -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Notion · Agents App</span>
+        </div>
+        <p class="pc-empty-note">本期未在 anthropic.com / openai.com / blog.google / techcrunch.com（AI 版块）等一手白名单渠道核到独立 Agents App 的官方发布公告；社媒有若干未验证的传闻，为避免引用未证实来源，本卡暂空。</p>
+      </div>
+
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Microsoft · Copilot OS (Aion)</span>
+        </div>
+        <p class="pc-empty-note">本期 Copilot OS / Aion Windows 探索版泄露事件未在 azure.microsoft.com/blog / blog.microsoft / The Verge AI 版块的可核一手页面出现；社媒转发存在，为避免引用未证实来源，本卡暂空。</p>
       </div>
 
     </div>
@@ -563,7 +601,7 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
 <section class="section" id="s4" style="padding-bottom: 0;">
   <div class="section-label">板块四</div>
   <div class="section-title">对我们的启示</div>
-  <p class="section-note">从本期产品动态中提炼的 6 条具体、可执行的设计建议</p>
+  <p class="section-note">从 06.25 ~ 07.08 双周产品动态中提炼的 6 条具体、可执行的设计建议</p>
 
   <div class="insight-grid">
 
@@ -576,37 +614,37 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
 
     <div class="insight-card">
       <div class="in-num">Insight · 02</div>
-      <div class="in-trigger">↗ ChatGPT · Codex Remote GA</div>
+      <div class="in-trigger">↗ ChatGPT · Codex Remote GA · Claude Code</div>
       <div class="in-title">Agent 型工具:桌面写策略,手机做审批</div>
-      <div class="in-body">Codex Remote 手机 App 上线后,一条可以直接沉淀为设计原则的经验:<b>Agent 型工具的移动端不需要复刻桌面版</b>。桌面端负责"写 policy、看 diff、调 log";移动端只负责"通勤路上一按 Approve",两个端做的是不同的事,不是同一件事的不同尺寸。第二条:<b>手机端 5 个控件就够</b>——标题、状态 chip、Approve、Reject、Pause——多一个都会让用户在通勤地铁上误触;详细日志、diff、原文这些"决策依据"要用"展开原文"折叠掉,默认收起。<span class="in-body-token">状态 chip 四态:Running / Waiting / Done / Error(8px 圆点前缀);Approve / Reject 44pt 触控区;耗时用数字优于百分比条;展开原文默认收起。</span></div>
+      <div class="in-body">Codex Remote 与 Claude Code 这一双周把 Agent 型工具的界面语言拉齐:<b>Agent 型工具的移动端不需要复刻桌面版</b>。桌面端负责"写 policy、看 diff、调 log";移动端只负责"通勤路上一按 Approve",两个端做的是不同的事,不是同一件事的不同尺寸。第二条:<b>Agent 状态就四种,别发明第五种</b>——Running / Waiting for approval / Done / Error 已经是行业共识,任何"半成品/挂起/审核中"都能塞进这四态,自造术语只会让集成方懵圈;手机端 5 个控件就够——标题、状态 chip、Approve、Reject、Pause,多一个都会让用户在通勤地铁上误触。<span class="in-body-token">状态 chip 四态:Running / Waiting / Done / Error(8px 圆点前缀);Approve / Reject 44pt 触控区;耗时用数字优于百分比条;展开原文默认收起;Effort Control 档位≤3(超过=暴露参数)。</span></div>
     </div>
 
     <div class="insight-card">
       <div class="in-num">Insight · 03</div>
-      <div class="in-trigger">↗ ChatGPT · 6 档模型选择器</div>
-      <div class="in-title">模型档位命名的三个避坑准则</div>
-      <div class="in-body">ChatGPT 6 档命名把"参数抽象成用户语言"做到教科书级别,拿来直接对照能避 3 个常见坑:<b>① 不用"Fast" 用 "Instant"</b>——速度是"结果"不是"承诺",承诺很容易被 SLA 打脸;<b>② 不用"Better / Best" 用 "Medium / High / Extra High"</b>——避免价值判断陷阱,不然用户永远疑惑"Better 到底比默认好在哪";<b>③ 付费档用统一前缀(Pro Standard / Pro Extended)</b>——一眼分辨免费/付费边界。第二条:<b>企业客户看不到的档位要"隐藏"而不是"置灰"</b>——置灰是"你想用但没资格",隐藏是"你没这个选项",后者对 IT 更友好,不会引发"为什么我没这个权限"的工单。<span class="in-body-token">Instant(不用 Fast)· Medium / High / Extra High(不用 Better / Best)· Pro Standard / Pro Extended(付费统一前缀);Enterprise picker 无权限档"隐藏而非置灰";避免模型代号(GPT-5.5 / Sonnet 5)出现在用户界面。</span></div>
+      <div class="in-trigger">↗ ChatGPT · 6 档模型选择器 + GPT-5.6 Sol / Terra / Luna</div>
+      <div class="in-title">模型档位命名:量词 → 意象词表,并给"审批状态位"留一格</div>
+      <div class="in-body">双周里 OpenAI 把「模型档位」推进了两步。第一步 6 档命名给出三条可对照的避坑准则:<b>不用"Fast"用"Instant"</b>(速度是结果不是承诺)、<b>不用"Better/Best"用"Medium/High/Extra High"</b>(避免价值判断陷阱)、<b>付费档用统一前缀"Pro Standard / Pro Extended"</b>(一眼分辨免费/付费边界)。第二步 Sol / Terra / Luna 更进一步:<b>档位名字要走"意象"而非"工程量词"</b>——「日光/大地/月亮」自带强弱层级和情绪色彩,新用户 3 秒建心智,不用查手册。CAISI 政府 gating 常态化后,档位卡片必须留一个「审批状态位」:被 gating 的档不隐藏、不置灰,而是保留可点、告诉用户"预计 X 天后开放"。<span class="in-body-token">Instant · Medium / High / Extra High · Pro Standard / Pro Extended(避免 Fast / Better);意象命名首字母大写 + 全小写显示;档位左上 12px 状态点(绿=已开放 / 琥珀=预审中含倒计时 / 灰锁=政府 gating);档位图标 20px 网格 · 靠形态而非色块区分(色弱友好);企业无权限档隐藏而非置灰。</span></div>
     </div>
 
     <div class="insight-card">
       <div class="in-num">Insight · 04</div>
-      <div class="in-trigger">↗ ChatGPT · Memory Sources 面板</div>
-      <div class="in-title">带记忆的 AI 功能都要过"三个能"自检</div>
-      <div class="in-body">Sources 面板把"AI 记住了什么"变成可读可改的资产,这条几乎可以变成硬约束:<b>任何带记忆的 AI 功能都要过三个能自检——用户能看到吗?能修改吗?能选择性遗忘吗?</b>三个问题只要有一个答不上来,就是产品欠债,后面一定会被合规团队/隐私团队打回。这一条对做用户画像、推荐系统、AI 客服记忆的团队都适用。第二条:<b>记忆管理入口用 Popover,不用 Modal</b>——查记忆是阅读中的"轻打断"动作,Modal 会强制中断阅读流,让用户觉得"我做错什么了";Popover 让用户"顺路点开顺路关掉"。<span class="in-body-token">入口 = 回答气泡下方 "Sources · 3" 链接(13px muted-soft);展开态 = Popover(不是 Modal);条目结构 = icon + 原文 2 行截断 + 三档操作(Edit / Remove / Mark irrelevant);回退口 = 右上二级链接"Use legacy Saved memories"。</span></div>
+      <div class="in-trigger">↗ Anthropic × AWS · Claude 双通道分发</div>
+      <div class="in-title">同一个 AI 产品在双通道下要显式声明"你现在在哪儿"</div>
+      <div class="in-body">当 AI 产品从「SaaS 单点」扩到「SaaS + 云平台双通道」,最容易被忽视但代价最大的一件事:<b>员工可能同时属于两个组织实例,界面必须显式告诉他"你现在在哪儿"</b>。数据、权限、消费归属都挂在这里——藏在设置里的 org 切换器不够,顶栏得永远留一个身份 chip。第二条:<b>双通道意味着不能锁死切换路径</b>——设置底部保留一个 muted 的"切回另一通道"链接,即使 99% 的用户不会用,也给出"你随时能走"的心理安全感;企业 IT 尤其对此敏感。这条同样适用于任何要跨云、跨代理商、跨采购通道分发的 SaaS 产品。<span class="in-body-token">顶栏「Org · AWS-XXXX」12px muted-soft chip;model picker 右侧 "via AWS" 来源标签;团队 token 余额进度条 &lt;60%绿 / 60~85%琥珀 / &gt;85%红,置于编辑器顶栏;「一键切回原通道」muted 链接放设置抽屉底部。</span></div>
     </div>
 
     <div class="insight-card">
       <div class="in-num">Insight · 05</div>
-      <div class="in-trigger">↗ Figma · Agent Skills &amp; Custom Tools</div>
-      <div class="in-title">AI 助手的"prompt 之外"配置层要显式化</div>
-      <div class="in-body">Figma Agent Skills 说明一件事:<b>AI 助手的能力已经不能全靠"你会写 prompt"来解决,"prompt 之外"的配置层必须显式化</b>——Skills 是团队沉淀、Connectors 是数据出入口、Context files 是外挂知识、Defaults 是默认口味,四段各自有独立 UI,没有一段可以偷懒塞进"设置 → 高级"。第二条:<b>Connector OAuth 状态灯 + Context 文件的 token 消耗</b>是被反复忽略的两个小细节——OAuth 灭了用户以为在用其实没接上,Context 只显示文件大小用户永远不知道自己扔了多少 token 进去,产品端要主动把这两个"隐性状态"可视化。<span class="in-body-token">设置抽屉 4 段 IA:Skills / Connectors / Context files / Defaults;Connector 每项带 OAuth 状态灯(绿 = 已连接 / 灰 = 未连接 / 红 = token 过期);Context 上传显示 token 占用(不是文件大小);Skills 支持团队共享(不只是个人收藏)。</span></div>
+      <div class="in-trigger">↗ Meta · Muse Image in IG / WhatsApp</div>
+      <div class="in-title">AI 越"隐入"越好,但产物必须留一条可溯源的尾巴</div>
+      <div class="in-body">Muse 把生图能力塞进「输入框旁的一个 icon」——不做独立 App、不占 tab、不抢焦点,让 AI 变成"消息装饰"而不是"新产品"。这是消费级 AI 目前跑得通的一条路:<b>低依赖场景不需要独立 IA,隐入既有输入器就够了</b>。但隐入必须有代价——<b>生成物要留一条可溯源的视觉尾巴</b>:右下一个轻水印、长按出"AI 生成 · 可举报"的 sheet,把「谁在生成、生成给谁」讲清楚,才不会被平台策略反噬。设计侧要谨慎:不要把入口做成 FAB 那种"主功能"的份量,它就是一个 24px 的按钮。<span class="in-body-token">入口 = 24px icon 挂在输入框右侧(不是 FAB);生成中态 = 消息气泡渐变霓虹描边(不打断聊天流);生成物右下 8px、10% 透明度水印;长按弹 sheet 三选项「重生成 / 换风格 / 举报」。</span></div>
     </div>
 
     <div class="insight-card">
       <div class="in-num">Insight · 06</div>
-      <div class="in-trigger">↗ Claude Science + Gemini Study/Business Notebooks</div>
+      <div class="in-trigger">↗ Claude Science · via AWS + Gemini Study / Business Notebooks</div>
       <div class="in-title">先分清「聊天窗口」还是「工作台」,组件库根本不同</div>
-      <div class="in-body">当 PM 说"给这个功能加个 AI",先要问一句:<b>它是聊天窗口,还是工作台?</b> 两者的组件库、输入形态、输出容器、持久化机制、校验流程——五个层面全都不一样,不能靠"共用一套组件加点判断"糊过去。这一周三家公司(Claude / Gemini)都把这条边界画得非常清楚:垂直场景 → Workbench,通用问答 → Chat。第二条:<b>Workbench 的输出必须是"可编辑资产",不是"气泡消息"</b>——Notebook cell、3D 视图、表格、报告页面,任何 AI 生成的东西都要能被继续修改,不能只提供一个"复制"按钮让用户去外部工具里改。<span class="in-body-token">Chat vs Workbench 五个层面差异:布局(单栏 vs 三栏);输入(textarea vs 多入口 @);输出(气泡 vs 可编辑资产);持久化(session vs 项目);校验(无 vs reviewer 卡);输入多入口 = chat + 拖入文件 + 数据源 @ 引用。</span></div>
+      <div class="in-body">当 PM 说"给这个功能加个 AI",先要问一句:<b>它是聊天窗口,还是工作台?</b> 两者的组件库、输入形态、输出容器、持久化机制、校验流程——五个层面全都不一样,不能靠"共用一套组件加点判断"糊过去。双周内 Claude Science、Gemini Notebooks 都把这条边界画得非常清楚:垂直场景 → Workbench,通用问答 → Chat。第二条:<b>Workbench 的输出必须是"可编辑资产",不是"气泡消息"</b>——Notebook cell、3D 视图、表格、报告页面,任何 AI 生成的东西都要能被继续修改,不能只提供一个"复制"按钮让用户去外部工具里改。<span class="in-body-token">Chat vs Workbench 五个层面差异:布局(单栏 vs 三栏);输入(textarea vs 多入口 @);输出(气泡 vs 可编辑资产);持久化(session vs 项目);校验(无 vs reviewer 卡三态);输入多入口 = chat + 拖入文件 + 数据源 @ 引用。</span></div>
     </div>
 
   </div>
@@ -616,7 +654,7 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
 <div class="cta-band">
   <div>
     <h2>下期预告</h2>
-    <p>覆盖窗口：2026-07-02 ~ 2026-07-08 · 下周三发布</p>
+    <p>覆盖窗口：2026-07-09 ~ 2026-07-15 · 下周三发布</p>
   </div>
   <div class="cta-band-meta">
     云基础 &amp; VnE 团队<br>
@@ -628,7 +666,7 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
 </div><!-- /wrap -->
 
 <footer>
-  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第八期</span>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06~07 第八期</span>
   <span>仅供设计大团队内部参考</span>
 </footer>
 
