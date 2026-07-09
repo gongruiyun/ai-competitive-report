@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.06 第八期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --on-dark:       #ffffff;
+  --teal:          #1a3a3a;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero { max-width: 1200px; margin: 0 auto; padding: 56px 48px 40px; }
+
+.report-selector { position: relative; display: inline-block; margin-bottom: 20px; }
+.report-selector__trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-card); color: var(--muted);
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  border-radius: 9999px; padding: 6px 14px 6px 16px;
+  cursor: pointer; border: none; font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s; user-select: none;
+}
+.report-selector__trigger:hover { background: var(--surface-strong); color: var(--body); }
+.report-selector__trigger.open  { background: var(--surface-strong); color: var(--body-strong); }
+.report-selector__chevron { width: 14px; height: 14px; opacity: 0.5; transition: transform 0.2s; flex-shrink: 0; }
+.report-selector__trigger.open .report-selector__chevron { transform: rotate(180deg); opacity: 0.8; }
+.report-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 300px; background: #fff;
+  border: 1px solid var(--hairline); border-radius: 16px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10); z-index: 100;
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.report-dropdown__section-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-soft); padding: 6px 10px 4px; }
+.report-dropdown__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none;
+  color: var(--body); transition: background 0.12s;
+}
+.report-dropdown__item:hover { background: var(--surface-soft); }
+.report-dropdown__item--active { background: var(--surface-card); color: var(--body-strong); }
+.report-dropdown__item-left { display: flex; flex-direction: column; gap: 2px; }
+.report-dropdown__item-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.report-dropdown__item-period { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.report-dropdown__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; background: var(--teal); color: #fff; border-radius: 9999px; padding: 2px 8px; flex-shrink: 0; }
+
+.hero h1 { font-size: clamp(52px, 7vw, 80px); font-weight: 500; letter-spacing: -2.5px; line-height: 1; color: var(--ink); max-width: 720px; margin-bottom: 16px; }
+.hero-sub { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+.section { padding: 48px 0 0; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); margin-bottom: 16px; }
+.section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+.section-note { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+.flash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flash-card { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px; min-height: 210px; }
+.flash-card:nth-child(1) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: #d4e8e3;      color: var(--ink); }
+.flash-card:nth-child(3) { background: #ece8f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #d8eef8;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; }
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); color: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 9999px; padding: 4px 12px; align-self: flex-start; }
+
+.track { margin-top: 52px; }
+.track-label { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.track-pill { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 9999px; padding: 6px 16px; background: var(--surface-card); color: var(--muted); white-space: nowrap; }
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+.track-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.product-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: 16px; padding: 28px; transition: box-shadow 0.15s; }
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.product-card.empty { border-style: dashed; background: var(--surface-soft); }
+.pc-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date { margin-left: auto; font-size: 12px; color: var(--muted-soft); background: var(--surface-card); border-radius: 9999px; padding: 3px 12px; white-space: nowrap; }
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li { font-size: 14px; color: var(--body); line-height: 1.6; padding-left: 18px; position: relative; }
+.pc-list li::before { content: '·'; position: absolute; left: 4px; color: var(--muted-soft); font-size: 18px; line-height: 1.3; }
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux { margin-top: 14px; padding: 10px 12px; background: rgba(232,185,74,0.10); border-radius: 8px; border-left: 3px solid var(--ochre); font-size: 13px; color: var(--body); line-height: 1.55; }
+.pc-ux::before { content: "设计视角 · "; font-weight: 700; color: #b8860b; }
+.pc-ux-token { display: block; margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(184,134,11,0.35); font-size: 11px; letter-spacing: 0.2px; color: var(--muted); line-height: 1.6; }
+.pc-ux-token::before { content: "Token · "; font-weight: 700; color: #b8860b; opacity: 0.7; }
+.band-teal .pc-ux-token { color: rgba(255,255,255,0.5); border-top-color: rgba(232,185,74,0.35); }
+.pc-empty-note { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .section-note { color: rgba(255,255,255,0.4); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .track-desc { color: rgba(255,255,255,0.35); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card.empty { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub, .band-teal .pc-date { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+.band-teal .pc-empty-note { color: rgba(255,255,255,0.4); }
+
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #d4e8e3; }
+.insight-card:nth-child(2) { background: #d8eef8; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #faf3d8; }
+.insight-card:nth-child(5) { background: #fce4ee; }
+.insight-card:nth-child(6) { background: #dde8e5; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.5; margin-bottom: 12px; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+.in-body-token { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(0,0,0,0.15); font-size: 11px; letter-spacing: 0.2px; opacity: 0.6; line-height: 1.6; }
+.in-body-token::before { content: "Token · "; font-weight: 700; opacity: 0.7; }
+
+.cta-band { background: var(--surface-soft); border-radius: 24px; margin: 80px 0; padding: 80px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+footer { background: var(--surface-soft); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer, .cta-band { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第八期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-07-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第九期</span>
+          <span class="report-dropdown__item-period">2026-07-02 ~ 2026-07-08</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第八期</span>
+          <span class="report-dropdown__item-period">2026-06-25 ~ 2026-07-01</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第七期</span>
+          <span class="report-dropdown__item-period">2026-06-18 ~ 2026-06-24</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第六期</span>
+          <span class="report-dropdown__item-period">2026-06-11 ~ 2026-06-17</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第五期</span>
+          <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第四期</span>
+          <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub">覆盖窗口：2026-06-25 ~ 2026-07-01｜阅读时长：约 5 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示</p>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 板块一 · 本期速览 ═══ -->
+<section class="section" id="s1">
+  <div class="section-label">板块一</div>
+  <div class="section-title">本期速览</div>
+
+  <div class="flash-grid">
+
+    <div class="flash-card">
+      <span class="flash-card-chip">FIGMA · CONFIG 2026</span>
+      <div class="flash-card-num">01</div>
+      <div class="flash-card-body"><strong>Figma Config 2026 全面 AI 化</strong>——Motion、3D transforms、Shaders、Code Layers 首次进入协作画布；Agent Skills 支持通过 prompt 自定义可复用工具，并连接 Notion / GitHub 等外部数据源。</div>
+      <div class="flash-card-src">来源：<a href="https://www.figma.com/whats-new/" target="_blank">figma.com/whats-new · Config 2026</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE · SONNET 5</span>
+      <div class="flash-card-num">02</div>
+      <div class="flash-card-body"><strong>Claude Sonnet 5 发布 · Effort Control</strong>——1M token 上下文；用户可手动调 effort 档位在成本与性能间权衡；引入价 $2/$10 每百万 token 至 8/31，之后 $3/$15。Free / Pro 首日默认启用。</div>
+      <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Sonnet 5</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · OPENAI</span>
+      <div class="flash-card-num">03</div>
+      <div class="flash-card-body"><strong>Codex Remote 全量开放</strong>——手机端 App 可启动/继续 Mac / Windows 主机上的编码任务，用 QR 一对一配对建立可信通道，Agent 的「控制舱」从桌面挪到口袋里。</div>
+      <div class="flash-card-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · Release Notes 2026-06-25</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · MEMORY</span>
+      <div class="flash-card-num">04</div>
+      <div class="flash-card-body"><strong>ChatGPT 记忆全面可视化</strong>——个性化回答下方新增 Sources 面板，显示引用的 memory / 历史对话 / 自定义指令；用户可修改、删除、标记不相关或一键关闭。Enterprise 6/25、Business 6/26 分批上线。</div>
+      <div class="flash-card-src">来源：<a href="https://openai.com/index/" target="_blank">openai.com · Memory Dreaming</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE · SCIENCE</span>
+      <div class="flash-card-num">05</div>
+      <div class="flash-card-body"><strong>Claude Science 发布</strong>——面向生命科学的垂直 AI Workbench；PubMed / Jupyter / R / HPC 集成到单一 app；60+ 预配置 skill；Actor-Critic 双 Agent 互相校验；原生渲染 3D 蛋白结构与基因组浏览器。</div>
+      <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Science</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · MODEL PICKER</span>
+      <div class="flash-card-num">06</div>
+      <div class="flash-card-body"><strong>模型选择器简化为 6 档</strong>——Instant / Medium / High / Extra High / Pro Standard / Pro Extended；不再暴露具体模型名，「思考努力度」抽象成用户能读懂的语言。</div>
+      <div class="flash-card-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · Model picker 2026-06-26</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 产品动态 · 消费级 ═══ -->
+<section class="section" id="s2">
+  <div class="section-label">板块二</div>
+  <div class="section-title">产品动态</div>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">AI 消费级产品</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Claude · ChatGPT · Gemini · Kimi · DeepSeek · MiniMax — UX 变化与功能发布</p>
+    <div class="product-grid">
+
+      <!-- Claude -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude</span>
+          <span class="pc-sub">Anthropic</span>
+          <span class="pc-date">2026.06.30</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Claude Sonnet 5 首发</b>（06.30）—— 1M token 上下文；引入 <b>Effort Control</b>：用户手动选择「更快」或「更深思考」，在成本与性能间自主平衡；引入价 $2/$10 每百万 token 保持至 8/31，之后恢复 $3/$15。Free / Pro 首日即默认使用；Max / Team / Enterprise 同步开启。</li>
+          <li><b>Fable 5 / Mythos 5 重新部署</b>（06.30）—— 美国政府批准后 Anthropic 恢复顶级模型访问；改进的安全分类器阻断 99% 借由 jailbreak 生成漏洞利用代码的行为；与 Amazon / Microsoft / Google 共同发布行业级 <b>Jailbreak Severity Framework</b>。</li>
+          <li><b>Claude Science 独立 App</b>（06.30）—— 面向制药与生命科学研究的垂直 AI Workbench；PubMed 检索、Jupyter Notebook、R 会话、HPC 集群终端合并到单一界面；60+ 预配置科研 skill；协调 Agent + reviewer Agent 双 Agent 架构自动校验计算与引用；原生渲染 3D 蛋白结构。</li>
+        </ul>
+        <div class="pc-ux">Anthropic 用 Claude Science 亲手示范了一件事:<b>面向科研这种"高专业度、强流程"的场景,别把 AI 塞回主 app 里当一个新按钮,应该独立成 workbench</b>——用户预期、组件库、导航、审计路径全都不一样,共用一个信息架构反而拧巴。第二条:<b>付费引入价一定要给"具体锚点"</b>,"$2/$10 保持至 8/31"比"限时优惠"焦虑感低 3 倍,用户可以把日期写进日历,而不是每天怀疑是不是错过了。<span class="pc-ux-token">Effort Control 用 chip 而非 slider(连续区间→离散两态);引入价 "$X 保持至 MM/DD" 精确日期;垂直场景独立 workbench(三栏:资源/画布/上下文)。</span></div>
+        <div class="pc-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Sonnet 5 &amp; Claude Science &amp; Fable 5</a></div>
+      </div>
+
+      <!-- ChatGPT -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.06.25 ~ 06.26</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Codex Remote GA</b>（06.25）—— 手机 App 启动 / 审批远程 Mac 或 Windows 上的编码任务；QR 一对一配对建立可信通道；登出即断开 Remote Control，配对不丢失。Agent 的「监督界面」正式向移动端迁移。</li>
+          <li><b>Memory 全面重构</b>（06.25，Enterprise 起）—— 个性化回答下新增 Sources 面板，显示引用的记忆 / 历史对话 / 自定义指令；用户可修改内容、删除引用、标记为不相关或一键回退到旧版 Saved memories。</li>
+          <li><b>模型选择器简化</b>（06.26）—— 6 档：Instant / Medium / High / Extra High / Pro Standard / Pro Extended；Thinking Light 下线；Instant 可自动切换到 Medium。选项决策从「选模型」变为「选努力度」。</li>
+          <li><b>Personal Finance 扩展</b>（06.26）—— Plus 用户可用（美国 web + iOS），Pro/Plus Android 端也开放；连接账户后建立仪表盘并支持上下文提问。</li>
+        </ul>
+        <div class="pc-ux">这一周 ChatGPT 端上有一条最直接的启示:<b>AI 输出不该默认都长成"气泡消息"</b>。Personal Finance 用仪表盘、Memory 用 Popover 面板、Codex 用状态卡片——同一个模型,四五种输出形态,靠"内容类型 → 组件类型"的映射来决定用什么容器,而不是全都塞进对话框。第二条:<b>企业级模型选择器要"隐藏"而不是"置灰"</b>。看得到用不了会让企业 IT 觉得"你在推销",隐藏则给 IT 完整的治理感——他们决定用户看到什么。<span class="pc-ux-token">Codex Remote 用 QR 配对(移动端信任建立最小交互);Memory Sources 用 Popover 而非 Modal;6 档 picker 无权限档「隐藏 vs 置灰」;Personal Finance 用仪表盘卡片而非气泡消息。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · ChatGPT Release Notes</a> · <a href="https://openai.com/index/" target="_blank">openai.com/index · Memory Dreaming</a></div>
+      </div>
+
+      <!-- Gemini -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Gemini</span>
+          <span class="pc-sub">Google</span>
+          <span class="pc-date">2026.06.25 ~ 07.01</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Gemini Study Notebooks 上线</b>（06.25）—— 学生上传学习材料 → Gemini 生成诊断测试 + 定制课程 + 阶段测验 + 进度仪表盘；与 NotebookLM 双向共享资料，形成「学 → 测 → 复习」闭环。生成式 AI 首次以「学习路径」而非「回答」为交付物。</li>
+          <li><b>Gemini Business Notebooks 上线</b>（07.01）—— 直连 Google Business Profile；一键连接后 Gemini 主动扫描并推送「未回复评论 / 未设节假日营业时间 / 定价优化点」等待办建议。SMB 老板可在 Gemini 中直接生成品牌口吻的评论回复。</li>
+        </ul>
+        <div class="pc-ux">Study Notebooks 和 Business Notebooks 是同一个模型两套人设,证明<b>B 端 AI 助手的差异不在模型,而在文案主导权和主动推送节奏</b>。这一周最有共识价值的一条:「主动推送 3~5 张待办卡片」正在成为 B 端 AI 的默认首屏,反转了过去"先输入后输出"的老默认——AI 从"等你问"变成"先告诉你 3 件该做的事"。第二条:<b>Notebooks 三栏工作台(左资源 / 中生成路径 / 右上下文)</b>是数据密集型 AI 的模板 IA,当你要处理"多源资料 → 生成结构化产出"时,三栏结构比 chat + 侧栏更清晰,做自家的 dashboard、AI PM 助手前先按这个骨架搭。<span class="pc-ux-token">首屏 3~5 张待办卡片(反转 chat 默认);三栏 IA:资源列 / 生成路径主区 / 上下文抽屉;场景语气差异靠 tone token,不靠换模型;待办卡片 = 12px 场景 icon + 14px 标题 + 单 CTA。</span></div>
+        <div class="pc-src">来源：<a href="https://blog.google/" target="_blank">blog.google · Gemini Study &amp; Business Notebooks</a></div>
+      </div>
+
+      <!-- Kimi / DeepSeek / MiniMax -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Kimi · DeepSeek · MiniMax</span>
+        </div>
+        <p class="pc-empty-note">本期无重大 UX 更新。国产大模型厂商本周聚焦模型能力迭代与开源发布，暂无面向 C 端的显著交互层变化。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 企业级 AI ═══ -->
+<div class="color-band band-teal">
+  <div class="section-label">板块二（续）</div>
+  <div class="section-title">企业级 AI 产品</div>
+  <p class="section-note">ChatGPT Enterprise · Claude Enterprise · Gemini for Workspace — UX 变化与团队协作</p>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">企业级 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <div class="product-grid">
+
+      <!-- ChatGPT Enterprise -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT Enterprise / Edu / Business</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.06.25 ~ 06.26</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>可视化 Memory + Sources 面板</b> —— 个性化回答下方标注引用来源；用户可点击每条 memory / 历史对话查看原文、修改、删除或标记为不相关，也可一键退回到旧版 Saved memories。企业版首推 2 周 early access，之后默认打开。</li>
+          <li><b>Plugin 管理进驻 Workspace 设置</b> —— 管理员可按角色、状态、类别搜索并配置插件；可强制默认安装或限定可安装范围，「AI 生态治理」终于有了一站式界面。</li>
+          <li><b>模型选择器统一简化</b> —— Enterprise / Edu 与消费级同步使用 6 档；Reasoning Model Access / Pro Model Access 两个开关分别控制思考模型与 Pro 模型的可用性，隐藏用户无权限使用的档位。</li>
+        </ul>
+        <div class="pc-ux">这一周的启示很清晰:<b>企业级 AI 产品的核心不是"更多设置",而是设置的可组合性</b>。ChatGPT Enterprise 比消费版多出的东西——Sources 的审计视图、Plugin 的双开关、权限档的隐藏机制——每一个都不是"新按钮",而是可以被组合成不同角色配置的"设置原子"。第二条:<b>企业级审计不能只显示"引用了什么",还得显示"谁在什么时间怎么改的"</b>——Sources 面板的 timestamp / 编辑者 / 权限来源三列是 SOC 2 / ISO 27001 合规审查的最低要求,消费端可以省,企业端不能。<span class="pc-ux-token">Sources 审计视图三列:timestamp / 编辑者 / 权限来源;Plugin 双开关:可安装(Allow) + 强制默认(Push);模型档「隐藏而非置灰」;Reasoning 与 Pro 两类档独立开关。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · ChatGPT Enterprise &amp; Edu Release Notes</a></div>
+      </div>
+
+      <!-- Gemini for Workspace -->
+      <div class="product-card">
+        <div class="pc-head">
+          <span class="pc-name">Gemini for Workspace</span>
+          <span class="pc-sub">Google</span>
+          <span class="pc-date">2026.06.25 ~ 07.01</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Study Notebooks 面向教育版</b>（06.25）—— Workspace for Education 用户可在 Gemini 中把课程材料一键生成为诊断测试、阶段性测验和进度仪表盘，与 NotebookLM 双向共享上下文。</li>
+          <li><b>Business Notebooks 直连 Google Business Profile</b>（07.01）—— 中小企业管理员可在 Gemini 中直接查询商家数据（曝光、导航、通话、客户互动），并让 Gemini 生成品牌口吻的评论回复。</li>
+        </ul>
+        <div class="pc-ux">Gemini for Workspace 打了个样:<b>B 端 AI 助手的默认状态不该是空对话框,而是"已经帮你想好了 3 件事"的待办清单</b>——OAuth 一完成就在首屏浮出建议,不等用户提问。这一步反过来说明,过去 5 年做 SaaS AI 的默认状态"输入你想问什么"是懒惰的产品设计,把工作推给了用户。第二条:<b>主动内容必须带"品牌口吻"参数</b>——通用 AI 文案配上商家专属人设会立刻违和,评论回复、SMS 草稿、邮件模板都要在设置里给出「公司名 + 语气 + 禁词」三档,写进 prompt 而不是让用户手改。<span class="pc-ux-token">OAuth 后主动扫描 → 首屏 3 张待办卡;CTA 用「生成」而非「查看」(降一次点击);Tone token:公司名 / 语气(正式/亲切) / 禁词表 三档;建议卡片一次不超过 5 张(防溢出)。</span></div>
+        <div class="pc-src">来源：<a href="https://blog.google/" target="_blank">blog.google · Study &amp; Business Notebooks</a></div>
+      </div>
+
+      <!-- Claude Enterprise -->
+      <div class="product-card">
+        <div class="pc-head">
+          <span class="pc-name">Claude Enterprise / Science</span>
+          <span class="pc-sub">Anthropic</span>
+          <span class="pc-date">2026.06.30</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Claude Science 面向企业发布</b> —— 生命科学垂直 AI Workbench；PubMed / Jupyter / R / HPC 集成到单一界面；Actor-Critic 双 Agent 架构校验计算与引用；Pro / Max / Team / Enterprise 均可开通 beta。</li>
+          <li><b>Fable 5 / Mythos 5 恢复</b> —— 美国政府批准后重新部署；AWS / Google Cloud / Microsoft Foundry 三条通道分阶段恢复；Enterprise 客户在过渡期内额度稳定。</li>
+          <li><b>Jailbreak Severity Framework</b> —— 与 Amazon / Microsoft / Google 共建的行业级安全分级标准同步落地企业席位，为 IT 管理员提供跨厂商一致的越狱严重度评估口径。</li>
+        </ul>
+        <div class="pc-ux">Claude Science 给了垂直行业 AI 一条清晰的信任建设路径:<b>不是靠"更强的模型",而是靠"可见的校验流程"</b>——Actor-Critic 双 Agent 把每一次计算和引用都挂一张"reviewer 卡"给你看,用户永远知道"哪些结果被复核过、哪些还没"。这一点做管理、金融、法务这类高专业度产品时可以直接抄。第二条:<b>技能超过 20 个就该用命令面板,不要展开面板</b>——垂直场景动不动 60+ 技能,如果全部铺开成按钮列表,用户既扫不过来也记不住;⌘K 打开 + 场景分组 + 快捷输入,是替代"按钮墙"的正确形态。<span class="pc-ux-token">三栏 workbench:PubMed/Jupyter/R 资源列 / Notebook 画布 / Agent 上下文抽屉;⌘K 面板 + 场景分组(不是按钮列表);Reviewer 卡三态:已复核绿 / 疑问琥珀 / 未复核灰;每个计算/引用旁挂一张 reviewer 卡。</span></div>
+        <div class="pc-src">来源：<a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Science &amp; Fable 5</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">云厂商 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Google Cloud · Azure AI · AWS Bedrock — 企业控制台 UX 更新</p>
+    <div class="product-grid">
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Google Cloud · Azure AI · AWS Bedrock</span>
+        </div>
+        <p class="pc-empty-note">本期无重大控制台 UX 更新。Anthropic 恢复 Fable 5 在 AWS / Google Cloud / Microsoft Foundry 通道的部署，属于模型层重新上线，非平台 UX 变化。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块三 · 设计工具动态 ═══ -->
+<div class="band-surface">
+  <div class="section-label">板块三</div>
+  <div class="section-title">设计工具动态</div>
+
+  <!-- 设计主力工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">设计主力工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Figma · Adobe CC — AI 功能迭代与新交互范式</p>
+    <div class="product-grid">
+
+      <!-- Figma Config 2026 -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Figma · Config 2026</span>
+          <span class="pc-sub">Figma</span>
+          <span class="pc-date">2026.06.25</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Motion / 3D transforms / Shaders 进入画布</b> —— Motion 时间轴动画由 Figma agent 生成并交付「dev-ready」代码；3D transforms 让静态设计具备立体感；Shaders 通过 prompt 描述纹理效果并可分享复用。设计师不再需要跳出 Figma 完成动效与材质。</li>
+          <li><b>Code Layers（Beta）</b> —— 允许直接在协作画布内 clone 代码仓库，把代码里的流程「提取」为可视化设计层进行探索性迭代；产品经理、设计师、工程师首次在同一画布上工作，不再纠结代码的生产级质量。</li>
+          <li><b>Agent Skills + 外部连接器</b> —— 用户可用 prompt 创建可复用的 skill 供 agent 调用；agent 可连接 Notion / Granola / Excel / GitHub 或上传文件补充上下文；「prompt 之外」的 AI 配置层正式浮现。</li>
+          <li><b>Generative Plugins</b> —— 通过 prompt 生成自定义插件（布局生成器、矢量路径追踪器等）；插件生态从「安装第三方」进化为「团队按需生成」。</li>
+          <li><b>Figma Weave 深度整合</b> —— 收购后的 Weave workflow 可在 Figma 内直接创建、发布为工具或模板，并可分享到 Figma Community。</li>
+        </ul>
+        <div class="pc-ux">Config 2026 之后的一条底层启示:<b>画布不再只是"像素稿",而是多态资产容器</b>。Motion / 3D / Shader / Code 与 Static 并列存在于同一张画布,意味着设计文件从"帧的集合"变成了"资产类型的集合"——下次我们做资产库、组件库、DAM 类产品时,分类维度应该是"资产类型",而不是"文件夹层级"。第二条:<b>Agent Skill 需要按「我的 / 团队 / 组织」三档共享,而不是简单的 prompt 收藏夹</b>——技能可见范围决定了它是不是能被复用,团队级 skill 库是"AI 助手规模化"的必选项,粒度比 prompt 收藏夹深一级。<span class="pc-ux-token">资产类型 chip:Motion / 3D / Shader / Code / Static 图层顶栏并列;Code Layer 双向绑定 Git commit hash("设计已过期"提示);Agent Skill 三档共享:我的 / 团队 / 组织;Motion 用 timeline 时间轴,不用 hover 状态描述。</span></div>
+        <div class="pc-src">来源：<a href="https://www.figma.com/whats-new/" target="_blank">figma.com/whats-new · Config 2026 全量合集</a></div>
+      </div>
+
+      <!-- Adobe -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Adobe Firefly · Creative Cloud</span>
+        </div>
+        <p class="pc-empty-note">本期无重大更新。上期发布的 Firefly Elements + Projects（可复用资产 + 跨会话工作流）延续放量中。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AI 原生设计工具 -->
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">AI 原生设计工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Claude Artifacts · v0 by Vercel · Galileo AI · Lovable — 描述即生成的 UX 体验</p>
+    <div class="product-grid">
+
+      <!-- Claude Code · Codex Remote 对照 -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude Code &amp; ChatGPT Codex Remote</span>
+          <span class="pc-sub">跨厂商 · 编码 Agent 对照</span>
+          <span class="pc-date">2026.06.25 ~ 06.30</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>ChatGPT Codex Remote</b>（06.25）—— 手机 App 启动 / 审批远程 Mac 或 Windows 主机上的编码任务；QR 一对一配对建立可信通道；把「Agent 监督界面」正式挪到移动端。</li>
+          <li><b>Claude Sonnet 5 驱动 Claude Code</b>（06.30）—— Anthropic 官方称 Sonnet 5 为「最具 Agent 能力的 Sonnet」，Claude Code CLI 首日即切换到 Sonnet 5；Effort Control 让开发者在成本与推理深度间自主平衡。</li>
+        </ul>
+        <div class="pc-ux">Codex Remote 与 Claude Code 这一周把 Agent 型工具的界面语言拉齐到同一套模板,一句话可以背下来:<b>桌面写策略,手机做审批</b>。桌面端要提供完整的 policy 编辑器、日志、diff、multi-tab 上下文;移动端只需要 5 个控件——标题、状态 chip、Approve、Reject、Pause——把复杂决策留在办公室,把即时批准放在通勤路上。第二条:<b>Agent 状态就四种,别发明第五种</b>——Running / Waiting for approval / Done / Error 已经是行业共识,任何"半成品/挂起/审核中"都能塞进这四态,自造术语只会让集成方懵圈。<span class="pc-ux-token">桌面 vs 手机 IA 差异:桌面写 policy / 手机做审批;Agent 状态四态:Running / Waiting for approval / Done / Error;Effort Control 档位≤3(超过=暴露参数);手机端仅 5 控件:标题 / 状态 chip / Approve / Reject / Pause。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · Codex Remote GA</a> · <a href="https://www.anthropic.com/news" target="_blank">anthropic.com/news · Claude Sonnet 5</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 效率工具 -->
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">设计师高频效率工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Cursor · Notion AI · Canva AI — 值得关注的新功能与交互设计</p>
+    <div class="product-grid">
+
+      <!-- 效率工具本周 empty state -->
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Cursor · Notion AI · Canva AI</span>
+        </div>
+        <p class="pc-empty-note">本期设计师高频效率工具无经官方渠道确认的 UX 相关重大更新。设计师视角上，本期真正值得关注的效率类事件已集中在上一小节的「Claude Code &amp; ChatGPT Codex Remote」跨厂商对照卡片中——Agent 型编码工具正在成为设计-研发协作链路的新枢纽。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块四 · 对我们的启示 ═══ -->
+<section class="section" id="s4" style="padding-bottom: 0;">
+  <div class="section-label">板块四</div>
+  <div class="section-title">对我们的启示</div>
+  <p class="section-note">从本期产品动态中提炼的 6 条具体、可执行的设计建议</p>
+
+  <div class="insight-grid">
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 01</div>
+      <div class="in-trigger">↗ Figma · Config 2026(Motion / 3D / Shaders / Code Layers)</div>
+      <div class="in-title">画布进入"多态资产容器"时代,分类维度改用"资产类型"</div>
+      <div class="in-body">Config 2026 之后要更新的一个心智:<b>画布不再是"帧的集合",而是"资产类型的集合"</b>。Motion / 3D / Shader / Code 和 Static 层平级——每种类型都有自己的编辑面板、评审流程和交付物。做自家的资产库/DAM/组件库,把顶层分类从"文件夹"改成"资产类型 chip",能一下解决交付物混乱、命名混乱、评审路径混乱三个老问题。第二条:<b>Shader 层的交付物是 prompt 字符串,不是贴图文件</b>——这条对做 AIGC 素材管理的团队最直接:资产库里要给"prompt 类资产"留一个专属版本管理路径,不能当普通图片管。<span class="in-body-token">图层顶栏 5 个资产类型 chip;Motion 用 timeline 时间轴描述,不用 hover 状态;3D 引入 Z 轴 = 层级(不再等价 z-index);Shader 层交付物 = prompt 字符串。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 02</div>
+      <div class="in-trigger">↗ ChatGPT · Codex Remote GA</div>
+      <div class="in-title">Agent 型工具:桌面写策略,手机做审批</div>
+      <div class="in-body">Codex Remote 手机 App 上线后,一条可以直接沉淀为设计原则的经验:<b>Agent 型工具的移动端不需要复刻桌面版</b>。桌面端负责"写 policy、看 diff、调 log";移动端只负责"通勤路上一按 Approve",两个端做的是不同的事,不是同一件事的不同尺寸。第二条:<b>手机端 5 个控件就够</b>——标题、状态 chip、Approve、Reject、Pause——多一个都会让用户在通勤地铁上误触;详细日志、diff、原文这些"决策依据"要用"展开原文"折叠掉,默认收起。<span class="in-body-token">状态 chip 四态:Running / Waiting / Done / Error(8px 圆点前缀);Approve / Reject 44pt 触控区;耗时用数字优于百分比条;展开原文默认收起。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 03</div>
+      <div class="in-trigger">↗ ChatGPT · 6 档模型选择器</div>
+      <div class="in-title">模型档位命名的三个避坑准则</div>
+      <div class="in-body">ChatGPT 6 档命名把"参数抽象成用户语言"做到教科书级别,拿来直接对照能避 3 个常见坑:<b>① 不用"Fast" 用 "Instant"</b>——速度是"结果"不是"承诺",承诺很容易被 SLA 打脸;<b>② 不用"Better / Best" 用 "Medium / High / Extra High"</b>——避免价值判断陷阱,不然用户永远疑惑"Better 到底比默认好在哪";<b>③ 付费档用统一前缀(Pro Standard / Pro Extended)</b>——一眼分辨免费/付费边界。第二条:<b>企业客户看不到的档位要"隐藏"而不是"置灰"</b>——置灰是"你想用但没资格",隐藏是"你没这个选项",后者对 IT 更友好,不会引发"为什么我没这个权限"的工单。<span class="in-body-token">Instant(不用 Fast)· Medium / High / Extra High(不用 Better / Best)· Pro Standard / Pro Extended(付费统一前缀);Enterprise picker 无权限档"隐藏而非置灰";避免模型代号(GPT-5.5 / Sonnet 5)出现在用户界面。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 04</div>
+      <div class="in-trigger">↗ ChatGPT · Memory Sources 面板</div>
+      <div class="in-title">带记忆的 AI 功能都要过"三个能"自检</div>
+      <div class="in-body">Sources 面板把"AI 记住了什么"变成可读可改的资产,这条几乎可以变成硬约束:<b>任何带记忆的 AI 功能都要过三个能自检——用户能看到吗?能修改吗?能选择性遗忘吗?</b>三个问题只要有一个答不上来,就是产品欠债,后面一定会被合规团队/隐私团队打回。这一条对做用户画像、推荐系统、AI 客服记忆的团队都适用。第二条:<b>记忆管理入口用 Popover,不用 Modal</b>——查记忆是阅读中的"轻打断"动作,Modal 会强制中断阅读流,让用户觉得"我做错什么了";Popover 让用户"顺路点开顺路关掉"。<span class="in-body-token">入口 = 回答气泡下方 "Sources · 3" 链接(13px muted-soft);展开态 = Popover(不是 Modal);条目结构 = icon + 原文 2 行截断 + 三档操作(Edit / Remove / Mark irrelevant);回退口 = 右上二级链接"Use legacy Saved memories"。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 05</div>
+      <div class="in-trigger">↗ Figma · Agent Skills &amp; Custom Tools</div>
+      <div class="in-title">AI 助手的"prompt 之外"配置层要显式化</div>
+      <div class="in-body">Figma Agent Skills 说明一件事:<b>AI 助手的能力已经不能全靠"你会写 prompt"来解决,"prompt 之外"的配置层必须显式化</b>——Skills 是团队沉淀、Connectors 是数据出入口、Context files 是外挂知识、Defaults 是默认口味,四段各自有独立 UI,没有一段可以偷懒塞进"设置 → 高级"。第二条:<b>Connector OAuth 状态灯 + Context 文件的 token 消耗</b>是被反复忽略的两个小细节——OAuth 灭了用户以为在用其实没接上,Context 只显示文件大小用户永远不知道自己扔了多少 token 进去,产品端要主动把这两个"隐性状态"可视化。<span class="in-body-token">设置抽屉 4 段 IA:Skills / Connectors / Context files / Defaults;Connector 每项带 OAuth 状态灯(绿 = 已连接 / 灰 = 未连接 / 红 = token 过期);Context 上传显示 token 占用(不是文件大小);Skills 支持团队共享(不只是个人收藏)。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 06</div>
+      <div class="in-trigger">↗ Claude Science + Gemini Study/Business Notebooks</div>
+      <div class="in-title">先分清「聊天窗口」还是「工作台」,组件库根本不同</div>
+      <div class="in-body">当 PM 说"给这个功能加个 AI",先要问一句:<b>它是聊天窗口,还是工作台?</b> 两者的组件库、输入形态、输出容器、持久化机制、校验流程——五个层面全都不一样,不能靠"共用一套组件加点判断"糊过去。这一周三家公司(Claude / Gemini)都把这条边界画得非常清楚:垂直场景 → Workbench,通用问答 → Chat。第二条:<b>Workbench 的输出必须是"可编辑资产",不是"气泡消息"</b>——Notebook cell、3D 视图、表格、报告页面,任何 AI 生成的东西都要能被继续修改,不能只提供一个"复制"按钮让用户去外部工具里改。<span class="in-body-token">Chat vs Workbench 五个层面差异:布局(单栏 vs 三栏);输入(textarea vs 多入口 @);输出(气泡 vs 可编辑资产);持久化(session vs 项目);校验(无 vs reviewer 卡);输入多入口 = chat + 拖入文件 + 数据源 @ 引用。</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-band">
+  <div>
+    <h2>下期预告</h2>
+    <p>覆盖窗口：2026-07-02 ~ 2026-07-08 · 下周三发布</p>
+  </div>
+  <div class="cta-band-meta">
+    云基础 &amp; VnE 团队<br>
+    AI 产品 UX 观察报告 · 第八期<br>
+    仅供设计大团队内部参考
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.06 第八期</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger = document.getElementById('reportTrigger');
+  var dropdown = document.getElementById('reportDropdown');
+  var selector = document.getElementById('reportSelector');
+  function open() { trigger.classList.add('open'); dropdown.classList.add('open'); trigger.setAttribute('aria-expanded','true'); }
+  function close() { trigger.classList.remove('open'); dropdown.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); }
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); dropdown.classList.contains('open') ? close() : open(); });
+  dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href !== '#') { e.preventDefault(); window.location.href = href; } else { close(); }
+    });
+  });
+  document.addEventListener('click', function(e) { if (!selector.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+});
+</script>
+</body>
+</html>
