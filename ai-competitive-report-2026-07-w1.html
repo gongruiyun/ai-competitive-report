@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.07 第九期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --on-dark:       #ffffff;
+  --teal:          #1a3a3a;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero { max-width: 1200px; margin: 0 auto; padding: 56px 48px 40px; }
+
+.report-selector { position: relative; display: inline-block; margin-bottom: 20px; }
+.report-selector__trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-card); color: var(--muted);
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  border-radius: 9999px; padding: 6px 14px 6px 16px;
+  cursor: pointer; border: none; font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s; user-select: none;
+}
+.report-selector__trigger:hover { background: var(--surface-strong); color: var(--body); }
+.report-selector__trigger.open  { background: var(--surface-strong); color: var(--body-strong); }
+.report-selector__chevron { width: 14px; height: 14px; opacity: 0.5; transition: transform 0.2s; flex-shrink: 0; }
+.report-selector__trigger.open .report-selector__chevron { transform: rotate(180deg); opacity: 0.8; }
+.report-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 300px; background: #fff;
+  border: 1px solid var(--hairline); border-radius: 16px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10); z-index: 100;
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.report-dropdown__section-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-soft); padding: 6px 10px 4px; }
+.report-dropdown__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none;
+  color: var(--body); transition: background 0.12s;
+}
+.report-dropdown__item:hover { background: var(--surface-soft); }
+.report-dropdown__item--active { background: var(--surface-card); color: var(--body-strong); }
+.report-dropdown__item-left { display: flex; flex-direction: column; gap: 2px; }
+.report-dropdown__item-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.report-dropdown__item-period { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.report-dropdown__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; background: var(--teal); color: #fff; border-radius: 9999px; padding: 2px 8px; flex-shrink: 0; }
+
+.hero h1 { font-size: clamp(52px, 7vw, 80px); font-weight: 500; letter-spacing: -2.5px; line-height: 1; color: var(--ink); max-width: 720px; margin-bottom: 16px; }
+.hero-sub { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+.section { padding: 48px 0 0; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); margin-bottom: 16px; }
+.section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+.section-note { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+.flash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flash-card { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px; min-height: 210px; }
+.flash-card:nth-child(1) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: #d4e8e3;      color: var(--ink); }
+.flash-card:nth-child(3) { background: #ece8f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #d8eef8;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; }
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); color: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 9999px; padding: 4px 12px; align-self: flex-start; }
+
+.track { margin-top: 52px; }
+.track-label { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.track-pill { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 9999px; padding: 6px 16px; background: var(--surface-card); color: var(--muted); white-space: nowrap; }
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+.track-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.product-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: 16px; padding: 28px; transition: box-shadow 0.15s; }
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.product-card.empty { border-style: dashed; background: var(--surface-soft); }
+.pc-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date { margin-left: auto; font-size: 12px; color: var(--muted-soft); background: var(--surface-card); border-radius: 9999px; padding: 3px 12px; white-space: nowrap; }
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li { font-size: 14px; color: var(--body); line-height: 1.6; padding-left: 18px; position: relative; }
+.pc-list li::before { content: '·'; position: absolute; left: 4px; color: var(--muted-soft); font-size: 18px; line-height: 1.3; }
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux { margin-top: 14px; padding: 10px 12px; background: rgba(232,185,74,0.10); border-radius: 8px; border-left: 3px solid var(--ochre); font-size: 13px; color: var(--body); line-height: 1.55; }
+.pc-ux::before { content: "设计视角 · "; font-weight: 700; color: #b8860b; }
+.pc-ux-token { display: block; margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(184,134,11,0.35); font-size: 11px; letter-spacing: 0.2px; color: var(--muted); line-height: 1.6; }
+.pc-ux-token::before { content: "Token · "; font-weight: 700; color: #b8860b; opacity: 0.7; }
+.band-teal .pc-ux-token { color: rgba(255,255,255,0.5); border-top-color: rgba(232,185,74,0.35); }
+.pc-empty-note { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .section-note { color: rgba(255,255,255,0.4); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .track-desc { color: rgba(255,255,255,0.35); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card.empty { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub, .band-teal .pc-date { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+.band-teal .pc-empty-note { color: rgba(255,255,255,0.4); }
+
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #d4e8e3; }
+.insight-card:nth-child(2) { background: #d8eef8; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #faf3d8; }
+.insight-card:nth-child(5) { background: #fce4ee; }
+.insight-card:nth-child(6) { background: #dde8e5; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.5; margin-bottom: 12px; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+.in-body-token { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(0,0,0,0.15); font-size: 11px; letter-spacing: 0.2px; opacity: 0.6; line-height: 1.6; }
+.in-body-token::before { content: "Token · "; font-weight: 700; opacity: 0.7; }
+
+.cta-band { background: var(--surface-soft); border-radius: 24px; margin: 80px 0; padding: 80px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+footer { background: var(--surface-soft); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer, .cta-band { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.07 第九期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第九期</span>
+          <span class="report-dropdown__item-period">2026-07-09 ~ 2026-07-15</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06~07 第八期</span>
+          <span class="report-dropdown__item-period">2026-06-25 ~ 2026-07-08</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第七期</span>
+          <span class="report-dropdown__item-period">2026-06-18 ~ 2026-06-24</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第六期</span>
+          <span class="report-dropdown__item-period">2026-06-11 ~ 2026-06-17</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第五期</span>
+          <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第四期</span>
+          <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub">覆盖窗口：2026-07-09 ~ 2026-07-15｜阅读时长：约 6 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示｜单周版</p>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 板块一 · 本期速览 ═══ -->
+<section class="section" id="s1">
+  <div class="section-label">板块一</div>
+  <div class="section-title">本期速览</div>
+
+  <div class="flash-grid">
+
+    <div class="flash-card">
+      <span class="flash-card-chip">GPT-5.6 · GA</span>
+      <div class="flash-card-num">01</div>
+      <div class="flash-card-body"><strong>GPT-5.6 正式发布 · Sol / Terra / Luna 三档 GA</strong>——7 月 9 日在 ChatGPT / Codex / API 全面推开；Sol $5/$30、Terra $2.5/$15、Luna $1/$6 每百万 token；新增 <strong>max / ultra</strong> 能力等级供开发者按需调用推理深度。</div>
+      <div class="flash-card-src">来源：<a href="https://openai.com/index/gpt-5-6/" target="_blank">openai.com · GPT-5.6 is here</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · WORK</span>
+      <div class="flash-card-num">02</div>
+      <div class="flash-card-body"><strong>ChatGPT Work 上线长任务 Agent</strong>——可在跨应用、跨文件的复杂任务上工作数小时；关键步骤支持 <strong>Pause / Approve</strong>；Enterprise / Edu 席位获得 2 周 early access，之后向 Plus / Pro 分批开放。</div>
+      <div class="flash-card-src">来源：<a href="https://openai.com/index/chatgpt-for-your-most-ambitious-work/" target="_blank">openai.com · ChatGPT for your most ambitious work</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · SITES</span>
+      <div class="flash-card-num">03</div>
+      <div class="flash-card-body"><strong>ChatGPT Sites 公测</strong>——用自然语言描述即可生成可交互网站 / 仪表盘 / 报告页面；生成物直接托管在 chatgpt.com/sites/&lt;slug&gt;，AI 生成的产物首次进入「有 URL 的可分享资产」形态。</div>
+      <div class="flash-card-src">来源：<a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com · Introducing ChatGPT Sites (public beta)</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · NEW DESKTOP</span>
+      <div class="flash-card-num">04</div>
+      <div class="flash-card-body"><strong>新桌面 App 合并 Chat / Work / Codex</strong>——三条产品线从独立 App 收敛到单一入口，旧版保留为 ChatGPT Classic；同期上线 <strong>Plugin Directory</strong> 取代 App Directory，插件治理面并入 Workspace 设置。</div>
+      <div class="flash-card-src">来源：<a href="https://openai.com/products/release-notes/" target="_blank">openai.com · ChatGPT Release Notes 07-09</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE · FOR TEACHERS</span>
+      <div class="flash-card-num">05</div>
+      <div class="flash-card-body"><strong>Claude for Teachers 面向 K-12 免费</strong>——美国认证教师可免费获得高级 Claude 席位；预装教学 Skill 库；对齐 50 州学术标准。「AI 免费额度」首次按<strong>职业身份</strong>发放。</div>
+      <div class="flash-card-src">来源：<a href="https://www.anthropic.com/news/claude-for-teachers" target="_blank">anthropic.com · Claude for Teachers</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">FIGMA · MCP REMOTE</span>
+      <div class="flash-card-num">06</div>
+      <div class="flash-card-body"><strong>Figma Dev Mode MCP · Remote 服务器升级</strong>（07.15）—— MCP 从依赖本地桌面 App 演进到 <strong>Remote 服务器</strong>，VS Code Copilot / Cursor / Windsurf / Claude Code 一键接入无需再挂本地端口；Figma Make 同步接入 MCP；<strong>Design Snapshots + Multiple AI edits</strong> 保持公测。设计文件真正成为「AI Coding Agent 的一等公民数据源」。</div>
+      <div class="flash-card-src">来源：<a href="https://www.figma.com/blog/introducing-remote-mcp/" target="_blank">figma.com/blog · Remote MCP</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 产品动态 · 消费级 ═══ -->
+<section class="section" id="s2">
+  <div class="section-label">板块二</div>
+  <div class="section-title">产品动态</div>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">AI 消费级产品</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Claude · ChatGPT · Gemini · Kimi · DeepSeek · MiniMax — UX 变化与功能发布</p>
+    <div class="product-grid">
+
+      <!-- ChatGPT -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.07.09 ~ 07.15</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>GPT-5.6 三档 GA</b>（07.09）—— Sol（$5/$30）/ Terra（$2.5/$15）/ Luna（$1/$6）在 ChatGPT / Codex / API 全面推开；新增 max / ultra 能力等级；6 档模型选择器同步收敛为「档位 × 能力等级」二维矩阵。</li>
+          <li><b>ChatGPT Work 上线</b>（07.09）—— 长任务 Agent，可跨应用与文件工作数小时；关键步骤 <b>Pause / Approve</b>，操作历史可回溯；Enterprise / Edu 席位 2 周 early access，之后分批向 Plus / Pro 开放。</li>
+          <li><b>ChatGPT Sites 公测</b>（07.09）—— 自然语言描述 → 可交互网站 / 仪表盘 / 报告；生成物直接托管在 chatgpt.com/sites/&lt;slug&gt;；AI 生成物首次进入「有稳定 URL 的分享资产」形态。</li>
+          <li><b>新桌面 App 合并三线</b>（07.09）—— Chat / Work / Codex 从三个独立 App 收敛到单一入口，左栏 tabs 三选一切换；旧版保留为 ChatGPT Classic 供不适应的用户回退。</li>
+          <li><b>Search across chats / projects / files 增强</b>（07.14）—— 顶栏搜索框首次覆盖历史对话、项目文件、上传附件、Memory 条目四类内容；跨类结果合并到同一 result list。</li>
+          <li><b>ChatGPT returns to WhatsApp in EEA</b>（07.13）—— 欧洲经济区用户可在 WhatsApp 内直接对话 ChatGPT；离线消息通过 push 通知补齐，「AI 触点」再一次隐入日常消息 App。</li>
+        </ul>
+        <div class="pc-ux">这一周 ChatGPT 一次性发出「模型 + 产品线 + 分发面」三个大动作,可以浓缩成三条产品设计原则:<b>① AI 产品线合并要留一条"回退旧版"的显式路径</b>——把 Chat / Work / Codex 三个 App 收敛到一个入口是对的,但旧用户的心智不可能一夜切换,顶部或设置里保留一个 muted 的「回到 ChatGPT Classic」链接,是"我随时能走"的信任基础;强推单一入口=退订率飙升。<b>② 长任务 Agent 的核心不是"能跑多久",而是"能被中断吗"</b>——Work 的 Pause / Approve 双按钮把 Agent 从"黑盒"变成"半自动流水线",用户可以在开会时按 Pause,回来再按 Approve;界面得先设计好"打断态",再设计"执行态"。<b>③ AI 生成物开始要 URL</b>——Sites 让生成物挂上 chatgpt.com/sites/&lt;slug&gt;,意味着 AI 产物从"聊天记录里的一段文字"升级到"可被 Google 索引的资产";我们下一代设计要给"AI 生成产物"预留 URL slot、meta 面板、分享 sheet 三件套。<span class="pc-ux-token">「回到 Classic」muted 链接放设置抽屉底部(不当默认按钮);Work 三态:Running / Pause / Waiting for approval → Approve / Reject 双主 CTA + 无限撤销时间轴;Sites 生成物 = URL + og:image + 分享 sheet 三件套;搜索结果 4 类图标 12px + 类别 chip 色分组;WhatsApp 触点 = 联系人图标(不新增 tab);模型选择器 6 档 × 3 能力等级 = 二维矩阵而非纯列表。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/index/gpt-5-6/" target="_blank">openai.com · GPT-5.6 is here</a> · <a href="https://openai.com/index/chatgpt-for-your-most-ambitious-work/" target="_blank">openai.com · ChatGPT for your most ambitious work</a> · <a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com · Release Notes (Sites / Desktop / Search / WhatsApp)</a></div>
+      </div>
+
+      <!-- Claude -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude</span>
+          <span class="pc-sub">Anthropic</span>
+          <span class="pc-date">2026.07.14</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Claude for Teachers 免费开放</b>（07.14）—— 美国 K-12 认证教师可免费获得高级 Claude 席位；预装 <b>教学 Skill 库</b>（备课、评分、家长沟通模板、差异化学习）；对齐 50 州学术标准与 FERPA 学生隐私要求。</li>
+          <li><b>教师身份认证机制</b>（07.14）—— 使用学区邮箱 + SHEEO 数据库交叉核验；认证不通过留下"预备教师"过渡席位（限次数），避免"审核失败=直接封杀"的挫败体验。</li>
+          <li><b>Learning Commons 共享库</b>（07.14）—— 教师之间可分享 prompt 模板、评分 rubric、differentiated learning 模板；首次让"教学 Skill"进入协作 / 共享层，而不只是个人预装。</li>
+        </ul>
+        <div class="pc-ux">Claude 这一周把"免费"这件事做出了新姿势:<b>① AI 免费额度按"职业身份"发放比按"用户量"发放更精准</b>——teachers 免费不是普世优惠,而是"这是你的职业工具";在 Skill 库、模板、术语上做垂直适配,才让教师觉得"这不是被施舍,是被理解"。<b>② 身份核验的失败态要留"过渡席位"</b>——SHEEO 数据库不可能百分百完备,认证不通过就"直接封杀"会伤害真实教师;留一个次数受限的预备席位,是产品礼貌与安全防滥用之间的合理妥协。<b>③ 垂直 Skill 库应该内建"共享层"</b>——Learning Commons 让教师之间可以互传 prompt / rubric / 教学模板,把 Skill 从"个人预装"进化到"社群共享",这条同样适用于其它垂直行业(金融、医药、法务)。<span class="pc-ux-token">身份核验三态:通过(全席位) / 预审(预备席位 + 倒计时) / 失败(申诉链接不是死胡同);Skill 库首页按"备课 / 评分 / 沟通"三分类 chip 而非无序列表;FERPA 合规提示写进 onboarding 首屏而非埋在设置;Learning Commons 共享按钮直接挂 Skill 卡右上;点赞 / 收藏 / fork 三种社群动作分开(不合并成一颗心)。</span></div>
+        <div class="pc-src">来源：<a href="https://www.anthropic.com/news/claude-for-teachers" target="_blank">anthropic.com · Claude for Teachers</a></div>
+      </div>
+
+      <!-- Gemini -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Gemini</span>
+          <span class="pc-sub">Google</span>
+          <span class="pc-date">2026.07.10 ~ 07.12</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Workspace Gemini 管控 · admin / user 双层开关</b>（07.10~12）—— 管理员可对 Docs / Drive / Gmail 分域禁用 Gemini；用户在个人设置里也能独立关闭；同一功能出现"组织层 + 个人层"的可组合开关。</li>
+          <li><b>Fill with Gemini 面向 Business Standard 起步 rollout</b>（07.10）—— Docs 表格「Fill with Gemini」列填充自本周起面向 Business Standard 席位分批放量；给出示例，Gemini 按模式扩展到剩余行；企业管理员可对敏感字段强制关闭该功能。</li>
+          <li><b>Gemini 3.5 Pro 启动预告</b>（07.11）—— 7 月 17 日进入 Workspace 全量灰度；Gemini 3.5 Pro 的核心卖点是"分文档 / 分表格 / 分对话"的分域上下文管理。</li>
+        </ul>
+        <div class="pc-ux">Gemini 这一周的动作说明<b>企业 AI 的"关掉"能力和"打开"能力一样重要</b>:admin / user 双层开关是"AI 治理"的标配——组织层负责合规、个人层负责心理安全,两层同权且可读,单独一层都不够。第二条:<b>「Fill with Gemini」把 AI 从对话式换成了表单式</b>——用户不再"问 AI",而是"给示例让 AI 归纳";这条对 B 端数据处理产品是启发:凡是能用"给例子 + 扩展模式"完成的任务,不要再套一个 chat 对话框,直接把入口挂到列头。<span class="pc-ux-token">admin / user 双层开关矩阵:「关」/「允许开」/「强制开」三态;Fill with Gemini 入口挂列头(不套 chat);示例 → 模式 → 预览 → 应用 四步进度条(每步可编辑);分域上下文 chip:文档 / 表格 / 对话 三色不同(不用色块用形态);Workspace Gemini 关闭按钮不藏,放设置一级页面。</span></div>
+        <div class="pc-src">来源：<a href="https://borncity.com/win/2026/07/12/google-workspace-neue-kontrollen-fuer-gemini-ki-ab-sofort/" target="_blank">borncity.com · Google Workspace admin/user 双层开关 (07.10~12)</a> · <a href="https://blog.google/products/workspace/" target="_blank">blog.google/products/workspace · Gemini 3.5 Pro preview</a></div>
+      </div>
+
+      <!-- Kimi / DeepSeek / MiniMax -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Kimi · DeepSeek · MiniMax</span>
+        </div>
+        <p class="pc-empty-note">本期无重大 UX 更新。国产大模型厂商本周聚焦模型能力迭代与开源发布，暂无面向 C 端的显著交互层变化。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 企业级 AI ═══ -->
+<div class="color-band band-teal">
+  <div class="section-label">板块二（续）</div>
+  <div class="section-title">企业级 AI 产品</div>
+  <p class="section-note">ChatGPT Enterprise · Claude Enterprise · Gemini for Workspace — UX 变化与团队协作</p>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">企业级 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <div class="product-grid">
+
+      <!-- ChatGPT Enterprise -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT Enterprise / Edu / Business</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.07.09 ~ 07.14</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>ChatGPT Work 企业首批预览</b>（07.09）—— Enterprise / Edu 席位获得 2 周 early access；管理员可控制哪些角色可发起长任务、哪些工具可被 Agent 调用；Pause 状态支持"跨席位交接"（甲发起 → 乙审批 → 丙继续）。</li>
+          <li><b>ChatGPT Sites 组织级开关</b>（07.09）—— 管理员可"允许 / 禁用 / 仅内部可见"三态控制 Sites 发布路径；企业侧的 Sites 可自动挂公司 slug 前缀，避免品牌混淆。</li>
+          <li><b>GPT-5.6 成为 Microsoft 365 Copilot 首选模型</b>（07.09）—— Copilot Chat / Word / Excel / Outlook 里默认调用 Sol；企业管理员在 Microsoft 365 Admin Center 中控制模型接入策略，「AI 采购」进一步向企业既有工具链靠拢。</li>
+          <li><b>Plugin Directory 取代 App Directory</b>（07.09）—— 企业 IT 用统一命名（Plugin）代替新旧混杂的 App / Extension 术语；Workspace 设置里按"角色 / 状态 / 类别"三维筛选，管理员一站式治理。</li>
+          <li><b>Enterprise 增强搜索</b>（07.14）—— 顶栏搜索首次覆盖历史对话、项目文件、上传附件、Memory 条目；企业管理员可控制哪些数据类型进入搜索索引，Sources 审计视图同步展开。</li>
+        </ul>
+        <div class="pc-ux">这一周企业级 ChatGPT 一次性推出了 Work / Sites / Search 三大能力,可以浓缩成三条:<b>① 长任务 Agent 必须支持"跨席位交接"</b>——不是所有决策都由发起人做完;甲发起、乙审批、丙继续是企业协作真实形态,状态机得设计好"授权流转"节点,而不是"一个人一路点到底"。<b>② 组织级功能开关默认要"最保守"</b>——Sites 默认应为"仅内部可见"而非"允许公开"(GDPR / SOC 2 合规默认原则);企业 IT 会先把默认值设成"关"才开始考虑打开,产品应该迎合而非对抗这个逻辑。<b>③ AI 术语要向企业既有工具链靠拢</b>——「App / Extension / Plugin」这类术语混用是企业采购最大摩擦点;OpenAI 这一步把它统一成 Plugin,是"减轻企业 IT 词汇负担"的正确方向;我们做 B 端产品也要审视自家术语列表,是否有旧新术语并存的"多语言"问题。<span class="pc-ux-token">Work 跨席位交接三阶段:发起 · 审批 · 继续,每阶段留操作抽屉(who/when/what);Sites 组织级开关默认为"仅内部可见"(禁用状态用灰锁 icon,允许状态用绿钩);Plugin Directory 三维筛选:角色 · 状态 · 类别;Sources 审计三列:timestamp / 编辑者 / 权限来源;Copilot 默认模型标注在设置一级页面 chip(而非二级抽屉);Enterprise 搜索索引类型开关 = 5 个 List Row + toggle 复选(chat / files / memory / sources / plugins)。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/index/chatgpt-for-your-most-ambitious-work/" target="_blank">openai.com · ChatGPT for your most ambitious work</a> · <a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com · Enterprise Release Notes (Sites / Search / Plugin Directory)</a></div>
+      </div>
+
+      <!-- Claude Enterprise -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude Enterprise</span>
+          <span class="pc-sub">Anthropic</span>
+          <span class="pc-date">2026.07.14</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Claude for Teachers 教育版路径</b>（07.14）—— 认证教师所属学区可批量升级到 Claude Enterprise Edu 席位；席位复用现有 Anthropic Console 治理面（IAM / 审计 / token 配额），教师从"个人 free tier"到"学区 Enterprise"零迁移成本。</li>
+          <li><b>Learning Commons 共享层进企业</b>（07.14）—— 教师之间可共享 prompt / rubric / 教学模板；Enterprise 席位可开启"审批记录写入 SIEM"选项，把 Claude 的每次工具调用挂到既有安全事件流。</li>
+          <li><b>企业级 Skill 库前瞻</b>（07.14）—— Claude for Teachers 的教学 Skill 库首次示范了"垂直行业预装 Skill"的做法；企业管理员未来可预期看到金融、法务、医药等垂直 Skill 库的产品化。</li>
+        </ul>
+        <div class="pc-ux">Anthropic 这一周把"教师免费"演进为"学区批量升级"的路径,展示了一条<b>B2C 到 B2B 的产品桥</b>:<b>① 个人免费席位与企业席位共享治理面</b>——Free tier 用户切换到 Enterprise 时,不应该重建组织树、不应该丢失 Skill 库、不应该重新学习界面;这条对做 SaaS 的团队最直接:"个人 → 团队 → 企业"的升级路径必须无缝,任何数据丢失都会让企业 IT 打退堂鼓。<b>② 审批记录要能"写出"到既有 SIEM</b>——企业不会为了新工具改造整个安全事件流;做企业级 AI 就要提供 SIEM webhook / 事件订阅 / SCIM 用户同步这三样,把治理面与企业既有工具链拼接。<b>③ Skill 库是企业级 AI 的护城河</b>——垂直行业 Skill 库比通用 chat 更有粘性,teachers 的产品化路径可以直接被复用到金融合规、法务尽调、医药研发等场景。<span class="pc-ux-token">升级路径三步:个人 free → 团队 pro → 企业 Enterprise(数据 / Skill / 界面全保留);SIEM webhook 开关 + 事件类型多选(工具调用 / 越权 / 敏感数据);Skill 库分类树 = 行业 → 场景 → 具体 skill 三层;审批记录写入 SIEM 选项默认关(合规默认原则);「学区批量升级」独立入口(不藏在通用 pricing 页)。</span></div>
+        <div class="pc-src">来源：<a href="https://www.anthropic.com/news/claude-for-teachers" target="_blank">anthropic.com · Claude for Teachers</a></div>
+      </div>
+
+      <!-- Gemini for Workspace -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Gemini for Workspace</span>
+          <span class="pc-sub">Google</span>
+          <span class="pc-date">2026.07.10 ~ 07.12</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>admin / user 双层 Gemini 开关</b>（07.10~12）—— 管理员可对 Docs / Drive / Gmail 分域禁用 Gemini；用户在个人设置里也能独立关闭；两层开关矩阵形成「关 / 允许开 / 强制开」三态。</li>
+          <li><b>Fill with Gemini 面向 Business Standard 起步</b>（07.10）—— 表格列填充：给出示例，Gemini 归纳规则并按模式扩展；企业管理员可对特定文档强制关闭该功能，避免敏感字段被 AI 自动补齐。</li>
+          <li><b>Gemini 3.5 Pro 全量灰度预告</b>（07.17 启动）—— 分域上下文管理是核心卖点，企业可按文档 / 表格 / 对话粒度隔离敏感上下文；预告页面展示了「上下文域」这一新的信息架构概念。</li>
+        </ul>
+        <div class="pc-ux">Gemini for Workspace 这一周把「AI 管控」推到新高度:<b>① 双层开关是企业 AI 治理的最低标准</b>——组织层管合规、个人层管心理安全,任何一层缺失都会引起客户投诉;做企业 AI 产品必须原生支持这套矩阵,而不是"事后加一个开关"。<b>② 表单式 AI 比 chat 式 AI 更适合数据密集场景</b>——Fill with Gemini 把"提示 + 补全"两步简化成"给例子 + 扩展",在表格里比对话框更符合肌肉记忆;下次做数据处理类 AI 产品,先问自己:能不能挂列头/表头,不必套 chat。<b>③ 「上下文域」将成为企业 AI 的新原语</b>——Gemini 3.5 Pro 的分域上下文管理暗示:未来所有 AI 助手都要能说"我在这个文档的语境里回答"vs"我在整个 workspace 语境里回答";信息架构层要提前预留「上下文域切换器」的位置。<span class="pc-ux-token">双层开关矩阵三态:关 / 允许开 / 强制开(用 chip + 图标区分,不用色块);Fill with Gemini 挂列头右上小 icon(不占单元格);敏感字段"强制关闭"红标 = 8px 圆点 + tooltip 提示;分域上下文 chip:此文档 / 此表格 / 此对话 / 全 workspace,置于输入框上方;Gemini 3.5 Pro 灰度进度可见(不藏后台);管理员操作留操作 Log(Docs 域禁用 / 恢复的 audit trail)。</span></div>
+        <div class="pc-src">来源：<a href="https://borncity.com/win/2026/07/12/google-workspace-neue-kontrollen-fuer-gemini-ki-ab-sofort/" target="_blank">borncity.com · admin controls &amp; Fill with Gemini (07.10~12)</a> · <a href="https://blog.google/products/workspace/" target="_blank">blog.google/products/workspace · Gemini 3.5 Pro preview</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">云厂商 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">AWS Bedrock · Azure AI · Google Cloud — 企业控制台 UX 更新</p>
+    <div class="product-grid">
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Microsoft 365 · Copilot × GPT-5.6</span>
+          <span class="pc-sub">Microsoft</span>
+          <span class="pc-date">2026.07.09</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>GPT-5.6 成为 Copilot 首选模型</b>（07.09）—— Copilot Chat / Word / Excel / Outlook 默认调用 Sol；Copilot 顶栏新增小 chip 显示"powered by GPT-5.6"，方便企业审计和用户预期管理。</li>
+          <li><b>模型接入策略进入 Admin Center</b>（07.09）—— 管理员可对不同席位配置不同的 Copilot 模型档位（Sol/Terra/Luna）与能力等级（max/ultra）；策略跟随 Azure AD 角色继承。</li>
+          <li><b>企业采购路径统一</b> —— 「买 Copilot」= "买 Microsoft 365 + 内嵌 OpenAI Sol"；企业 IT 不再单独评估 OpenAI API 计费，AI 采购完全并入 M365 契约体系。</li>
+        </ul>
+        <div class="pc-ux">Microsoft 把 GPT-5.6 塞进 M365 Copilot 后,B 端 AI 控制台的两条产品设计原则又被再度证实:<b>① 与其自造治理组件,不如直接对齐云厂商既有 UX 语言</b>——Copilot 模型策略挂进 Admin Center 而不是新建"AI 控制台",让企业 IT 用"治理 Exchange 邮箱的经验"来治理 AI 模型,几乎零学习成本。<b>② 「powered by」小 chip 是"双通道分发"的必要透明化</b>——同一个 Copilot 底层可能是 GPT-5.6、Phi、Mistral,顶栏 12px chip 告诉用户"当前调用的是谁",既满足合规审计,又管理用户预期(某些国家/行业禁止使用美国模型)。<span class="pc-ux-token">"powered by GPT-5.6" chip 12px muted-soft 靠顶栏右侧;模型策略 = Azure AD 角色继承(List Row + 角色 chip);席位维度模型分配 = 二维矩阵(角色 × 档位);模型审计写入 M365 Compliance Center(而非独立 log);Copilot 顶栏永远可点 chip → 弹出"当前模型 · 策略来源 · 切换权限"三段信息。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/index/gpt-5-6-preferred-model-microsoft-365-copilot/" target="_blank">openai.com · GPT-5.6 preferred model for Microsoft 365 Copilot</a> · <a href="https://openai.com/index/gpt-5-6/" target="_blank">openai.com · GPT-5.6 is here</a></div>
+      </div>
+
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">AWS Bedrock · Azure AI · Google Cloud AI</span>
+        </div>
+        <p class="pc-empty-note">本周窗口内 aws.amazon.com/blogs / azure.microsoft.com/blog / blog.google 的云控制台版块均无面向企业管理员的独立 UX 更新公告。GPT-5.6 相关变化归入 Microsoft 365 Copilot 卡。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块三 · 设计工具动态 ═══ -->
+<div class="band-surface">
+  <div class="section-label">板块三</div>
+  <div class="section-title">设计工具动态</div>
+
+  <!-- 设计主力工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">设计主力工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Figma · Adobe CC — AI 功能迭代与新交互范式</p>
+    <div class="product-grid">
+
+      <!-- Figma -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Figma · Dev Mode MCP Remote + Design Snapshots</span>
+          <span class="pc-sub">Figma</span>
+          <span class="pc-date">2026.07.13 ~ 07.15</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Dev Mode MCP · Remote 服务器升级</b>（07.15）—— MCP 从依赖本地桌面 App 演进到 Remote 服务器，工程师在 VS Code Copilot / Cursor / Windsurf / Claude Code 里可直接「问 Figma」拿到组件 spec、token、变量、组件命名规则，无需再挂本地端口；Figma Make 同步接入 MCP。</li>
+          <li><b>Multiple AI image edits 后台并行</b>（07.13）—— 多任务 AI 图像编辑并行进入 Business/Enterprise 席位：设计师触发几组编辑任务后可继续在画布上工作，无需等待每一次生成完成；结果卡片以「已完成 · 等待评审」列在画布右侧。</li>
+          <li><b>Design Snapshots + AI-Powered Editing 预告</b>（07.15）—— 官方宣布即将推出「设计快照 + AI 修改」组合：Snapshot 冻结当前状态，AI 在快照上迭代改动，用户随时可回滚到任一快照，把"AI 破坏性编辑"的可逆性做到位。</li>
+        </ul>
+        <div class="pc-ux">Figma 这一周把设计工具的 AI 化推到"生产级"节点,可以提炼三条:<b>① MCP 让"设计文件"第一次成为"AI Coding Agent 的一等公民数据源"</b>——工程师不再靠截图 / 检查器 / 手抄 token 来复刻设计,而是"提问 → 拿答案";这也意味着设计侧要重新审视自己的组件命名、变量结构、注释规范,因为它们即将被 LLM 直接读——命名不清 = AI 猜不对 = 交付错。<b>② AI 编辑必须支持"多任务后台"</b>——设计师最反感"AI 独占画布"的等待感;把生成任务扔到后台、结果以卡片形式挂在侧栏,让设计师可以"边等边设计",这条对所有生成式设计工具都是必选项。<b>③ AI 破坏性编辑必须内建"快照"作为可逆机制</b>——Design Snapshots 是对"AI 改稿容易翻车"的产品级回应;用户不该靠"备份图层"来自救,而是产品自己给出显式的"回滚 UI"。<span class="pc-ux-token">MCP 接入器 = IDE 里"@Figma"命令(与 @file / @web 一致);组件命名规则显式暴露为 lint 规则(AI 可读);多任务 AI 编辑结果卡挂画布右栏,状态四态:Running / Done / Review / Error;快照条 = 底部横向 timeline + 缩略图 + hover 显示 diff;回滚按钮 = 单击回退 · 双击"回退+分支"(避免误触);Design Snapshots 快照命名自动填 = "AI 优化按钮态 · 2 分钟前"(人可读)。</span></div>
+        <div class="pc-src">来源：<a href="https://www.figma.com/blog/introducing-remote-mcp/" target="_blank">figma.com/blog · Introducing Remote MCP</a> · <a href="https://www.figma.com/whats-new/" target="_blank">figma.com/whats-new · Design Snapshots preview</a></div>
+      </div>
+
+      <!-- Adobe -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Adobe Firefly · Creative Cloud</span>
+        </div>
+        <p class="pc-empty-note">本期无重大 UX 更新公告。上期 Firefly Elements + Projects 延续放量中。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AI 原生入口 -->
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">AI 原生入口</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">OpenAI Atlas · The Decoder — 分发面变化与用户反应</p>
+    <div class="product-grid">
+
+      <!-- OpenAI Atlas 关停 -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">OpenAI · Atlas Browser 关停</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.07.12</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Atlas 浏览器宣布 8 月 9 日停服</b>（07.12）—— 上线不足一年即关停；OpenAI 官方原因是"用户核心 AI 需求已在 ChatGPT 主端与新桌面 App 中被覆盖"；数据迁移工具提供 4 周窗口，历史书签 / 阅读记录可导出为标准 HTML。</li>
+          <li><b>关停通知策略</b> —— 首屏顶部固定 banner + 邮件 + 应用内 modal 三重提醒；modal 支持 "Later" 但保留每次启动重复提示；数据导出按钮永远在设置一级页可见，不藏。</li>
+          <li><b>用户迁移路径</b> —— 官方推荐迁移到 Chrome / Safari + ChatGPT 桌面 App 组合；书签同步 ChatGPT Memory；「浏览历史 → 项目文件」一键转换到 ChatGPT Projects。</li>
+        </ul>
+        <div class="pc-ux">Atlas 关停不到一年是一个反面案例,能提炼三条产品设计原则:<b>① 关停通知不能只依赖单一渠道</b>——顶栏 banner + 邮件 + 应用内 modal 三重提醒是"给足用户走人时间"的礼貌;藏在博客里的关停公告 = 用户永远不知道 = 数据永远拿不回;这是产品对用户的最后一次尊重。<b>② 数据迁移工具要永远在一级页面可见</b>——不是"设置里翻三层才能找到导出按钮";关停期间用户情绪本就负面,再让他"找路"就是灾难;导出按钮应该像 "Save As" 一样显眼。<b>③ 关停不是"扔掉"是"合流"</b>——OpenAI 把 Atlas 用户导流到 ChatGPT 桌面 App + Projects,配合 Memory 同步、书签转项目,让"关停"从"你的数据没了"变成"你的资产搬家了";这条对做多产品线的公司最直接:内部产品线合并时,数据映射比"发关停公告"更能保住品牌信任。<span class="pc-ux-token">关停三重通知:顶栏 banner(不可关) + 邮件(3 次分批) + 首启 modal(每次可 Later);数据导出按钮 = 设置一级页固定位置 + 独立菜单条目;导出格式 = 标准 HTML + JSON(不用私有格式);迁移映射:书签 → Memory / 阅读历史 → Projects / 密码 → 系统钥匙串;stopping timeline = 首屏永久显示倒计时(D-28 → D-0);Later 按钮次数无上限但每次都提醒(减少焦虑)。</span></div>
+        <div class="pc-src">来源：<a href="https://wwwhatsnew.com/2026/07/13/openai-cierra-chatgpt-atlas-navegador-agosto-2026/" target="_blank">wwwhatsnew · OpenAI cierra ChatGPT Atlas (引 The Verge / Adi Robertson)</a> · <a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com · Release Notes 07-12 Atlas shutdown</a></div>
+      </div>
+
+      <!-- The Decoder OpenAI UX Crisis -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">The Decoder · OpenAI's UX Crisis</span>
+          <span class="pc-sub">Industry Analysis</span>
+          <span class="pc-date">2026.07.14</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>企业客户对 GPT-5.6 / ChatGPT Work 反弹</b>（07.14）—— The Decoder 报道多家 Enterprise 客户反馈 Work 长任务的"消耗不透明"、Sol 档位"性价比不清晰"、Sidebar 密度过高导致操作误触。</li>
+          <li><b>OpenAI 紧急回滚 sidebar</b>（07.14~15）—— 官方 release notes 确认 sidebar 恢复到 07.08 版本；同时新增"实时消耗指标"widget 显示当前对话已花费的 token 数与档位单价。</li>
+          <li><b>行业反思</b> —— The Decoder 认为这是 OpenAI 首次公开承认「一周堆三个新产品线」的 UX 代价：合并桌面 App、发布 Work、发布 Sites、GPT-5.6 GA、Plugin Directory 五件事挤在同一天，超过用户和企业 IT 的消化能力。</li>
+        </ul>
+        <div class="pc-ux">OpenAI 这次"UX 危机"给行业上了三堂课:<b>① 一次发布不要超过用户认知负载</b>——桌面合并 + Work + Sites + GPT-5.6 GA + Plugin Directory 五件事同一天,即使每件都是好设计,叠在一起也会让企业 IT 直接懵圈;产品团队要有"发布节奏预算"意识,大改动要留 2~4 周的消化间隔。<b>② 「消耗透明」是长任务 Agent 的最低门槛</b>——用户不怕花钱,怕的是"不知道花了多少";Work 长任务运行数小时,期间没有"实时消耗指标"就是灾难;widget 应该像行车电脑一样显示"当前每分钟花费 / 累计花费 / 预估总花费"。<b>③ 官方回滚不是"失败",是"信任建立"</b>——OpenAI 承认 sidebar 密度错误并回滚,是"我们听得进反馈"的公开信号;做产品要有"回滚不是耻辱"的心态,快速修正比死撑更值得客户尊敬。<span class="pc-ux-token">发布节奏预算:一周最多 1 个"C0 级"变更(功能合并 / 新增付费档 / 定价变化);消耗 widget 三行:当前速率 · 累计花费 · 预估总花费,固定在 Work 顶栏;Sidebar 密度上限 = 一屏可见项 ≤ 12(超过=折叠或分组);回滚公告 = 首屏 banner + 明确注明"感谢反馈"(不掩饰);Sol 档位性价比暴露 = 定价页对比列(Sol vs Terra vs Luna 三列 · 每列列出典型任务耗时和成本)。</span></div>
+        <div class="pc-src">来源：<a href="https://the-decoder.com/openai-admits-it-didnt-get-everything-quite-right-with-chatgpt-work-launch-and-scrambles-to-fix-ux-and-costs/" target="_blank">the-decoder.com · OpenAI admits it didn't get everything quite right with ChatGPT Work</a> · <a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com · Release Notes 07-14~15</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块四 · 对我们的启示 ═══ -->
+<section class="section" id="s4" style="padding-bottom: 0;">
+  <div class="section-label">板块四</div>
+  <div class="section-title">对我们的启示</div>
+  <p class="section-note">从 07.09 ~ 07.15 这一周产品动态中提炼的 6 条具体、可执行的设计建议</p>
+
+  <div class="insight-grid">
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 01</div>
+      <div class="in-trigger">↗ ChatGPT Work / Sites · Enterprise 跨席位交接</div>
+      <div class="in-title">长任务 Agent:先设计"打断态",再设计"执行态"</div>
+      <div class="in-body">这周 Work、Sites、Enterprise 跨席位交接三条线共同把长任务 Agent 推到主线,共识非常明确:<b>长任务 Agent 的核心不是"能跑多久",而是"能被中断吗"</b>。用户在开会时按 Pause,回来再按 Approve/Reject,这才是真实工作流。产品该先设计好"暂停状态"的信息面(当前正在做什么 · 已经消耗多少 · 剩余步骤预估),再设计"执行状态"的动画。第二条:<b>跨席位交接是企业场景的隐性需求</b>——甲发起、乙审批、丙继续,状态机得原生支持授权流转,而不是"一个人一路点到底";单人视角设计出来的 Agent 一进企业就水土不服。<span class="in-body-token">Agent 五态:Running / Pause / Waiting for approval / Done / Error(比 4 态多一个 Pause);Pause 状态信息面 = 当前步骤 · 已消耗 · 剩余预估三行;跨席位交接 = 授权流转 UI(who / when / what 三栏抽屉);Approve / Reject 44pt 触控区 · 无限撤销时间轴;手机端 5 控件 · 桌面端全套 policy 编辑器。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 02</div>
+      <div class="in-trigger">↗ ChatGPT Sites · Figma Design Snapshots 预告</div>
+      <div class="in-title">AI 生成物要 URL:从"聊天里的一段文字"到"可分享资产"</div>
+      <div class="in-body">Sites 让 AI 生成物挂上 chatgpt.com/sites/&lt;slug&gt; 是这一周最容易被忽视但影响最深远的变化。<b>AI 生成物开始要 URL、要 og:image、要分享 sheet</b>——不再是"聊天记录里可以复制的文字",而是可被搜索引擎索引、可发朋友圈、可挂进企业知识库的"一等公民资产"。做下一代 AI 产品要给生成产物预留三件套:URL slot、meta 面板(标题/描述/封面)、分享 sheet(权限:仅自己/组织/公开)。第二条:<b>可分享资产必须内建"快照"机制</b>——Figma Design Snapshots 预告告诉我们,一旦生成物有 URL,就必然需要"版本快照 + 一键回滚",否则 AI 改稿翻车时用户没法自救。<span class="in-body-token">生成物三件套:URL slot + og:image + 分享 sheet(权限三档:仅自己/组织/公开);slug 命名 = AI 建议 + 用户可改(先建议后编辑);快照 timeline 挂底栏 · hover 显示 diff · 单击回退 · 双击"回退+分支";meta 面板与生成物同层级(不藏在设置);企业级需追加"组织 slug 前缀"避免品牌混淆。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 03</div>
+      <div class="in-trigger">↗ Fill with Gemini · admin/user 双层开关</div>
+      <div class="in-title">数据密集场景:表单式 AI 优于对话式 AI</div>
+      <div class="in-body">Fill with Gemini 把"提示 + 补全"两步换成"给示例 + 扩展",直接挂进列头——这是 B 端数据处理 AI 最值得抄的一条:<b>凡是能用"给例子 + 扩展模式"完成的任务,不要再套一个 chat 对话框,直接把入口挂在列头 / 表头 / 单元格 hover</b>。用户不需要"打招呼",不需要"描述任务",只需要"给一个例子";AI 归纳后一步预览、一步应用。第二条这周被再次实证:<b>双层开关(admin/user)是企业 AI 治理最低标准</b>——组织层管合规、个人层管心理安全,任何一层缺失都会引起投诉;做 B 端 AI 产品必须原生支持,不是"事后加一个开关"。<span class="in-body-token">Fill with Gemini 入口挂列头右上 icon(不套 chat);四步流程:示例 → 模式 → 预览 → 应用(每步可编辑);双层开关矩阵三态:关 / 允许开 / 强制开(chip + 图标不用色块);敏感字段"强制关闭"红标 = 8px 圆点 + tooltip 提示;user 层开关放"我的账户"首页(不藏在管理员设置);admin 操作留 audit trail。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 04</div>
+      <div class="in-trigger">↗ Figma Dev Mode MCP Remote · Multiple AI edits</div>
+      <div class="in-title">设计文件成为"AI 一等公民数据源",命名规范提前生产级化</div>
+      <div class="in-body">Dev Mode MCP Remote 服务器化意味着<b>工程师第一次可以在 IDE 里"@Figma"直接问 spec、token、变量、组件命名规则</b>,而且无需再挂本地端口——LLM 会直接读你的组件树,命名不清 = AI 猜不对 = 交付错。设计侧要重新审视自己的:组件命名规范、变量命名规则、注释文字、状态命名(default / hover / active / disabled / loading),这些即将成为"AI 输入"而不只是"人类可读的组织"。第二条:<b>AI 编辑必须支持"多任务后台"</b>——设计师最反感"AI 独占画布"的等待感;把生成任务扔到后台、结果以卡片形式挂在侧栏,让设计师"边等边设计",这条对所有生成式设计工具都是必选项。<span class="in-body-token">组件命名规则 = 显式 lint 规则(AI 可读);变量层级 = 语义级 → token 级 → 值级(三层);状态命名统一:default / hover / active / focus / disabled / loading;多任务生成结果侧栏 = 状态四态(Running / Done / Review / Error);MCP 接入器 = IDE "@Figma" 命令(与 @file / @web 语法一致);组件注释支持 markdown(AI 直接摘要)。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 05</div>
+      <div class="in-trigger">↗ OpenAI Atlas 关停 · Chat/Work/Codex 合并</div>
+      <div class="in-title">产品线合并要留"回退旧版"的显式路径</div>
+      <div class="in-body">Atlas 一年内关停 + Chat/Work/Codex 三线合并成新桌面 App,同一周发生两次"产品线剧变",给出的产品设计原则很硬:<b>① 关停不是"扔掉"是"合流"</b>——OpenAI 把 Atlas 用户导流到 ChatGPT 桌面 + Projects,配合 Memory 同步、书签转项目,让"关停"从"你的数据没了"变成"你的资产搬家了";这条对做多产品线的公司最直接。<b>② 合并要留"回到 Classic"的显式路径</b>——把三线收敛到一个入口是对的,但旧用户的心智不可能一夜切换,顶部或设置里保留一个 muted 的「回到 ChatGPT Classic」链接,是"我随时能走"的信任基础。<b>③ 关停通知不能只依赖单一渠道</b>——顶栏 banner + 邮件 + 应用内 modal 三重提醒,数据导出按钮永远在设置一级页可见,是产品对用户的最后一次尊重。<span class="in-body-token">关停三重通知:顶栏 banner(不可关) + 邮件(3 次分批) + 首启 modal(每次可 Later);数据导出永远在设置一级页固定位置(不藏);「回到 Classic」muted 链接放设置抽屉底部(非按钮);数据映射清单公开(书签 → Memory / 阅读历史 → Projects);stopping timeline 首屏永久倒计时;导出格式标准 HTML + JSON(不用私有格式)。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 06</div>
+      <div class="in-trigger">↗ The Decoder OpenAI UX Crisis · Sidebar 回滚</div>
+      <div class="in-title">发布节奏预算:一周不做 5 件大事,回滚是信任而非耻辱</div>
+      <div class="in-body">OpenAI 这周把桌面合并、Work、Sites、GPT-5.6 GA、Plugin Directory 五件"C0 级"变更挤在同一天,即使每件都是好设计,叠在一起也让企业 IT 懵圈——The Decoder 报道后 OpenAI 紧急回滚 sidebar。这条教训对所有产品团队都直接:<b>① 一次发布不要超过用户认知负载</b>——"发布节奏预算"意识:一周最多 1 个"C0 级"变更(功能合并/新增付费档/定价变化),大改动要留 2~4 周的消化间隔。<b>② 消耗透明是长任务 Agent 的最低门槛</b>——用户不怕花钱,怕的是"不知道花了多少";长任务运行数小时,顶栏必须像行车电脑一样显示"当前速率 · 累计花费 · 预估总花费"。<b>③ 官方回滚不是"失败",是"信任建立"</b>——快速修正比死撑更值得客户尊敬;回滚公告首屏 banner + 明确注明"感谢反馈",不掩饰。<span class="in-body-token">发布节奏预算:一周最多 1 个 C0 级变更 + 2~4 周消化间隔;消耗 widget 三行:当前速率 · 累计花费 · 预估总花费(顶栏固定);Sidebar 密度上限 = 一屏可见项 ≤ 12(超过=折叠或分组);回滚公告 = 首屏 banner + "感谢反馈"文案(不掩饰);定价页横向对比列(每档列出典型任务耗时和成本);企业 IT 反馈通道置于顶栏(不藏)。</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-band">
+  <div>
+    <h2>下期预告</h2>
+    <p>覆盖窗口：2026-07-16 ~ 2026-07-22 · 下周三发布</p>
+  </div>
+  <div class="cta-band-meta">
+    云基础 &amp; VnE 团队<br>
+    AI 产品 UX 观察报告 · 第九期<br>
+    仅供设计大团队内部参考
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.07 第九期</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger = document.getElementById('reportTrigger');
+  var dropdown = document.getElementById('reportDropdown');
+  var selector = document.getElementById('reportSelector');
+  function open() { trigger.classList.add('open'); dropdown.classList.add('open'); trigger.setAttribute('aria-expanded','true'); }
+  function close() { trigger.classList.remove('open'); dropdown.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); }
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); dropdown.classList.contains('open') ? close() : open(); });
+  dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href !== '#') { e.preventDefault(); window.location.href = href; } else { close(); }
+    });
+  });
+  document.addEventListener('click', function(e) { if (!selector.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+});
+</script>
+</body>
+</html>
