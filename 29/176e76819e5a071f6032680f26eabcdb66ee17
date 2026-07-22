@@ -1,0 +1,460 @@
+ai-competitive-report-2026-05-w4.html
+  s_253dde18a30304::t_ddcd5000e90a51 458-464 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac2a88b1842796ed0a39","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[458,464]}]}]}
+ai-competitive-report-2026-06-w3.html
+  s_253dde18a30304::t_47eb89415d16e7 203-209 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60abf188b1842796ed0a2d","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[203,209]}]}]}
+ai-competitive-report-2026-06-w2.html
+  s_253dde18a30304::t_713ffa53c82966 201-207 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60abe288b1842796ed0a2a","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[201,207]}]}]}
+ai-competitive-report-2026-05-w2.html
+  s_253dde18a30304::t_396bd54d0b540f 458-464 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac1188b1842796ed0a33","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[458,464]}]}]}
+ai-competitive-report-2026-05.html
+  s_253dde18a30304::t_cf733763534f2c 474-480 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac3788b1842796ed0a3c","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[474,480]}]}]}
+ai-competitive-report-2026-05-w1.html
+  s_253dde18a30304::t_f47d097e1b9bc5 458-464 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac0088b1842796ed0a30","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[458,464]}]}]}
+ai-competitive-report-2026-07-w1.html
+  s_253dde18a30304::t_e7b6c05f251a7e 203-209 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac4b88b1842796ed0a3f","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[203,209]}]}]}
+ai-competitive-report-2026-06.html
+  s_253dde18a30304::t_046f06175d19c0 201-207 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60abd488b1842796ed0a27","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[201,207]}]}]}
+ai-competitive-report-2026-05-w3.html
+  s_253dde18a30304::t_4a49193f323b67 458-464 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac1d88b1842796ed0a36","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[458,464]}]}]}
+index.html
+  s_253dde18a30304::t_38e2b0cc62a752 20 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac8f88b1842796ed0a4e","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Single":20}]}]}
+  s_253dde18a30304::t_1a7d321d8e04da 16 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac8588b1842796ed0a4b","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Single":16}]}]}
+  s_253dde18a30304::t_e50dd2c7fc327a 8 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a60ac7a88b1842796ed0a48","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Single":8}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "29176e76819e5a071f6032680f26eabcdb66ee17",
+  "prompts": {},
+  "sessions": {
+    "s_253dde18a30304": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a4505235888cd1109da434e",
+        "model": "openrouter-3o__dev"
+      },
+      "human_author": "gongruiyun.gongry <gongruiyun.gongry@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {
+    "ai-competitive-report-2026-05-w1.html": [
+      {
+        "hash": "s_253dde18a30304::t_f47d097e1b9bc5",
+        "line_ranges": [
+          {
+            "Range": [
+              458,
+              464
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac0088b1842796ed0a30",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  458,
+                  464
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ai-competitive-report-2026-05-w2.html": [
+      {
+        "hash": "s_253dde18a30304::t_396bd54d0b540f",
+        "line_ranges": [
+          {
+            "Range": [
+              458,
+              464
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac1188b1842796ed0a33",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  458,
+                  464
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ai-competitive-report-2026-05-w3.html": [
+      {
+        "hash": "s_253dde18a30304::t_4a49193f323b67",
+        "line_ranges": [
+          {
+            "Range": [
+              458,
+              464
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac1d88b1842796ed0a36",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  458,
+                  464
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ai-competitive-report-2026-05-w4.html": [
+      {
+        "hash": "s_253dde18a30304::t_ddcd5000e90a51",
+        "line_ranges": [
+          {
+            "Range": [
+              458,
+              464
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac2a88b1842796ed0a39",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  458,
+                  464
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ai-competitive-report-2026-05.html": [
+      {
+        "hash": "s_253dde18a30304::t_cf733763534f2c",
+        "line_ranges": [
+          {
+            "Range": [
+              474,
+              480
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac3788b1842796ed0a3c",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  474,
+                  480
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ai-competitive-report-2026-06-w2.html": [
+      {
+        "hash": "s_253dde18a30304::t_713ffa53c82966",
+        "line_ranges": [
+          {
+            "Range": [
+              201,
+              207
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60abe288b1842796ed0a2a",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  201,
+                  207
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ai-competitive-report-2026-06-w3.html": [
+      {
+        "hash": "s_253dde18a30304::t_47eb89415d16e7",
+        "line_ranges": [
+          {
+            "Range": [
+              203,
+              209
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60abf188b1842796ed0a2d",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  203,
+                  209
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ai-competitive-report-2026-06.html": [
+      {
+        "hash": "s_253dde18a30304::t_046f06175d19c0",
+        "line_ranges": [
+          {
+            "Range": [
+              201,
+              207
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60abd488b1842796ed0a27",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  201,
+                  207
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ai-competitive-report-2026-07-w1.html": [
+      {
+        "hash": "s_253dde18a30304::t_e7b6c05f251a7e",
+        "line_ranges": [
+          {
+            "Range": [
+              203,
+              209
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac4b88b1842796ed0a3f",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  203,
+                  209
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "index.html": [
+      {
+        "hash": "s_253dde18a30304::t_38e2b0cc62a752",
+        "line_ranges": [
+          {
+            "Single": 20
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac8f88b1842796ed0a4e",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Single": 20
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hash": "s_253dde18a30304::t_1a7d321d8e04da",
+        "line_ranges": [
+          {
+            "Single": 16
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac8588b1842796ed0a4b",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Single": 16
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hash": "s_253dde18a30304::t_e50dd2c7fc327a",
+        "line_ranges": [
+          {
+            "Single": 8
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a60ac7a88b1842796ed0a48",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Single": 8
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_253dde18a30304": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_046f06175d19c0": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_1a7d321d8e04da": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_38e2b0cc62a752": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_396bd54d0b540f": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_47eb89415d16e7": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_4a49193f323b67": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_713ffa53c82966": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_cf733763534f2c": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_ddcd5000e90a51": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_e50dd2c7fc327a": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_e7b6c05f251a7e": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_f47d097e1b9bc5": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
