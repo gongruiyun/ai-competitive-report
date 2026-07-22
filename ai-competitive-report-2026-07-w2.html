@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.07 第十期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --on-dark:       #ffffff;
+  --teal:          #1a3a3a;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero { max-width: 1200px; margin: 0 auto; padding: 56px 48px 40px; }
+
+.report-selector { position: relative; display: inline-block; margin-bottom: 20px; }
+.report-selector__trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-card); color: var(--muted);
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  border-radius: 9999px; padding: 6px 14px 6px 16px;
+  cursor: pointer; border: none; font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s; user-select: none;
+}
+.report-selector__trigger:hover { background: var(--surface-strong); color: var(--body); }
+.report-selector__trigger.open  { background: var(--surface-strong); color: var(--body-strong); }
+.report-selector__chevron { width: 14px; height: 14px; opacity: 0.5; transition: transform 0.2s; flex-shrink: 0; }
+.report-selector__trigger.open .report-selector__chevron { transform: rotate(180deg); opacity: 0.8; }
+.report-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 300px; background: #fff;
+  border: 1px solid var(--hairline); border-radius: 16px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10); z-index: 100;
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.report-dropdown__section-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-soft); padding: 6px 10px 4px; }
+.report-dropdown__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none;
+  color: var(--body); transition: background 0.12s;
+}
+.report-dropdown__item:hover { background: var(--surface-soft); }
+.report-dropdown__item--active { background: var(--surface-card); color: var(--body-strong); }
+.report-dropdown__item-left { display: flex; flex-direction: column; gap: 2px; }
+.report-dropdown__item-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.report-dropdown__item-period { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.report-dropdown__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; background: var(--teal); color: #fff; border-radius: 9999px; padding: 2px 8px; flex-shrink: 0; }
+
+.hero h1 { font-size: clamp(52px, 7vw, 80px); font-weight: 500; letter-spacing: -2.5px; line-height: 1; color: var(--ink); max-width: 720px; margin-bottom: 16px; }
+.hero-sub { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+.section { padding: 48px 0 0; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); margin-bottom: 16px; }
+.section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+.section-note { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+.flash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flash-card { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px; min-height: 210px; }
+.flash-card:nth-child(1) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: #d4e8e3;      color: var(--ink); }
+.flash-card:nth-child(3) { background: #ece8f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #d8eef8;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; }
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); color: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 9999px; padding: 4px 12px; align-self: flex-start; }
+
+.track { margin-top: 52px; }
+.track-label { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.track-pill { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 9999px; padding: 6px 16px; background: var(--surface-card); color: var(--muted); white-space: nowrap; }
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+.track-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.product-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: 16px; padding: 28px; transition: box-shadow 0.15s; }
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.product-card.empty { border-style: dashed; background: var(--surface-soft); }
+.pc-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date { margin-left: auto; font-size: 12px; color: var(--muted-soft); background: var(--surface-card); border-radius: 9999px; padding: 3px 12px; white-space: nowrap; }
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li { font-size: 14px; color: var(--body); line-height: 1.6; padding-left: 18px; position: relative; }
+.pc-list li::before { content: '·'; position: absolute; left: 4px; color: var(--muted-soft); font-size: 18px; line-height: 1.3; }
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux { margin-top: 14px; padding: 10px 12px; background: rgba(232,185,74,0.10); border-radius: 8px; border-left: 3px solid var(--ochre); font-size: 13px; color: var(--body); line-height: 1.55; }
+.pc-ux::before { content: "设计视角 · "; font-weight: 700; color: #b8860b; }
+.pc-ux-token { display: block; margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(184,134,11,0.35); font-size: 11px; letter-spacing: 0.2px; color: var(--muted); line-height: 1.6; }
+.pc-ux-token::before { content: "Token · "; font-weight: 700; color: #b8860b; opacity: 0.7; }
+.band-teal .pc-ux-token { color: rgba(255,255,255,0.5); border-top-color: rgba(232,185,74,0.35); }
+.pc-empty-note { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .section-note { color: rgba(255,255,255,0.4); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .track-desc { color: rgba(255,255,255,0.35); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card.empty { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub, .band-teal .pc-date { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+.band-teal .pc-empty-note { color: rgba(255,255,255,0.4); }
+
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #d4e8e3; }
+.insight-card:nth-child(2) { background: #d8eef8; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #faf3d8; }
+.insight-card:nth-child(5) { background: #fce4ee; }
+.insight-card:nth-child(6) { background: #dde8e5; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.5; margin-bottom: 12px; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+.in-body-token { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(0,0,0,0.15); font-size: 11px; letter-spacing: 0.2px; opacity: 0.6; line-height: 1.6; }
+.in-body-token::before { content: "Token · "; font-weight: 700; opacity: 0.7; }
+
+.cta-band { background: var(--surface-soft); border-radius: 24px; margin: 80px 0; padding: 80px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+footer { background: var(--surface-soft); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer, .cta-band { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.07 第十期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第十期</span>
+          <span class="report-dropdown__item-period">2026-07-16 ~ 2026-07-22</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-07-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第九期</span>
+          <span class="report-dropdown__item-period">2026-07-09 ~ 2026-07-15</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06~07 第八期</span>
+          <span class="report-dropdown__item-period">2026-06-25 ~ 2026-07-08</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第七期</span>
+          <span class="report-dropdown__item-period">2026-06-18 ~ 2026-06-24</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第六期</span>
+          <span class="report-dropdown__item-period">2026-06-11 ~ 2026-06-17</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第五期</span>
+          <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第四期</span>
+          <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub">覆盖窗口：2026-07-16 ~ 2026-07-22｜阅读时长：约 6 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示｜单周版</p>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 板块一 · 本期速览 ═══ -->
+<section class="section" id="s1">
+  <div class="section-label">板块一</div>
+  <div class="section-title">本期速览</div>
+
+  <div class="flash-grid">
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · 桌面回滚</span>
+      <div class="flash-card-num">01</div>
+      <div class="flash-card-body"><strong>ChatGPT 桌面 App 8 天内回滚「超级 App」改版</strong>——继上期把 Chat / Work / Codex 合并到单一入口引发反弹后，07.16 官方 release notes 恢复 sidebar 历史与 Projects，重建 ChatGPT / Codex 全局切换器与 Chat / Work 分栏；Tibo Sottiaux 07.17 公开承认改版「没完全做对」。</div>
+      <div class="flash-card-src">来源：<a href="https://help.openai.com/en/articles/6825453-connectors" target="_blank">help.openai.com · ChatGPT Release Notes 07-16</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">GEMINI · 旗舰跳票</span>
+      <div class="flash-card-num">02</div>
+      <div class="flash-card-body"><strong>Gemini 3.5 Pro 发布再延数月</strong>（07.16 彭博独家）——代号 Cappuccino 的旗舰连错三个发布截止日，团队放弃原底座重新预训练；消息当日 Alphabet 股价一度下挫约 4.4%，市场对「旗舰节奏」的耐心开始收紧。</div>
+      <div class="flash-card-src">来源：<a href="https://cj.sina.cn/articles/view/5953189932/162d6782c06704o8ys" target="_blank">新浪财经 · 引彭博 Gemini 3.5 Pro 延期 (07.17)</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">GEMINI · 效率三连</span>
+      <div class="flash-card-num">03</div>
+      <div class="flash-card-body"><strong>Google 一口气发三款效率模型</strong>（07.21）——Gemini 3.6 Flash（$1.5/$7.5、token 用量 -17%）、3.5 Flash-Lite（$0.3/$2.5、350 tok/s）、Flash Cyber（安全专用，仅政府 / 可信伙伴限量试点）；旗舰跳票，效率档补位。</div>
+      <div class="flash-card-src">来源：<a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/" target="_blank">blog.google · Gemini 3.6 Flash / 3.5 Flash-Lite / Flash Cyber</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE · FABLE 5</span>
+      <div class="flash-card-num">04</div>
+      <div class="flash-card-body"><strong>Claude Fable 5 逆转「限额」成 Max / Team Premium 标配</strong>（07.20 生效）——在六周三度延期后，Anthropic 让 Fable 5 进入 Max / Team Premium（含 50% 周限额）；Pro / Team Standard 先给一次性 $100 额度过渡再转计量计费，Claude Code 速率提升延至 8 月。</div>
+      <div class="flash-card-src">来源：<a href="https://ai-news.ge/en/article/anthropic-reverses-fable-5-cutoff-max-team-premium" target="_blank">ai-news.ge · Anthropic reverses Fable 5 cutoff (07.20)</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">KIMI · K3 开源</span>
+      <div class="flash-card-num">05</div>
+      <div class="flash-card-body"><strong>Moonshot Kimi K3 开源 frontier 模型发布</strong>（07.16）——2.8T 参数、1M 上下文、$3/$15 定价；Arena Frontend Code 榜首超越 Claude Fable 5，权重定于 07.27 开放。开源 frontier 首次把「顶级代码能力」拉到公开可自部署的价位带。</div>
+      <div class="flash-card-src">来源：<a href="https://www.kimi.com/blog/kimi-k3" target="_blank">kimi.com/blog · Kimi K3</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">FIGMA · WORKFLOW LAB</span>
+      <div class="flash-card-num">06</div>
+      <div class="flash-card-body"><strong>Figma 演示「用 Figma Make 直接部署设计」工作流</strong>（07.16）——官方 Workflow lab 拆解设计 → 代码 → PR 的双向 handoff：设计稿在 Figma Make 内生成可部署代码，改动能作为 Pull Request 回流工程仓库，设计与代码第一次进入「双向同步」而非单向交付。</div>
+      <div class="flash-card-src">来源：<a href="https://www.figma.com/blog/workflow-lab-deploying-designs-directly-with-figma-make/" target="_blank">figma.com/blog · Deploying designs directly with Figma Make</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 产品动态 · 消费级 ═══ -->
+<section class="section" id="s2">
+  <div class="section-label">板块二</div>
+  <div class="section-title">产品动态</div>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">AI 消费级产品</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">ChatGPT · Claude · Gemini · Kimi · DeepSeek · MiniMax — UX 变化与功能发布</p>
+    <div class="product-grid">
+
+      <!-- ChatGPT -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.07.16 ~ 07.17</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>桌面 App 恢复 sidebar 历史与 Projects</b>（07.16）—— 上期「超级 App」改版把对话历史移出侧栏、Projects 入口下沉，引发社区强烈反弹；本周官方 release notes 把历史记录与 Projects 恢复到 sidebar，回到用户熟悉的导航结构。</li>
+          <li><b>重建 ChatGPT / Codex 全局切换器</b>（07.16）—— 顶部新增 ChatGPT / Codex 全局切换，ChatGPT 内再分 Chat / Work 两栏；Unified Recents 统一近期列表，跨设备的 Cloud Work 同步、Local 任务留在本机。</li>
+          <li><b>官方公开承认改版「没完全做对」</b>（07.17）—— Tibo Sottiaux 在 X 发文回应，坦言新版「didn't get totally quite right」；从改版到回滚仅 8 天，被外媒类比为软件版「New Coke」。</li>
+        </ul>
+        <div class="pc-ux">ChatGPT 桌面这 8 天的「改版—反弹—回滚」是本周最值得抄进设计复盘的案例:<b>① 高频入口的位置是"肌肉记忆资产",不能一次性挪走</b>——把对话历史移出 sidebar 看似是"信息架构升级",但用户每天点它几十次,位置本身就是资产;要迁移必须留旧位置的"过渡指引"或允许一键切回,而不是直接消失。<b>② 产品线切换器要"全局常驻 + 层级清晰"</b>——ChatGPT / Codex 全局切换 + Chat / Work 二级分栏,是"多产品线合并"的正解:顶层切大类、次层切模式,而不是把所有东西塞进一个扁平列表。<b>③ 回滚要配一句"人话道歉"</b>——Sottiaux 那句"没完全做对"比任何 release note 都管用;承认错误 + 快速修正,是把"改版翻车"转化为"信任加分"的唯一路径。<span class="pc-ux-token">高频入口迁移三件套:旧位置留跳转指引 + 新位置高亮引导 + 设置里可切回;产品线切换 = 顶层全局切换器(ChatGPT / Codex)+ 二级模式栏(Chat / Work),常驻不折叠;Unified Recents 跨设备合并 · Cloud / Local 用图标区分同步范围;回滚公告 = 首屏 banner + 具名负责人"人话"说明(不用模板腔);改版灰度必须留"一键回到旧版"开关至少 30 天。</span></div>
+        <div class="pc-src">来源：<a href="https://help.openai.com/en/articles/6825453-connectors" target="_blank">help.openai.com · ChatGPT Release Notes 07-16</a> · <a href="https://winbuzzer.com/2026/07/21/openai-restores-chatgpt-desktop-features-after-backlash-xcxwbn/" target="_blank">winbuzzer · OpenAI restores ChatGPT desktop features</a> · <a href="https://x.com/thsottiaux/status/2077928427936710901" target="_blank">x.com · Tibo Sottiaux (07.17)</a></div>
+      </div>
+
+      <!-- Claude -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude</span>
+          <span class="pc-sub">Anthropic</span>
+          <span class="pc-date">2026.07.20</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Fable 5 逆转「限额」成 Max / Team Premium 标配</b>（07.20 生效）—— 此前计划把 Fable 5 限入付费加购，六周内三度延期（07.08 → 07.13 → 07.19）；本周官方逆转，Max（5x $110 / 20x $220）与 Team Premium（$100）直接包含 Fable 5，含 50% 周限额。</li>
+          <li><b>Pro / Team Standard 一次性 $100 额度过渡</b>（07.20）—— 未含标配的档位先发一次性 $100 使用额度作缓冲，用完后转 $10 / $50 计量计费；用"先送额度再计费"平滑掉定价切换的抵触感。</li>
+          <li><b>Claude Code 速率提升延至 8 月</b>（07.20）—— 原定本周到期的 Claude Code 速率提升延期至 8 月 19 日；官方把逆转归因于 GPT-5.6 Sol（07.09）与 Kimi K3（07.16）接连施压的竞争环境。</li>
+        </ul>
+        <div class="pc-ux">Claude 这次"额度政策逆转"给订阅制 AI 上了一堂定价 UX 课:<b>① 付费档的"包含什么"要一眼可读,不能藏在计量细则里</b>——Max / Team Premium 直接"包含 Fable 5"这句话本身就是转化钩子;用户买的是确定性,"标配"比"加购"更能降低决策成本。<b>② 定价切换必须留"缓冲额度"而非硬断</b>——给 Pro / Team Standard 先发一次性 $100 额度再转计量,是把"涨价 / 收紧"从"突然断供"变成"平滑过渡"的经典手法;用户对"先体验后计费"的接受度远高于"直接掏钱"。<b>③ 竞品节奏会倒逼你的额度策略</b>——官方直言逆转受 GPT-5.6 与 Kimi K3 施压;定价页设计要预留"快速调整"能力(标配项、限额比例、过渡额度都应是可配置参数,而非写死的文案)。<span class="pc-ux-token">付费档卡片首行 = "包含 [旗舰模型]"加粗(标配 vs 加购一眼分);周限额可视化 = 环形进度 + "已用 / 上限"数字(50% 限额别只写百分比);定价切换缓冲 = 一次性额度 + 倒计时 + 到期前 3 次提醒;计量计费单价($10/$50)与标配档并列展示(让用户自己算账);"速率提升延期"用 banner 明确新日期(不含糊说"稍后");额度政策参数化(标配 / 限额 / 过渡额度可后台热调)。</span></div>
+        <div class="pc-src">来源：<a href="https://ai-news.ge/en/article/anthropic-reverses-fable-5-cutoff-max-team-premium" target="_blank">ai-news.ge · Anthropic reverses Fable 5 cutoff (07.20)</a> · <a href="https://x.com/claudeai/status/2078302415804379218" target="_blank">x.com · @claudeai (07.18 宣布)</a> · <a href="https://aitoolsrecap.com/Blog/anthropic-fable-5-returns-max-team-premium-july-2026" target="_blank">aitoolsrecap · Fable 5 returns to Max / Team Premium</a></div>
+      </div>
+
+      <!-- Gemini -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Gemini</span>
+          <span class="pc-sub">Google</span>
+          <span class="pc-date">2026.07.16 ~ 07.21</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Gemini 3.5 Pro 旗舰发布再延数月</b>（07.16 彭博）—— 代号 Cappuccino（原计划 2M 上下文 + Deep Think）连错三个发布截止日，团队放弃原底座重新预训练；消息当日 Alphabet 股价一度跌约 4.4%，旗舰节奏首次被资本市场公开质疑。</li>
+          <li><b>三款效率模型补位发布</b>（07.21）—— Gemini 3.6 Flash（$1.5/$7.5、token 用量 -17%、DeepSWE 49% vs 前代 37%、知识 cutoff 推进到 2026-03）；3.5 Flash-Lite（$0.3/$2.5、350 tok/s）；Flash Cyber 安全专用，仅政府 / 可信伙伴限量试点。</li>
+          <li><b>"旗舰跳票 + 效率补位"叙事成型</b>（07.16~21）—— 一边是旗舰延期，一边把效率档打到极致性价比;Google 用"能马上交付的效率模型"稳住开发者预期,同时给旗舰争取重训时间。</li>
+        </ul>
+        <div class="pc-ux">Gemini 这一周的"旗舰跳票 + 效率补位"是产品沟通的教科书正反面:<b>① 旗舰跳票的最大伤害不是延期,而是"沉默"</b>——连错三个截止日、放弃底座重训,如果不主动沟通,市场会用最坏的方式脑补(股价 -4.4% 就是代价);发布 roadmap 的 UX 原则是"宁可给区间不给死线,一旦定了就要兑现或提前说明"。<b>② 用"效率档"承接旗舰跳票的注意力是聪明的产品节奏</b>——3.6 Flash 把 token 用量降 17%、Flash-Lite 打到 $0.3/$2.5,是"我们没交旗舰,但给了你今天就能用的省钱货";这条对做模型 / API 产品的团队直接:发布节奏要有"稳定档"托底,不能把所有筹码押在一次旗舰上。<b>③ 定价与能力要在同一张对比表里说清</b>——三款模型三种价位三种场景,用户最需要的是"我该选哪个"的决策表,而不是三篇独立公告。<span class="pc-ux-token">Roadmap 展示 = 时间区间(Q3)而非死线(某月某日);延期要主动发"进度说明"(不沉默 = 不被脑补);效率档对比表三列:3.6 Flash / 3.5 Flash-Lite / Flash Cyber × 价格 · 速度 · 适用场景;token 用量 -17% 用"同任务对比图"而非纯数字;Flash Cyber"限量试点"标清准入门槛(政府 / 可信伙伴)避免用户空等;知识 cutoff 日期(2026-03)显式标注在模型选择器。</span></div>
+        <div class="pc-src">来源：<a href="https://cj.sina.cn/articles/view/5953189932/162d6782c06704o8ys" target="_blank">新浪财经 · 引彭博 Gemini 3.5 Pro 延期 (07.17)</a> · <a href="https://9to5google.com/2026/07/21/gemini-3-6-flash-launch/" target="_blank">9to5google · Gemini 3.6 Flash launch (07.21)</a> · <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/" target="_blank">blog.google · Gemini 效率三模型</a></div>
+      </div>
+
+      <!-- Kimi K3 -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Kimi K3</span>
+          <span class="pc-sub">Moonshot AI</span>
+          <span class="pc-date">2026.07.16</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>开源 frontier 模型发布</b>（07.16）—— 2.8T 参数、1M 上下文、$3/$15 定价；Arena Frontend Code 榜首超越 Claude Fable 5，Artificial Analysis Index 位列第 4；模型权重定于 07.27 开放，可自部署。</li>
+          <li><b>"顶级代码能力 + 开放权重"组合</b>（07.16）—— 首次把前端代码生成的第一梯队能力放到"可下载自部署"的形态；对依赖闭源 API 的团队构成"用同等能力换掉计量账单"的现实选项。</li>
+          <li><b>发布即施压竞品定价</b>（07.16）—— Simon Willison 等评测者当日给出对比;Kimi K3 的定价与开放策略,被视为本周 Claude Fable 5 额度政策逆转的外部压力之一。</li>
+        </ul>
+        <div class="pc-ux">Kimi K3 用"开源 frontier"这一手,把行业的 UX 讨论从"界面"拉回到"分发形态":<b>① 开放权重本身就是一种产品体验承诺</b>——"可自部署"意味着用户不再被单一厂商的额度 / 限流 / 涨价绑架;做闭源 API 产品的团队要意识到,当同等能力可以"下载带走"时,你的护城河只剩"托管体验 + 生态 + 稳定性",定价必须更透明。<b>② 榜单成绩要落到"可复现的对比场景"</b>——Arena Frontend Code 榜首这类成绩,用户真正关心的是"在我的前端任务上到底强多少";发布页应配"同一 prompt 三模型并排结果",而不是只甩一个榜单名次。<b>③ "权重开放日"要当成一次产品节点来运营</b>——07.27 开放权重是继发布之后的第二次高峰;产品应把"发布 → 权重开放 → 生态接入"设计成有节奏的多幕,而非一次性抛出。<span class="pc-ux-token">开放权重 = 分发形态卖点,发布页显式标"可自部署 / 可商用"边界;榜单成绩配"同 prompt 并排结果"可复现对比(而非纯名次);定价 $3/$15 与"自部署零 API 费"两条路径并列(让用户按规模选);1M 上下文用"能装下多少代码 / 文档"的具象化说明;"权重开放日"(07.27)做成倒计时节点 + 接入指引;开源模型的信任锚 = 许可协议 + 复现脚本 + 评测集公开。</span></div>
+        <div class="pc-src">来源：<a href="https://www.kimi.com/blog/kimi-k3" target="_blank">kimi.com/blog · Kimi K3</a> · <a href="https://simonwillison.net/2026/Jul/16/kimi-k3/" target="_blank">simonwillison.net · Kimi K3 (07.16)</a></div>
+      </div>
+
+      <!-- DeepSeek / MiniMax -->
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">DeepSeek · MiniMax</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内两家均无面向 C 端的显著交互层更新。国产大模型本周的主线由 Moonshot Kimi K3 的开源 frontier 发布占据（见上卡）。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 企业级 AI ═══ -->
+<div class="color-band band-teal">
+  <div class="section-label">板块二（续）</div>
+  <div class="section-title">企业级 AI 产品</div>
+  <p class="section-note">ChatGPT Enterprise · Claude Team / Enterprise · Gemini for Workspace — UX 变化与团队协作</p>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">企业级 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <div class="product-grid">
+
+      <!-- ChatGPT Enterprise -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT Enterprise / Edu / Business</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.07.16 ~ 07.17</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>桌面回滚同步覆盖企业席位</b>（07.16）—— sidebar 历史与 Projects 恢复、ChatGPT / Codex 全局切换器重建等改动，对 Enterprise / Edu / Business 席位同步生效；企业侧免去了大规模内部培训的返工。</li>
+          <li><b>Cloud Work / Local 任务范围区分</b>（07.16）—— Unified Recents 之外，跨设备同步的 Cloud Work 与仅留本机的 Local 任务被显式区分，便于企业按数据驻留要求管控哪些任务可上云。</li>
+          <li><b>改版回滚的合规意义</b>（07.17）—— 官方承认改版「没完全做对」并快速回滚，对受监管行业客户是正向信号：核心导航不会在没有过渡期的情况下被单方面重构。</li>
+        </ul>
+        <div class="pc-ux">企业视角看这次桌面回滚,有两条比消费端更硬的原则:<b>① 企业席位的 UI 变更必须有"变更公告 + 过渡期"契约</b>——消费用户改版顶多抱怨,企业客户则要重排培训、更新内部文档、通知合规;核心导航"说改就改"会直接冲击续约信任,产品应给企业管理员一个"变更预告 + 灰度开关 + 回退窗口"的三段式契约。<b>② Cloud / Local 任务范围要成为可管控的一等属性</b>——把 Cloud Work 与 Local 任务显式区分,不只是同步体验,更是数据驻留合规的抓手;企业管理员需要能按"任务是否上云"来配策略,这一属性应进入 Admin 面板而非埋在用户端。<span class="pc-ux-token">企业 UI 变更契约三段:预告(≥2 周)+ 灰度开关(管理员可控)+ 回退窗口(≥30 天);Cloud / Local 任务 = 可管控属性,进 Admin 策略面(按数据驻留分域);Unified Recents 企业版需支持"按团队 / 项目过滤";改版回滚公告同步推送企业管理台(不止消费端 banner);核心导航变更走"重大变更"评审(与定价变更同级)。</span></div>
+        <div class="pc-src">来源：<a href="https://help.openai.com/en/articles/6825453-connectors" target="_blank">help.openai.com · ChatGPT Release Notes 07-16</a> · <a href="https://9to5mac.com/2026/07/17/openai-fixes-chat-access-in-the-chatgpt-app-for-mac/" target="_blank">9to5mac · OpenAI fixes chat access in ChatGPT app for Mac</a></div>
+      </div>
+
+      <!-- Claude Team / Enterprise -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude Team / Enterprise</span>
+          <span class="pc-sub">Anthropic</span>
+          <span class="pc-date">2026.07.20</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>Team Premium 标配 Fable 5</b>（07.20）—— Team Premium（$100 席位）直接包含 Fable 5 与 50% 周限额；Team Standard 走一次性 $100 额度 → $10/$50 计量的过渡路径，团队管理员可按席位分配不同档位。</li>
+          <li><b>过渡额度的团队分发</b>（07.20）—— 一次性 $100 额度以团队为单位发放，管理员可在成员间再分配，避免"人均一份用不完 / 重度用户不够用"的额度错配。</li>
+          <li><b>Claude Code 企业速率提升延至 8 月</b>（07.20）—— 面向团队的 Claude Code 速率提升延期至 8 月 19 日；对依赖 Claude Code 做工程协作的团队，官方给出了明确的新时间点而非模糊承诺。</li>
+        </ul>
+        <div class="pc-ux">Claude 把额度政策落到团队场景,暴露出企业订阅最容易翻车的两个点:<b>① 团队额度不能"人均切一份",要支持"池化 + 再分配"</b>——重度用户和轻度用户的用量差几十倍,平均分配等于同时得罪两头;过渡额度以团队为池、管理员可再分配,才是符合真实协作的模型。<b>② 席位档位与"包含的模型 / 限额"要在管理台一屏可视</b>——管理员最怕"不知道每个席位到底能用什么";Team Premium 含 Fable 5、Standard 走计量,这类差异应在席位管理页用矩阵一眼呈现,而不是让管理员去翻计费文档。<b>③ 速率 / 额度变更要给团队"明确新日期"</b>——延期到 8 月 19 日这种确定信息,比"稍后恢复"对企业规划友好得多。<span class="pc-ux-token">团队额度 = 池化模型 + 管理员再分配(不强制人均);席位管理页 = 席位 × 档位 × 含模型 × 限额 四列矩阵;过渡额度用量可视 = 团队总额度环形 + 成员用量条形;计费切换前置提醒(团队管理员 + 财务角色双通知);速率延期给"明确日期"(8/19)不用模糊词;档位差异做成"对比表"入口挂在升级按钮旁。</span></div>
+        <div class="pc-src">来源：<a href="https://ai-news.ge/en/article/anthropic-reverses-fable-5-cutoff-max-team-premium" target="_blank">ai-news.ge · Anthropic reverses Fable 5 cutoff (07.20)</a> · <a href="https://aitoolsrecap.com/Blog/anthropic-fable-5-returns-max-team-premium-july-2026" target="_blank">aitoolsrecap · Fable 5 returns to Max / Team Premium</a></div>
+      </div>
+
+      <!-- Gemini for Workspace -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Gemini for Workspace / Enterprise</span>
+          <span class="pc-sub">Google</span>
+          <span class="pc-date">2026.07.21</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>3.6 Flash 面向企业 API 放量</b>（07.21）—— 效率旗舰 3.6 Flash（$1.5/$7.5、token 用量 -17%）面向 API 与 Enterprise 推开；对成本敏感的企业批处理场景，"同任务更省 token"直接转化为账单下降。</li>
+          <li><b>Computer Use 内置 API / Enterprise</b>（07.21）—— Gemini 的 Computer Use 能力进入 API 与 Enterprise，Agent 可在受控环境操作界面完成跨应用任务；企业侧可按权限限定可操作的应用范围。</li>
+          <li><b>CodeMender 安全能力"上链但拴绳"</b>（07.21）—— 配合 Flash Cyber，CodeMender 走 scan → verify → remediate 的自动修复闭环，但保留人工复核关卡；SiliconAngle 形容为"给 bug hunter 上了 API 却仍拴着绳"。</li>
+        </ul>
+        <div class="pc-ux">Gemini 把效率与安全能力同步推进企业侧,给出两条 B 端 AI 的产品原则:<b>① 降本要能"被算清":省 token = 省钱要在控制台可见</b>——3.6 Flash 的"token 用量 -17%"对企业最有说服力的呈现,不是发布会 PPT,而是账单页里"同任务同比节省"的对比曲线;企业采购决策靠数据,不靠形容词。<b>② Agent 操作界面能力必须"内建人工关卡"</b>——Computer Use 让 Agent 能点按真实界面,风险陡增;CodeMender 的 scan / verify / remediate 保留人工复核,正是"自动化但不失控"的范式;做 Agent 产品要把"人工审批节点"设计成不可跳过的一等公民,而不是可选项。<b>③ 安全 / 敏感能力用"限量试点 + 可信伙伴"分级放量</b>——Flash Cyber 只给政府 / 可信伙伴,是对高风险能力的克制;能力越强,准入门槛越要显式、分级、可审计。<span class="pc-ux-token">降本可视 = 控制台"同任务同比节省 token / 成本"曲线(不止发布会数字);Computer Use 企业版 = 可操作应用白名单 + 每步操作日志;Agent 人工关卡 = scan → verify →(人工复核)→ remediate,复核不可跳过;高风险能力分级放量:公开 / 可信伙伴 / 政府三档,准入门槛显式;CodeMender 修复建议留"接受 / 拒绝 / 改写"三选项(不自动 merge);敏感能力操作全程 audit trail。</span></div>
+        <div class="pc-src">来源：<a href="https://siliconangle.com/2026/07/21/google-expands-gemini-cheaper-models-bug-hunter-keeps-leash/" target="_blank">siliconangle · Google expands Gemini cheaper models, bug hunter keeps leash</a> · <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/" target="_blank">blog.google · Gemini 效率三模型</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">云厂商 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">AWS Bedrock · Azure AI · Google Cloud — 企业控制台 UX 更新</p>
+    <div class="product-grid">
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Google Cloud · Gemini 3.6 Flash + Computer Use</span>
+          <span class="pc-sub">Google Cloud</span>
+          <span class="pc-date">2026.07.21</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>效率模型进入企业 API 层</b>（07.21）—— 3.6 Flash / 3.5 Flash-Lite 在 API 与 Enterprise 通道放量，云侧客户可按"性价比档"选择模型；控制台按价格 / 速度 / 场景三维呈现选型建议。</li>
+          <li><b>Computer Use 与 CodeMender 内置企业能力</b>（07.21）—— Agent 操作界面与自动化安全修复进入 Enterprise，均保留人工复核与权限边界；企业管理员可在可信环境内限定可操作范围。</li>
+          <li><b>"上链但拴绳"的安全治理姿态</b>（07.21）—— 高能力（Flash Cyber）走政府 / 可信伙伴限量试点，体现云厂商对高风险 AI 能力"分级、可审计、可回收"的治理取向。</li>
+        </ul>
+        <div class="pc-ux">从云控制台视角,这批更新印证了企业 AI 平台的两条 UX 走向:<b>① 模型选型要从"列一堆模型"进化到"给决策建议"</b>——控制台不该只把 3.6 Flash / Flash-Lite 平铺,而应按"你的场景 → 推荐档位 → 预估成本"做引导式选型;企业用户要的是"帮我选",不是"给我看目录"。<b>② 高风险 Agent 能力的默认态应为"最小权限 + 显式授权"</b>——Computer Use 能点真实界面,默认必须是"什么都不能碰",管理员逐项开权限;这与消费端"默认全开"的逻辑相反,企业侧永远"默认关、按需开"。<span class="pc-ux-token">模型选型 = 引导式(场景 → 推荐档 → 预估成本)而非平铺目录;Computer Use 默认最小权限 · 按应用逐项授权;安全能力操作留 audit trail + 可回收授权;成本预估器挂在模型选择页(选型即见账单);高风险能力准入分级(公开 / 可信伙伴 / 政府)控制台显式标注。</span></div>
+        <div class="pc-src">来源：<a href="https://siliconangle.com/2026/07/21/google-expands-gemini-cheaper-models-bug-hunter-keeps-leash/" target="_blank">siliconangle · Google expands Gemini cheaper models</a> · <a href="https://9to5google.com/2026/07/21/gemini-3-6-flash-launch/" target="_blank">9to5google · Gemini 3.6 Flash launch</a></div>
+      </div>
+
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">AWS Bedrock · Azure AI</span>
+        </div>
+        <p class="pc-empty-note">本周窗口内 aws.amazon.com/blogs 与 azure.microsoft.com/blog 的控制台版块均无面向企业管理员的独立 UX 更新公告。本期云厂商主线由 Google Cloud 侧 Gemini 效率模型与 Agent 能力放量占据。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块三 · 设计工具动态 ═══ -->
+<div class="band-surface">
+  <div class="section-label">板块三</div>
+  <div class="section-title">设计工具动态</div>
+
+  <!-- 设计主力工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">设计主力工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Figma · Adobe CC — AI 功能迭代与新交互范式</p>
+    <div class="product-grid">
+
+      <!-- Figma -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Figma · Workflow lab（Figma Make 部署）</span>
+          <span class="pc-sub">Figma</span>
+          <span class="pc-date">2026.07.16</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>设计 → 代码 → PR 的双向 handoff</b>（07.16）—— 官方 Workflow lab 拆解「用 Figma Make 直接部署设计」：设计稿在 Figma Make 内生成可部署代码，改动能作为 Pull Request 回流工程仓库，设计与代码进入"双向同步"而非单向交付。</li>
+          <li><b>把"交付"变成"持续同步"</b>（07.16）—— 传统 handoff 是设计定稿 → 工程照着实现的单程;Workflow lab 演示的是设计改动直接产出 diff / PR，工程 review 后合并，设计与实现的"漂移"被结构性收敛。</li>
+          <li><b>配合近期 AI 额度可见性</b>（07.14 release notes）—— Figma release notes 近期上线"在 betas 中查看 AI credit 用量"、GPT-5.6 接入 Figma Make、多张 AI 图像编辑等，Workflow lab 是这批能力的工作流串联示范。</li>
+        </ul>
+        <div class="pc-ux">Figma 这条 Workflow lab 把设计工具的终局往前推了一大步,提炼三条:<b>① "设计交付"正在从单程变双向,设计系统要为"可回流"重构</b>——当设计改动能直接生成 PR,设计侧的组件命名、token 结构、状态定义就不再只是"给人看",而是"给代码生成器读 + 给 diff 引擎比对";命名和结构的严谨度直接决定 PR 的质量。<b>② 双向 handoff 需要"谁是 source of truth"的显式约定</b>——设计改一版、工程改一版,双向同步最大的坑是冲突;产品必须设计"变更来源标记 + 冲突可视 + 合并策略"三件套,否则双向会变成互相覆盖。<b>③ AI 额度可见性是"生产级信任"的前提</b>——把 AI credit 用量摆到 betas 里让用户看得见,是"AI 功能进生产"的必要透明化;设计师不会把黑盒计费的工具放进关键工作流。<span class="pc-ux-token">设计→代码双向:变更来源标记(设计侧 / 代码侧)+ 冲突高亮 + 合并策略可选;PR 由设计改动生成时附"设计意图摘要"(帮工程 review);source of truth 显式切换(某组件以设计为准 / 以代码为准);组件命名 / token 作为"机器可读契约"纳入 lint;AI credit 用量常驻可见(不藏计费页);handoff 历史 = 双向 timeline(设计版本 ↔ 代码提交对照)。</span></div>
+        <div class="pc-src">来源：<a href="https://www.figma.com/blog/workflow-lab-deploying-designs-directly-with-figma-make/" target="_blank">figma.com/blog · Deploying designs directly with Figma Make</a> · <a href="https://www.figma.com/release-notes/" target="_blank">figma.com/release-notes · AI credit usage in betas (07.14)</a></div>
+      </div>
+
+      <!-- Adobe -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Adobe Firefly · Creative Cloud</span>
+        </div>
+        <p class="pc-empty-note">本期无重大 UX 更新公告。前期 Firefly Elements + Projects 延续放量中，本周无面向设计师的独立交互层变化。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AI 原生入口 -->
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">AI 原生入口</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">行业分析 · ChatGPT 超级 App 反弹 — 分发面变化与用户反应</p>
+    <div class="product-grid">
+
+      <!-- 行业分析：ChatGPT 8 天反转 -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">行业分析 · ChatGPT「超级 App」8 天反转</span>
+          <span class="pc-sub">Industry Analysis</span>
+          <span class="pc-date">2026.07.16 ~ 07.18</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>改版被类比为软件版「New Coke」</b>（07.18）—— 分析者指出，OpenAI 把 Chat / Work / Codex 合并成"超级 App"、移走 sidebar 历史，是在"clone Claude"的方向上用力过猛，忽视了老用户的既有心智。</li>
+          <li><b>8 天从改版到回滚</b>（07.16~17）—— 从社区大规模反弹到官方恢复 sidebar 历史 / Projects，仅用 8 天；spyglass、9to5mac 等追踪了这次"快速纠偏"的完整时间线。</li>
+          <li><b>反弹的核心是"导航被夺走"</b>—— 用户抱怨集中在"找不到历史对话""Projects 入口消失"，说明高频入口的位置变更，比新增功能更能激起负面情绪。</li>
+        </ul>
+        <div class="pc-ux">这次"超级 App"反转对做 AI 原生入口的团队是一记警钟:<b>① 追赶竞品的"形"不能牺牲自己用户的"习惯"</b>——把界面往竞品(Claude)靠拢,如果以移走老用户高频入口为代价,就是"为了像别人而背叛自己人";改版要问的第一个问题永远是"我的现有用户会不会找不到东西",而不是"这样像不像那个更火的产品"。<b>② 导航结构属于"契约级"资产,变更要走最高评审</b>——新增一个功能可以灰度试错,但移动"历史对话""项目入口"这种每日必用的导航,等同于修改和用户的隐性契约,必须走最严的评审与灰度。<b>③ "快速回滚"能把危机变口碑,但只有一次机会</b>——8 天回滚赢回了信任,可若同类失误反复出现,"敢回滚"就会变成"不靠谱";纠偏是止损,不是可反复消费的资源。<span class="pc-ux-token">改版自检第一问:"现有用户会不会找不到高频入口";导航变更 = 契约级评审(与定价 / 隐私同级)+ 强制灰度;竞品对标做"能力对齐"不做"界面照搬"(保留自身导航习惯);高频入口若必须迁移:旧位留指引 + 新位高亮 + 可切回,三者缺一不可;回滚只能是"止损手段"不能成"迭代常态";反弹信号监测(历史 / 项目 / 搜索这类高频功能的负反馈单列告警)。</span></div>
+        <div class="pc-src">来源：<a href="https://spyglass.org/chatgpt-brings-back-chatgpt/" target="_blank">spyglass.org · ChatGPT brings back ChatGPT</a> · <a href="https://hplus.club/blog/openai-restores-classic-interface-after-chatgpt-super-app-backlash/" target="_blank">hplus.club · OpenAI restores classic interface after super-app backlash</a> · <a href="https://9to5mac.com/2026/07/17/openai-fixes-chat-access-in-the-chatgpt-app-for-mac/" target="_blank">9to5mac · OpenAI fixes chat access in ChatGPT app for Mac</a></div>
+      </div>
+
+      <!-- empty -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Perplexity · Arc / 其它 AI 入口</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内无面向 C 端的显著分发面 / 入口层更新公告。AI 原生入口的讨论本周主要围绕 ChatGPT 桌面改版反弹展开（见左卡）。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块四 · 对我们的启示 ═══ -->
+<section class="section" id="s4" style="padding-bottom: 0;">
+  <div class="section-label">板块四</div>
+  <div class="section-title">对我们的启示</div>
+  <p class="section-note">从 07.16 ~ 07.22 这一周产品动态中提炼的 6 条具体、可执行的设计建议</p>
+
+  <div class="insight-grid">
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 01</div>
+      <div class="in-trigger">↗ ChatGPT 桌面回滚 · 超级 App 反弹</div>
+      <div class="in-title">高频入口是"肌肉记忆资产",迁移必须留退路</div>
+      <div class="in-body">ChatGPT 桌面从改版到回滚只用 8 天，核心教训极其具体:<b>用户每天点几十次的入口（对话历史、Projects），其位置本身就是资产</b>——移走它引发的负面情绪，远大于任何新功能带来的正面价值。改版自检的第一问永远是"现有用户会不会找不到东西"，而不是"这样像不像那个更火的产品"。第二条:<b>高频入口若必须迁移，"旧位置留指引 + 新位置高亮引导 + 设置里可切回"三者缺一不可</b>；直接让入口消失，等于单方面撕毁与用户的隐性契约。<span class="in-body-token">改版第一问:现有用户会不会找不到高频入口;导航变更走契约级评审(与定价 / 隐私同级);高频入口迁移三件套:旧位指引 + 新位高亮 + 可切回;反弹信号监测:历史 / 项目 / 搜索的负反馈单列告警;改版灰度保留"一键回旧版"≥30 天;竞品对标做能力对齐,不做界面照搬。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 02</div>
+      <div class="in-trigger">↗ ChatGPT 官方承认"没完全做对" · 快速回滚</div>
+      <div class="in-title">回滚是信任建立而非耻辱,但只有一次机会</div>
+      <div class="in-body">Tibo Sottiaux 一句"didn't get totally quite right"，比任何 release note 都更能挽回信任:<b>承认错误 + 快速修正，能把"改版翻车"转化为"我们听得进反馈"的口碑</b>。做产品要有"回滚不是失败"的心态，快速纠偏比死撑更值得用户尊敬。但第二条同样重要:<b>"敢回滚"只能是止损手段，不能成为迭代常态</b>——若同类失误反复出现，"快速回滚"就会被解读为"不靠谱"；纠偏是稀缺资源，不能反复消费。回滚公告要用"人话"具名说明，而不是模板腔的更新日志。<span class="in-body-token">回滚公告 = 首屏 banner + 具名负责人"人话"说明(非模板腔);承认错误要早、要具体(说清哪里做错了);回滚是止损不是常态(同类失误反复=信任崩塌);把"感谢反馈"写进公告(明确回应社区);建立"重大变更后 72 小时反馈窗口"机制;纠偏后做公开复盘(把教训变团队资产)。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 03</div>
+      <div class="in-trigger">↗ Claude Fable 5 标配化 · $100 过渡额度</div>
+      <div class="in-title">定价切换要留"缓冲额度",标配比加购更能降低决策成本</div>
+      <div class="in-body">Claude 把 Fable 5 从"限额加购"逆转为 Max / Team Premium"标配"，并给 Pro / Team Standard 发一次性 $100 额度过渡，是订阅制 AI 的定价 UX 范本:<b>① 付费档"包含什么"要一眼可读——"标配旗舰模型"这句话本身就是转化钩子</b>，用户买的是确定性，标配比加购的决策成本低得多。<b>② 定价切换必须留"缓冲额度"而非硬断</b>——"先送额度再计费"的接受度远高于"直接掏钱"，把涨价 / 收紧从"突然断供"变成"平滑过渡"。第三条:团队额度要"池化 + 再分配"，绝不能人均切一份，否则同时得罪重度和轻度用户。<span class="in-body-token">付费档首行"包含 [旗舰模型]"加粗(标配 vs 加购一眼分);定价切换缓冲 = 一次性额度 + 倒计时 + 到期前 3 次提醒;周限额可视化 = 环形进度 +"已用/上限"(50% 别只写百分比);团队额度池化 + 管理员再分配(不人均);计量单价与标配档并列(让用户自己算账);额度策略参数化(标配/限额/过渡额度后台热调)。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 04</div>
+      <div class="in-trigger">↗ Gemini 3.5 Pro 跳票 · 三款效率模型补位</div>
+      <div class="in-title">发布 roadmap 宁给区间不给死线,用"稳定档"托底旗舰风险</div>
+      <div class="in-body">Gemini 3.5 Pro 连错三个截止日、股价一度跌 4.4%，而同周三款效率模型高调补位——这组对照给出发布节奏的硬原则:<b>① 旗舰跳票最大的伤害不是延期，而是"沉默"</b>；roadmap 要"宁可给区间不给死线，一旦定了就兑现或提前说明"，延期必须主动发进度说明，否则市场会用最坏方式脑补。<b>② 用"效率档"承接旗舰跳票的注意力，是聪明的产品节奏</b>——发布节奏要有"稳定档"托底，不能把所有筹码押在一次旗舰上。第三条:<b>多档模型要在同一张对比表里说清"我该选哪个"</b>，而不是三篇独立公告；降本要能被算清，"省 token = 省钱"要在控制台可见。<span class="in-body-token">Roadmap 用时间区间(Q3)不用死线;延期主动发进度说明(沉默=被脑补);多档模型对比表:价格 · 速度 · 场景三维;发布节奏留"稳定档"托底(不押注单次旗舰);token 用量优化用"同任务对比图"呈现;知识 cutoff 日期显式标在模型选择器。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 05</div>
+      <div class="in-trigger">↗ Kimi K3 开源 frontier · $3/$15 定价</div>
+      <div class="in-title">开源 frontier 冲击定价:护城河只剩托管体验与透明度</div>
+      <div class="in-body">Kimi K3 用 2.8T 参数、1M 上下文、$3/$15、Arena Frontend Code 榜首，把"顶级代码能力"放到"可下载自部署"的形态，对整个行业的定价逻辑构成冲击:<b>① 当同等能力可以"下载带走"，闭源 API 的护城河只剩托管体验 + 生态 + 稳定性</b>，定价必须更透明，不能再靠信息不对称收费。<b>② 榜单成绩要落到"可复现的对比场景"</b>——发布页应配"同一 prompt 三模型并排结果"，而不是只甩榜单名次；用户信任来自能自己验证。第三条:<b>"权重开放日"要当成一次独立产品节点来运营</b>，把发布 → 权重开放 → 生态接入设计成有节奏的多幕。<span class="in-body-token">开放权重作为分发形态卖点(显式标可自部署/可商用边界);榜单配"同 prompt 并排结果"可复现对比;定价与"自部署零 API 费"两条路径并列(按规模选);闭源产品护城河重估:托管 + 生态 + 稳定性 + 透明定价;1M 上下文用"能装多少代码/文档"具象化;开源信任锚 = 许可协议 + 复现脚本 + 评测集公开。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 06</div>
+      <div class="in-trigger">↗ Figma Workflow lab · 设计→代码→PR</div>
+      <div class="in-title">设计交付从单程变双向,设计系统要为"可回流"重构</div>
+      <div class="in-body">Figma Workflow lab 演示"用 Figma Make 直接部署设计"、改动作为 PR 回流工程仓库，把设计交付从单程推向双向:<b>① 当设计改动能直接生成 PR，组件命名、token 结构、状态定义就不再只是"给人看"，而是"给代码生成器读 + 给 diff 引擎比对"</b>——命名和结构的严谨度直接决定 PR 质量，设计系统要按"机器可读契约"重构。<b>② 双向 handoff 需要"谁是 source of truth"的显式约定</b>——设计改一版、工程改一版，最大的坑是互相覆盖；必须设计"变更来源标记 + 冲突可视 + 合并策略"三件套。第三条:<b>AI 额度可见性是生产级信任的前提</b>，设计师不会把黑盒计费的工具放进关键工作流。<span class="in-body-token">组件命名/token 作为机器可读契约纳入 lint;双向 handoff 三件套:变更来源标记 + 冲突高亮 + 合并策略;source of truth 显式切换(某组件以设计/以代码为准);PR 由设计生成时附"设计意图摘要"帮工程 review;handoff 历史 = 设计版本↔代码提交双向 timeline;AI credit 用量常驻可见(不藏计费页)。</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-band">
+  <div>
+    <h2>下期预告</h2>
+    <p>覆盖窗口：2026-07-23 ~ 2026-07-29 · 下周三发布</p>
+  </div>
+  <div class="cta-band-meta">
+    云基础 &amp; VnE 团队<br>
+    AI 产品 UX 观察报告 · 第十期<br>
+    仅供设计大团队内部参考
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.07 第十期</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger = document.getElementById('reportTrigger');
+  var dropdown = document.getElementById('reportDropdown');
+  var selector = document.getElementById('reportSelector');
+  function open() { trigger.classList.add('open'); dropdown.classList.add('open'); trigger.setAttribute('aria-expanded','true'); }
+  function close() { trigger.classList.remove('open'); dropdown.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); }
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); dropdown.classList.contains('open') ? close() : open(); });
+  dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href !== '#') { e.preventDefault(); window.location.href = href; } else { close(); }
+    });
+  });
+  document.addEventListener('click', function(e) { if (!selector.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+});
+</script>
+</body>
+</html>
