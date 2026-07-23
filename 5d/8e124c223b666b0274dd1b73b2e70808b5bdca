@@ -1,0 +1,66 @@
+ai-competitive-report-2026-07-w2.html
+  s_253dde18a30304::t_737bb6f738067c 156-161 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a617db988b1842796ed3016","tool_type":"agent","tool_id":"apply_patch","line_ranges":[{"Range":[156,161]}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "5d8e124c223b666b0274dd1b73b2e70808b5bdca",
+  "prompts": {},
+  "sessions": {
+    "s_253dde18a30304": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a4505235888cd1109da434e",
+        "model": "gpt-5.5__dev"
+      },
+      "human_author": "gongruiyun.gongry <gongruiyun.gongry@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {
+    "ai-competitive-report-2026-07-w2.html": [
+      {
+        "hash": "s_253dde18a30304::t_737bb6f738067c",
+        "line_ranges": [
+          {
+            "Range": [
+              156,
+              161
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a617db988b1842796ed3016",
+            "tool_type": "agent",
+            "tool_id": "apply_patch",
+            "line_ranges": [
+              {
+                "Range": [
+                  156,
+                  161
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_253dde18a30304": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_253dde18a30304::t_737bb6f738067c": {
+      "tool": "trae",
+      "conversation_id": "6a4505235888cd1109da434e",
+      "session_id": "6a4505235888cd1109da434e",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
