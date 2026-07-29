@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.07 第十一期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --on-dark:       #ffffff;
+  --teal:          #1a3a3a;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero { max-width: 1200px; margin: 0 auto; padding: 56px 48px 40px; }
+
+.report-selector { position: relative; display: inline-block; margin-bottom: 20px; }
+.report-selector__trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-card); color: var(--muted);
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  border-radius: 9999px; padding: 6px 14px 6px 16px;
+  cursor: pointer; border: none; font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s; user-select: none;
+}
+.report-selector__trigger:hover { background: var(--surface-strong); color: var(--body); }
+.report-selector__trigger.open  { background: var(--surface-strong); color: var(--body-strong); }
+.report-selector__chevron { width: 14px; height: 14px; opacity: 0.5; transition: transform 0.2s; flex-shrink: 0; }
+.report-selector__trigger.open .report-selector__chevron { transform: rotate(180deg); opacity: 0.8; }
+.report-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 300px; background: #fff;
+  border: 1px solid var(--hairline); border-radius: 16px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10); z-index: 100;
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.report-dropdown__section-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-soft); padding: 6px 10px 4px; }
+.report-dropdown__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none;
+  color: var(--body); transition: background 0.12s;
+}
+.report-dropdown__item:hover { background: var(--surface-soft); }
+.report-dropdown__item--active { background: var(--surface-card); color: var(--body-strong); }
+.report-dropdown__item-left { display: flex; flex-direction: column; gap: 2px; }
+.report-dropdown__item-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.report-dropdown__item-period { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.report-dropdown__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; background: var(--teal); color: #fff; border-radius: 9999px; padding: 2px 8px; flex-shrink: 0; }
+
+.hero h1 { font-size: clamp(52px, 7vw, 80px); font-weight: 500; letter-spacing: -2.5px; line-height: 1; color: var(--ink); max-width: 720px; margin-bottom: 16px; }
+.hero-sub { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+.section { padding: 48px 0 0; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); margin-bottom: 16px; }
+.section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+.section-note { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+.flash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flash-card { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px; min-height: 210px; }
+.flash-card:nth-child(1) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: #d4e8e3;      color: var(--ink); }
+.flash-card:nth-child(3) { background: #ece8f8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #d8eef8;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; }
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); color: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 9999px; padding: 4px 12px; align-self: flex-start; }
+
+.track { margin-top: 52px; }
+.track-label { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.track-pill { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 9999px; padding: 6px 16px; background: var(--surface-card); color: var(--muted); white-space: nowrap; }
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+.track-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.product-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: 16px; padding: 28px; transition: box-shadow 0.15s; }
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.product-card.empty { border-style: dashed; background: var(--surface-soft); }
+.pc-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date { margin-left: auto; font-size: 12px; color: var(--muted-soft); background: var(--surface-card); border-radius: 9999px; padding: 3px 12px; white-space: nowrap; }
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li { font-size: 14px; color: var(--body); line-height: 1.6; padding-left: 18px; position: relative; }
+.pc-list li::before { content: '·'; position: absolute; left: 4px; color: var(--muted-soft); font-size: 18px; line-height: 1.3; }
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux { margin-top: 14px; padding: 10px 12px; background: rgba(232,185,74,0.10); border-radius: 8px; border-left: 3px solid var(--ochre); font-size: 13px; color: var(--body); line-height: 1.55; }
+.pc-ux::before { content: "设计视角 · "; font-weight: 700; color: #b8860b; }
+.pc-ux-token { display: block; margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(184,134,11,0.35); font-size: 11px; letter-spacing: 0.2px; color: var(--muted); line-height: 1.6; }
+.pc-ux-token::before { content: "Token · "; font-weight: 700; color: #b8860b; opacity: 0.7; }
+.band-teal .pc-ux-token { color: rgba(255,255,255,0.5); border-top-color: rgba(232,185,74,0.35); }
+.pc-empty-note { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .section-note { color: rgba(255,255,255,0.4); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .track-desc { color: rgba(255,255,255,0.35); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card.empty { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub, .band-teal .pc-date { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+.band-teal .pc-empty-note { color: rgba(255,255,255,0.4); }
+
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #e6e1f0; }
+.insight-card:nth-child(2) { background: #dcebe0; }
+.insight-card:nth-child(3) { background: #f3e6d4; }
+.insight-card:nth-child(4) { background: #d9e6ef; }
+.insight-card:nth-child(5) { background: #f0dfe4; }
+.insight-card:nth-child(6) { background: #e2e8d8; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.5; margin-bottom: 12px; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+.in-body-token { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(0,0,0,0.15); font-size: 11px; letter-spacing: 0.2px; opacity: 0.6; line-height: 1.6; }
+.in-body-token::before { content: "Token · "; font-weight: 700; opacity: 0.7; }
+
+.cta-band { background: var(--surface-soft); border-radius: 24px; margin: 80px 0; padding: 80px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+footer { background: var(--surface-soft); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer, .cta-band { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.07 第十一期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第十一期</span>
+          <span class="report-dropdown__item-period">2026-07-23 ~ 2026-07-29</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-07-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第十期</span>
+          <span class="report-dropdown__item-period">2026-07-16 ~ 2026-07-22</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-07-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第九期</span>
+          <span class="report-dropdown__item-period">2026-07-09 ~ 2026-07-15</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06~07 第八期</span>
+          <span class="report-dropdown__item-period">2026-06-25 ~ 2026-07-08</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第七期</span>
+          <span class="report-dropdown__item-period">2026-06-18 ~ 2026-06-24</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第六期</span>
+          <span class="report-dropdown__item-period">2026-06-11 ~ 2026-06-17</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第五期</span>
+          <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第四期</span>
+          <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub">覆盖窗口：2026-07-23 ~ 2026-07-29｜阅读时长：约 6 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示｜单周版</p>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 板块一 · 本期速览 ═══ -->
+<section class="section" id="s1">
+  <div class="section-label">板块一</div>
+  <div class="section-title">本期速览</div>
+
+  <div class="flash-grid">
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · HEALTH 上线</span>
+      <div class="flash-card-num">01</div>
+      <div class="flash-card-body"><strong>OpenAI 面向美国用户推出 Health in ChatGPT</strong>（07.23）——官方博客宣布用户可授权连接 Apple Health 与医疗记录；基于早期反馈，健康上下文不再局限于独立 Health 页，而是能在任意对话中被调用（默认需授权、可 @Health 显式召唤）。</div>
+      <div class="flash-card-src">来源：<a href="https://openai.com/index/health-in-chatgpt/" target="_blank">openai.com · Launching Health in ChatGPT</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">FIGMA · 安全 AGENT</span>
+      <div class="flash-card-num">02</div>
+      <div class="flash-card-body"><strong>Figma 公开「用 Agent 守护代码安全」的工程实践</strong>（07.24）——官方 blog 拆解安全 Agent 如何在代码编写、PR 评审、历史审计三阶段基于同一份 policy 工作;PR 评审并行跑 Claude Code（Opus 4.8）与 Codex（GPT-5.6 Sol），精度稳定超 70% 才对开发者可见。</div>
+      <div class="flash-card-src">来源：<a href="https://www.figma.com/blog/how-figma-stays-ahead-of-vulnerabilities-with-agents/" target="_blank">figma.com/blog · How Figma stays ahead of vulnerabilities with agents</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">AWS · CODING AGENT 洞察</span>
+      <div class="flash-card-num">03</div>
+      <div class="flash-card-body"><strong>Amazon CloudWatch 推出 coding agent insights</strong>（07.27）——AWS Weekly Roundup 记录 CloudWatch 让工程负责人看清 Claude Code、Codex、GitHub Copilot 等 AI 编码工具带来的价值，无需额外埋点即可采集遥测。</div>
+      <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-july-27-2026/" target="_blank">AWS News Blog · Weekly Roundup（July 27, 2026）</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CLAUDE · OPUS 5 ON BEDROCK</span>
+      <div class="flash-card-num">04</div>
+      <div class="flash-card-body"><strong>Claude Opus 5 上线 Amazon Bedrock，默认开启零数据保留</strong>（07.27）——AWS Weekly Roundup 记录 Anthropic 迄今最强的 Opus 模型登陆 Bedrock，zero data retention（ZDR）默认开启，把「顶级智能」与「数据治理」放在同一层交付。</div>
+      <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-july-27-2026/" target="_blank">AWS News Blog · Weekly Roundup（July 27, 2026）</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">BEDROCK AGENTCORE · 可观测性</span>
+      <div class="flash-card-num">05</div>
+      <div class="flash-card-body"><strong>Bedrock AgentCore 统一可观测性:trace 与日志进同一 log group</strong>（07.27）——AWS Weekly Roundup 记录 AgentCore 将 agent 的 traces、prompts 与运行日志合并进同一个 CloudWatch log group，支持细粒度访问控制与 CMK 加密，调试链路一处可查。</div>
+      <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-july-27-2026/" target="_blank">AWS News Blog · Weekly Roundup（July 27, 2026）</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">AMAZON CONNECT · AGENTIC VOICE</span>
+      <div class="flash-card-num">06</div>
+      <div class="flash-card-body"><strong>Amazon Connect 提供更自然的 agentic 语音体验</strong>（07.27）——AWS Weekly Roundup 记录 Connect 支持更接近真人的 agentic 语音，覆盖 50+ 语言、100+ 全新音色，让 AI 语音客服的对话体验更贴近人声。</div>
+      <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-july-27-2026/" target="_blank">AWS News Blog · Weekly Roundup（July 27, 2026）</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 产品动态 · 消费级 ═══ -->
+<section class="section" id="s2">
+  <div class="section-label">板块二</div>
+  <div class="section-title">产品动态</div>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">AI 消费级产品</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">ChatGPT · Claude · Gemini · Kimi · DeepSeek · MiniMax — UX 变化与功能发布</p>
+    <div class="product-grid">
+
+      <!-- ChatGPT -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT · Health</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.07.23</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>健康上下文从「专属页」进入「任意对话」</b>（07.23）—— 官方博客记录，早期测试中超七成健康对话发生在独立 Health 页之外，因此改为:连接后可在任何对话中调用健康信息，也保留 Health 作为连接与管理的「主基地」。</li>
+          <li><b>默认「先授权再使用」+ @Health 显式召唤</b>（07.23）—— ChatGPT 使用健康信息个性化回答前会先征询许可，用户可逐次批准或选择「始终允许」（设置 &gt; 插件 &gt; Health）;也可在消息里加 @Health 主动带入上下文。</li>
+          <li><b>连接项可审阅、可增删、可断开</b>（07.23）—— 可连接 Apple Health 与医疗记录（如 One Medical、Function 等），并审阅已连接的病症 / 用药、删除无关项、补充家族史;断开某来源后，同步数据将在 30 天内从系统删除。</li>
+          <li><b>隐私承诺写进产品说明</b>（07.23）—— 官方称对话在传输与静态存储中加密、Health 信息额外加密，连接的健康数据不用于训练基础模型、不用于广告;健康信息默认不自动生成 memory，可用 Temporary Chat 规避留痕。</li>
+        </ul>
+        <div class="pc-ux">Health in ChatGPT 是本周最值得拆解的一次「敏感能力产品化」，提炼三条:<b>① 敏感能力的正确形态是「上下文跟着人走」，而不是把用户困在专属页里</b>——OpenAI 的关键改动，是承认「超七成健康对话发生在专属页之外」这一真实行为，于是让健康上下文可被任意对话调用、专属页退居「连接与管理主基地」;做垂直能力别急着造一个独立 tab，先看用户到底在哪儿用。<b>② 越敏感的数据，「授权粒度」越要做细</b>——先授权再使用、可逐次批准或「始终允许」、可 @Health 显式召唤，这套组合把「什么时候用我的数据」的控制权交回用户手里;敏感场景的默认态应是「保守 + 可逐项放开」。<b>③ 连接、审阅、断开、删除要形成闭环</b>——可增删连接项、可断开来源并 30 天内删除、默认不自动生成 memory，这些不是隐私条款里的小字，而应是界面上可见、可操作的一等能力。<span class="pc-ux-token">垂直能力优先「上下文跟随对话」而非独立 tab（专属页只做连接 / 管理主基地）;敏感数据默认「先授权再使用」，支持逐次批准 / 始终允许;显式召唤入口（@Health）与被动调用并存，用户可控;连接项可审阅 / 增删 / 断开，断开后有明确删除时限（如 30 天）;敏感对话默认不自动留 memory，提供 Temporary Chat 选项;隐私承诺（不训练 / 不投广告 / 额外加密）要在界面可见，而非仅写进条款。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/index/health-in-chatgpt/" target="_blank">openai.com · Launching Health in ChatGPT</a> · <a href="https://www.theverge.com/ai-artificial-intelligence/970115/openai-chatgpt-health-launch-claims" target="_blank">The Verge · OpenAI rolls out ChatGPT Health</a></div>
+      </div>
+
+      <!-- Claude -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude</span>
+          <span class="pc-sub">Anthropic</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.23 ~ 07.29），anthropic.com/news 与 @AnthropicAI 均无面向消费级用户的独立交互层 / 定价体验更新公告。本周 Claude 侧可核实的一手动向是 Claude Opus 5 通过 Amazon Bedrock 上线（默认开启零数据保留），属企业 / 云侧条目，已收录于「企业级 AI」板块。为遵守「仅采信官方来源」的约束，本期不收录任何二手转述的 Claude C 端条目。</p>
+      </div>
+
+      <!-- Gemini -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">Gemini</span>
+          <span class="pc-sub">Google</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.23 ~ 07.29），blog.google 无面向 Gemini 消费端的交互层更新公告。Google 上一批一手动作（Gemini 3.6 Flash / 3.5 Flash-Lite / 3.5 Flash Cyber 发布、3.5 Pro 延期）发生在 07.21，落在上一期（第十期）窗口之外的前一日，按「严格落在 07.23 ~ 07.29 窗口内」的约束不在本期收录，特此说明以免与上期重复或越窗。</p>
+      </div>
+
+      <!-- DeepSeek / MiniMax / Kimi -->
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Kimi · DeepSeek · MiniMax</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内，Moonshot、deepseek.com/news 与 MiniMax 官方渠道均无面向 C 端的显著交互层更新公告。国产大模型上一主线（Kimi K3 发布与订阅暂停）发生在上一期窗口（07.17 ~ 07.20），本期无新的一手可核实条目。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 企业级 AI ═══ -->
+<div class="color-band band-teal">
+  <div class="section-label">板块二（续）</div>
+  <div class="section-title">企业级 AI 产品</div>
+  <p class="section-note">ChatGPT Enterprise · Claude on Bedrock · Gemini for Workspace — UX 变化与团队协作 / 数据治理</p>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">企业级 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <div class="product-grid">
+
+      <!-- Claude Opus 5 on Bedrock -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude Opus 5 · on Amazon Bedrock</span>
+          <span class="pc-sub">Anthropic × AWS</span>
+          <span class="pc-date">2026.07.27</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>迄今最强 Opus 登陆 Bedrock</b>（07.27）—— AWS Weekly Roundup 记录 Anthropic Claude Opus 5 在 Amazon Bedrock 可用，被描述为「最先进的 Opus 模型」，面向企业级智能任务。</li>
+          <li><b>零数据保留（ZDR）默认开启</b>（07.27）—— 关键点在于 ZDR 是「默认态」而非需要企业自行申请或配置的可选项;顶级能力与「数据不被保留」的治理承诺被打包在同一层交付。</li>
+          <li><b>「能力」与「治理」同层呈现</b>—— 对受合规约束的企业而言，模型上线信息里同时讲清「有多强」和「数据怎么处理」，比只讲跑分更能推动采购决策。</li>
+        </ul>
+        <div class="pc-ux">Opus 5 以「ZDR 默认开启」的姿态上 Bedrock，给企业级 AI 两条硬原则:<b>① 数据治理要做成「默认安全」，而不是「可选加固」</b>——把零数据保留设为默认态，等于把最保守的选项预置给企业，用户不必去翻设置、提工单才能拿到合规基线;凡涉及企业数据去向的开关，默认应偏保守，让「更安全」成为不作为时的结果。<b>② 模型上线信息要「能力 + 治理」双栏并陈</b>——企业选型看的从来不只是跑分，而是「这么强的模型，会不会留我的数据、留多久、能不能关」;把数据处理承诺与能力指标放在同一张卡片里讲清，才是面向 B 端的正确叙事。第三条:治理承诺要可验证、可审计，而非仅停留在发布稿的形容词里。<span class="pc-ux-token">数据治理默认安全（ZDR 默认开），而非「可选加固 / 需申请」;模型上线页「能力指标 + 数据处理承诺」双栏并陈;企业数据去向开关默认偏保守（不作为 = 更安全）;治理承诺可验证 / 可审计（不止发布稿形容词）;跨云 / 跨模型的 ZDR 状态在控制台一眼可查;合规基线作为默认交付项，而非事后配置项。</span></div>
+        <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-july-27-2026/" target="_blank">AWS News Blog · Weekly Roundup: Claude Opus 5 on AWS（July 27, 2026）</a></div>
+      </div>
+
+      <!-- ChatGPT Enterprise -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT Enterprise / Edu / Business</span>
+          <span class="pc-sub">OpenAI</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.23 ~ 07.29），openai.com/news 无面向 Enterprise / Edu / Business 席位、定价或管理台的独立更新公告。本周 OpenAI 的一手主线是消费侧的 Health in ChatGPT（18 岁以上美国用户、Free / Go / Plus / Pro，见「消费级」板块），未见企业侧的独立交互层变化，故此处按「诚实检查」保留空缺。</p>
+      </div>
+
+      <!-- Gemini for Workspace -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">Gemini for Workspace</span>
+          <span class="pc-sub">Google</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.23 ~ 07.29），blog.google 的 Workspace 频道无面向企业协作场景的交互层更新公告。为遵守「仅采信官方来源、严格落在窗口内」的约束，本期企业侧不收录任何越窗或二手转述的 Gemini for Workspace 条目。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">云厂商 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">AWS CloudWatch · Bedrock AgentCore · Amazon Connect · Azure AI — 云厂商 AI / 开发者入口 UX 更新</p>
+    <div class="product-grid">
+
+      <!-- AWS CloudWatch coding agent insights -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Amazon CloudWatch · Coding Agent Insights</span>
+          <span class="pc-sub">AWS</span>
+          <span class="pc-date">2026.07.27</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>让工程负责人「看清 AI 编码工具的价值」</b>（07.27）—— AWS Weekly Roundup 记录 CloudWatch 新增 coding agent insights，为 engineering leaders 提供 AI 编码工具产出价值的可见度。</li>
+          <li><b>覆盖 Claude Code / Codex / GitHub Copilot 等主流工具</b>—— 不押注单一工具，而是把跨工具的使用与效果统一到一处观测。</li>
+          <li><b>无需额外埋点即可采集遥测</b>—— 强调「without additional instrumentation」，降低团队为「衡量 AI 价值」而做接入的门槛。</li>
+        </ul>
+        <div class="pc-ux">CloudWatch 这条更新的价值，在于把「AI 工具到底有没有用」从模糊感受变成可观测指标，提炼三条:<b>① AI 工具的「价值」必须可观测，否则采购与推广都会卡在「感觉有用」</b>——给工程负责人一套能看清 Claude Code / Codex / Copilot 产出价值的视图，本质是把 AI 编码从「个人体验」升级为「团队可度量的资产」;做 Agent / AI 工具，别只优化单次交互，要给管理者一层「价值可见」的度量面。<b>② 观测要「零埋点起步」，把接入成本降到最低</b>——无需额外 instrumentation 就能采集遥测，意味着「先看到数据」不必先做一轮工程改造;度量能力的默认门槛越低，越可能被真正用起来。<b>③ 跨工具统一观测胜过各自为战</b>——覆盖多款主流编码工具于一处，管理者才能横向比较、做组合决策，而不是在各工具的孤岛报表间来回切换。<span class="pc-ux-token">AI 工具价值做成可观测指标（不止「个人感觉有用」）;度量能力「零埋点起步」，先看到数据再谈深度接入;跨工具统一观测面（Claude Code / Codex / Copilot 一处横比）;面向 engineering leader 的「价值视图」与面向工程师的「使用视图」分层;把 AI 编码从个人体验升级为团队可度量资产;度量口径透明（算的是什么价值 / 怎么归因）避免误读。</span></div>
+        <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-july-27-2026/" target="_blank">AWS News Blog · Weekly Roundup: CloudWatch coding agent insights（July 27, 2026）</a></div>
+      </div>
+
+      <!-- Bedrock AgentCore observability -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Amazon Bedrock AgentCore · 统一可观测性</span>
+          <span class="pc-sub">AWS</span>
+          <span class="pc-date">2026.07.27</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>trace、prompt 与日志进同一 log group</b>（07.27）—— AWS Weekly Roundup 记录 AgentCore 将 agent 的 traces、prompts 与运行日志合并进同一个 Amazon CloudWatch log group，调试时不必在多处拼数据。</li>
+          <li><b>细粒度访问控制 + CMK 加密</b>—— 统一到一处的同时，支持 fine-grained access control 与客户托管密钥（CMK）加密，兼顾「集中」与「可管控」。</li>
+          <li><b>与 CloudWatch coding agent insights 形成「Agent 可观测」组合</b>—— 一条看「工具价值」，一条看「运行链路」，云侧把 Agent 的可观测性补齐为体系。</li>
+        </ul>
+        <div class="pc-ux">AgentCore 把 Agent 的运行链路收敛到一处，印证 Agent 产品的一条底层 UX 走向:<b>① Agent 的可观测性要「一处可查」，把 trace / prompt / 日志拼在一起</b>——Agent 的问题往往横跨「它想了什么（prompt）、做了什么（trace）、系统发生了什么（logs）」三层;把它们放进同一 log group，等于把调试从「跨面板拼图」变成「顺着一条时间线读」。做 Agent 平台，可观测性不是附属功能，而是决定用户敢不敢把关键流程交给 Agent 的前提。<b>② 「集中」必须与「可管控」同时给</b>——把数据收拢到一处很方便，但敏感的 prompt / trace 也随之集中，因此 fine-grained access control + CMK 加密不是加分项而是配套底线;越是统一观测，越要把「谁能看、怎么加密」讲清楚。第三条:观测层要与「价值度量」分工——一条看链路排障、一条看价值归因，两者互补而非混为一谈。<span class="pc-ux-token">Agent 可观测性「一处可查」:prompt（想了什么）+ trace（做了什么）+ logs（系统状态）同源;集中观测同时配 fine-grained access control + CMK 加密（集中 ≠ 失控）;调试从「跨面板拼图」变「顺时间线读」;可观测性作为「敢把关键流程交给 Agent」的前提，而非附属功能;排障视图（trace / logs）与价值视图（insights）分层，互补不混淆;敏感 prompt / trace 的可见范围默认最小化。</span></div>
+        <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/aws/aws-weekly-roundup-july-27-2026/" target="_blank">AWS News Blog · Weekly Roundup: Bedrock AgentCore unified observability（July 27, 2026）</a></div>
+      </div>
+
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Azure AI</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.23 ~ 07.29），azure.microsoft.com/blog 未出现面向 Azure AI / 控制台 / 开发者 UX 的更新公告。本期云厂商可核实项由 AWS 07.27 Weekly Roundup（CloudWatch coding agent insights、Bedrock AgentCore 统一可观测性、Amazon Connect agentic voice、Lambda .NET durable execution）占据。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块三 · 设计工具动态 ═══ -->
+<div class="band-surface">
+  <div class="section-label">板块三</div>
+  <div class="section-title">设计工具动态</div>
+
+  <!-- 设计主力工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">设计主力工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Figma · Tencent Design Miora · Adobe CC — AI 功能迭代与新交互范式</p>
+    <div class="product-grid">
+
+      <!-- Figma -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Figma · 用 Agent 守护代码安全</span>
+          <span class="pc-sub">Figma</span>
+          <span class="pc-date">2026.07.24</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>一份 policy 贯穿「编写 → PR 评审 → 历史审计」三阶段</b>（07.24）—— 官方 blog 记录 Figma 的安全 Agent 在代码写就时守护、评审每一个 PR、审计十年老 monorepo，全部基于同一份 policy;这份 policy 由「precedents（示例）」而非宽泛规则构成，像「新人第一天该读的完整威胁模型」。</li>
+          <li><b>双模型交叉 + adjudicator 复核</b>（07.24）—— PR 评审并行运行 Claude Code（Opus 4.8）与 Codex（GPT-5.6 Sol），两者能抓到不同的 bug;对「边缘性驳回」再由一个 adjudicator Agent 复核，以提升召回。</li>
+          <li><b>精度稳定超 70% 才对开发者可见</b>（07.24）—— 面向开发者的 PR 评论，只有在 precision（上报中真实漏洞的占比）持续高于 70% 后才启用;作者可对每条发现给「有用 / 无用」反馈，作为精度信号;单次 PR 评审中位成本约 $0.50。</li>
+        </ul>
+        <div class="pc-ux">Figma 这篇工程实践，虽讲的是安全，却给「AI 参与协作流程」立了三条可迁移的 UX 原则:<b>① AI 的建议要过「精度门槛」才对人可见——宁可先沉默，也不要用噪声消耗信任</b>——Figma 把「precision 稳定超 70%」作为对开发者暴露评论的开关，这正是 AI 辅助最关键的产品判断:一旦让用户被误报淹没，再准的后续建议也会被无视;可见性应由质量指标闸控，而非「先上了再说」。<b>② AI 参与协作要有「反馈闭环」，把人的判断喂回系统</b>——作者对每条发现的「有用 / 无用」直接成为精度信号;凡是 AI 介入的人机协作，都该给一个轻量、就地的反馈入口，让系统的准确度随使用而收敛。<b>③ 规则要写成「示例（precedents）」而非抽象条文，并做「新人可读」的门槛</b>——把 policy 定义成一组可读的判例、要求它像「新人第一天能读懂的威胁模型」，本质是让 AI 的判断依据可被人理解、可被审阅;设计 AI 的「知识源」时，可读性和可维护性和准确率同等重要。<span class="pc-ux-token">AI 建议由「精度门槛」闸控可见性（precision 达标才对人暴露，宁缺毋滥）;每条 AI 发现配就地「有用 / 无用」反馈，喂回精度信号;规则写成可读「示例 / 判例（precedents）」而非抽象条文;知识源以「新人第一天可读懂」为可维护性门槛;多模型交叉 + adjudicator 复核边缘 case（提召回、控误伤）;单次评审成本可见（如中位 $0.50），让「AI 辅助」有明确性价比。</span></div>
+        <div class="pc-src">来源：<a href="https://www.figma.com/blog/how-figma-stays-ahead-of-vulnerabilities-with-agents/" target="_blank">figma.com/blog · How Figma stays ahead of vulnerabilities with agents</a></div>
+      </div>
+
+      <!-- Tencent Design Miora -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">Tencent Design Miora</span>
+          <span class="pc-sub">Tencent Design</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.23 ~ 07.29），miora.design 与腾讯官方渠道无新的一手交互层更新公告。Miora 的「全量上线」报道发生在 07.22（上一期第十期窗口内，已收录并给出 UX 洞察），按「严格落在窗口内」的约束，本期不重复收录该条，特此说明。</p>
+      </div>
+
+      <!-- Adobe -->
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Adobe Firefly · Creative Cloud</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内无面向设计师的独立交互层更新公告。设计工具本周的一手主线由 Figma「用 Agent 守护代码安全」的工程实践占据（见上卡）。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AI 原生入口 -->
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">AI 原生入口</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">OpenAI 官方动态 · 垂直能力入口 — 从通用助手到场景化入口的定位动作</p>
+    <div class="product-grid">
+
+      <!-- OpenAI Health as a vertical entry -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">OpenAI · Health 作为「场景化入口」</span>
+          <span class="pc-sub">OpenAI（openai.com/news）</span>
+          <span class="pc-date">2026.07.23</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>把「每周 3 亿人的健康提问」变成产品入口</b>（07.23）—— 官方博客以「每周超 3 亿人向 ChatGPT 提健康问题」为切口，把一个高频真实需求收敛成可连接数据、可管理的 Health 入口。</li>
+          <li><b>入口形态随真实行为调整</b>（07.23）—— 因超七成健康对话发生在专属页之外，OpenAI 让能力「跟随对话」而非困在独立 tab;入口设计以真实使用路径为准，而非产品经理设想的路径。</li>
+          <li><b>信任建设作为扩张前置件</b>（07.23）—— 加密、不训练、不投广告、可断开即删等承诺被放在发布叙事的核心位置;把垂直入口的普及建立在「先讲清安全」之上。</li>
+        </ul>
+        <div class="pc-ux">从「AI 原生入口」视角看 Health，看点不在健康本身，而在「通用助手如何长出场景化入口」，提炼三条:<b>① 场景入口要从「用户已经在做的高频真实行为」里长出来</b>——3 亿人本就在问健康问题，OpenAI 做的是把这条既有需求收敛成可连接、可管理的入口，而非凭空造需求;找垂直入口，先看用户已经把通用助手当什么用。<b>② 入口形态以「真实使用路径」为准，敢于推翻最初设计</b>——发现七成对话发生在专属页之外，就让能力跟随对话、专属页退居管理台;好入口是被真实行为校正出来的，不是一次设计定死的。<b>③ 垂直入口越敏感，「信任」越要前置</b>——把加密 / 不训练 / 不投广告 / 断开即删放在叙事核心，是把信任建设放在增长之前;入口越普及、数据越敏感，越要先回答「谁能用、数据去哪、怎么撤回」。<span class="pc-ux-token">场景入口从「用户已在做的高频真实行为」中长出（非凭空造需求）;入口形态以真实使用路径校正（敢推翻「独立 tab」的初始设计）;敏感垂直入口把「信任叙事」（加密 / 不训练 / 不投广告 / 断开即删）前置于增长;通用助手 → 场景入口时保留「主基地」做连接与管理;高频需求收敛为「可连接 + 可管理」而非一次性问答;扩张前先答清「谁能用 / 数据去哪 / 怎么撤回」。</span></div>
+        <div class="pc-src">来源：<a href="https://openai.com/index/health-in-chatgpt/" target="_blank">openai.com · Launching Health in ChatGPT</a></div>
+      </div>
+
+      <!-- empty -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">Perplexity · Arc / 其它 AI 入口</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内无来自官方渠道的显著分发面 / 入口层更新公告。AI 原生入口的官方主线本周由 OpenAI 的 Health 场景化入口动作占据（见左卡）。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块四 · 对我们的启示 ═══ -->
+<section class="section" id="s4" style="padding-bottom: 0;">
+  <div class="section-label">板块四</div>
+  <div class="section-title">对我们的启示</div>
+  <p class="section-note">从 07.23 ~ 07.29 这一周产品动态中提炼的 6 条具体、可执行的设计建议</p>
+
+  <div class="insight-grid">
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 01</div>
+      <div class="in-trigger">↗ Health in ChatGPT · 上下文跟随对话</div>
+      <div class="in-title">垂直能力要「跟着人走」，别把用户困在专属页</div>
+      <div class="in-body">Health in ChatGPT 最关键的改动，是承认「超七成健康对话发生在专属页之外」，于是让健康上下文可在任意对话被调用、专属页退居「连接与管理主基地」:<b>① 做垂直能力别急着造一个独立 tab</b>——先看用户到底把通用助手当什么用、在哪儿用;能力应长在用户已有的路径上，而不是逼用户绕到新入口。<b>② 入口形态要被真实使用行为校正</b>——发现路径不对就敢推翻最初设计，让能力跟随对话;好入口是「测出来 + 改出来」的，不是一次拍板定死的。专属页不必消失，但它的角色应从「唯一入口」退为「连接 / 管理主基地」。<span class="in-body-token">垂直能力优先「上下文跟随对话」而非独立 tab;入口形态以真实使用路径校正（敢推翻初始设计）;专属页退为「连接 / 管理主基地」，不做唯一入口;先看「用户把通用助手当什么用」再决定入口;高频需求收敛为「可连接 + 可管理」;能力长在既有路径上（减少绕路成本）。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 02</div>
+      <div class="in-trigger">↗ Health in ChatGPT · 授权与数据可控</div>
+      <div class="in-title">越敏感的数据，「授权粒度」和「删除闭环」越要做细</div>
+      <div class="in-body">Health 把「什么时候用我的数据」的控制权尽量交回用户:先授权再使用、可逐次批准或「始终允许」、可 @Health 显式召唤，连接项可审阅 / 增删 / 断开、断开后 30 天内删除、默认不自动生成 memory:<b>① 敏感场景的默认态应是「保守 + 可逐项放开」</b>——不默认全量使用，而是先问、可细调;掌控感在处理个人 / 健康数据时高于便利性。<b>② 连接、审阅、断开、删除要形成可见闭环</b>——这些不该是隐私条款里的小字，而应是界面上可操作的一等能力;「我的数据在哪、怎么撤回」要一眼可查。第三条:加密 / 不训练 / 不投广告等承诺要在界面呈现，而非仅写进 ToS。<span class="in-body-token">敏感数据默认「先授权再使用」，支持逐次批准 / 始终允许;显式召唤（@Health）与被动调用并存，用户可控;连接项可审阅 / 增删 / 断开，断开后有明确删除时限（如 30 天）;敏感对话默认不自动留 memory，提供 Temporary Chat;隐私承诺（不训练 / 不投广告 / 额外加密）界面可见;「数据在哪 / 怎么撤回」一眼可查（不藏深层菜单）。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 03</div>
+      <div class="in-trigger">↗ Figma 安全 Agent · 精度门槛决定可见性</div>
+      <div class="in-title">AI 建议要过「精度门槛」才对人可见，宁缺毋滥</div>
+      <div class="in-body">Figma 的安全 Agent，只有在 precision（上报中真实漏洞占比）持续高于 70% 后，才对开发者启用 PR 评论，且作者可对每条发现给「有用 / 无用」反馈:<b>① 可见性应由质量指标闸控，而非「先上了再说」</b>——AI 辅助最致命的失误，是让用户被误报淹没;一旦信任被噪声消耗，再准的后续建议也会被无视。给 AI 建议设一道「达标才暴露」的闸门，是保护信任的关键产品判断。<b>② AI 参与协作要有轻量、就地的反馈闭环</b>——把人的「有用 / 无用」判断喂回系统作为精度信号，让准确度随使用收敛;凡 AI 介入的人机协作，都该在建议旁给一个一键反馈入口。<span class="in-body-token">AI 建议由「精度门槛」闸控可见性（达标才对人暴露）;可见性由质量指标决定，而非「先上线再优化」;每条 AI 发现配就地「有用 / 无用」反馈，喂回精度信号;误报治理优先级高于「多报」（噪声消耗信任）;精度不足时宁可沉默，也不淹没用户;反馈入口轻量、就地、一键（降低反馈成本）。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 04</div>
+      <div class="in-trigger">↗ Figma 安全 Agent · 策略即威胁模型</div>
+      <div class="in-title">AI 的「知识源」要写成可读示例，并做「新人可读」门槛</div>
+      <div class="in-body">Figma 让安全 Agent 基于同一份 policy 工作，这份 policy 由「precedents（示例 / 判例）」而非宽泛规则构成，像「新人第一天该读懂的完整威胁模型」，并用双模型交叉 + adjudicator 复核边缘 case:<b>① 规则写成可读示例而非抽象条文</b>——让 AI 的判断依据可被人理解、可被审阅、可被维护;设计 AI 的知识源时，可读性和可维护性和准确率同等重要。<b>② 用「新人可读」当可维护性门槛</b>——如果一份策略连新人都读不懂，它对 AI 和对团队都难以长期维护;知识源要经得起「人能读、能改、能对齐」。第三条:对边缘性判断做二次复核（adjudicator），在「多报」与「漏报」之间找平衡，提召回同时控误伤。<span class="in-body-token">AI 知识源写成可读「示例 / 判例（precedents）」而非抽象条文;以「新人第一天可读懂」为可维护性门槛;判断依据可被人理解 / 审阅 / 维护（可读性 = 准确率同级）;边缘 case 做二次复核（adjudicator），平衡召回与误伤;多模型交叉互补（不同模型抓不同问题）;策略即「团队与 AI 共读的威胁模型」，保持对齐。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 05</div>
+      <div class="in-trigger">↗ AWS CloudWatch · Coding Agent Insights</div>
+      <div class="in-title">AI 工具的「价值」必须可观测，且要零埋点起步</div>
+      <div class="in-body">CloudWatch 的 coding agent insights 让工程负责人看清 Claude Code / Codex / Copilot 等 AI 编码工具的产出价值，且无需额外埋点即可采集遥测:<b>① AI 工具的价值要变成可观测指标，否则采购与推广都会卡在「感觉有用」</b>——把 AI 编码从「个人体验」升级为「团队可度量资产」，管理者才有横向比较和组合决策的依据;做 Agent / AI 工具别只优化单次交互，要给管理者一层「价值可见」的度量面。<b>② 观测要「零埋点起步」，把接入成本降到最低</b>——先看到数据不必先做一轮工程改造;度量能力的默认门槛越低，越可能被真正用起来。第三条:面向 leader 的「价值视图」与面向工程师的「使用视图」应分层，度量口径要透明以免误读。<span class="in-body-token">AI 工具价值做成可观测指标（不止「个人感觉有用」）;度量「零埋点起步」，先看到数据再谈深度接入;跨工具统一观测（Claude Code / Codex / Copilot 一处横比）;面向 leader 的价值视图与面向工程师的使用视图分层;把 AI 编码升级为「团队可度量资产」;度量口径透明（算什么价值 / 怎么归因）避免误读。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 06</div>
+      <div class="in-trigger">↗ Bedrock AgentCore + Claude Opus 5 ZDR</div>
+      <div class="in-title">Agent 可观测性要「一处可查」，治理要「默认安全」</div>
+      <div class="in-body">同一周，AWS 把 AgentCore 的 trace / prompt / 日志收进同一 log group，Claude Opus 5 上 Bedrock 则默认开启零数据保留（ZDR）——两条线合起来给 Agent 平台两条底层原则:<b>① Agent 的可观测性要「一处可查」</b>——Agent 的问题横跨「想了什么（prompt）、做了什么（trace）、系统发生了什么（logs）」，放进同源等于把调试从「跨面板拼图」变成「顺时间线读」;可观测性是「敢把关键流程交给 Agent」的前提，不是附属功能。<b>② 数据治理要做成「默认安全」而非「可选加固」</b>——ZDR 默认开、集中观测同时配 fine-grained access control + CMK 加密，意味着最保守选项被预置给用户;凡涉及企业数据去向，默认应偏保守，让「更安全」成为不作为时的结果。<span class="in-body-token">Agent 可观测性一处可查:prompt + trace + logs 同源;调试从「跨面板拼图」变「顺时间线读」;可观测性是「敢交付关键流程」的前提，非附属功能;数据治理「默认安全」（如 ZDR 默认开）而非可选加固;集中观测同时配 fine-grained access control + CMK（集中 ≠ 失控）;企业数据去向默认偏保守，治理承诺可验证可审计。</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-band">
+  <div>
+    <h2>下期预告</h2>
+    <p>覆盖窗口：2026-07-30 ~ 2026-08-05 · 下周三发布</p>
+  </div>
+  <div class="cta-band-meta">
+    云基础 &amp; VnE 团队<br>
+    AI 产品 UX 观察报告 · 第十一期<br>
+    仅供设计大团队内部参考
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.07 第十一期</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger = document.getElementById('reportTrigger');
+  var dropdown = document.getElementById('reportDropdown');
+  var selector = document.getElementById('reportSelector');
+  function open() { trigger.classList.add('open'); dropdown.classList.add('open'); trigger.setAttribute('aria-expanded','true'); }
+  function close() { trigger.classList.remove('open'); dropdown.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); }
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); dropdown.classList.contains('open') ? close() : open(); });
+  dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href !== '#') { e.preventDefault(); window.location.href = href; } else { close(); }
+    });
+  });
+  document.addEventListener('click', function(e) { if (!selector.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+});
+</script>
+</body>
+</html>
