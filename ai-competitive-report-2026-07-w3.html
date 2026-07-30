@@ -151,14 +151,12 @@ body {
 .band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
 .band-surface .product-card { background: var(--canvas); }
 
-.insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.insight-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 40px; }
 .insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
 .insight-card:nth-child(1) { background: #e6e1f0; }
 .insight-card:nth-child(2) { background: #dcebe0; }
 .insight-card:nth-child(3) { background: #f3e6d4; }
 .insight-card:nth-child(4) { background: #d9e6ef; }
-.insight-card:nth-child(5) { background: #f0dfe4; }
-.insight-card:nth-child(6) { background: #e2e8d8; }
 .in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
 .in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.5; margin-bottom: 12px; }
 .in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
@@ -578,7 +576,7 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
 <section class="section" id="s4" style="padding-bottom: 0;">
   <div class="section-label">板块四</div>
   <div class="section-title">对我们的启示</div>
-  <p class="section-note">从 07.23 ~ 07.29 这一周产品动态中提炼的 6 条具体、可执行的设计建议</p>
+  <p class="section-note">从 07.23 ~ 07.29 这一周产品动态中提炼的 4 条具体、可执行的设计建议</p>
 
   <div class="insight-grid">
 
@@ -605,23 +603,9 @@ footer { background: var(--surface-soft); padding: 48px; display: flex; justify-
 
     <div class="insight-card">
       <div class="in-num">Insight · 04</div>
-      <div class="in-trigger">↗ Figma 安全 Agent · 策略即威胁模型</div>
-      <div class="in-title">AI 的「知识源」要写成可读示例，并做「新人可读」门槛</div>
-      <div class="in-body">Figma 让安全 Agent 基于同一份 policy 工作，这份 policy 由「precedents（示例 / 判例）」而非宽泛规则构成，像「新人第一天该读懂的完整威胁模型」，并用双模型交叉 + adjudicator 复核边缘 case:<b>① 规则写成可读示例而非抽象条文</b>——让 AI 的判断依据可被人理解、可被审阅、可被维护;设计 AI 的知识源时，可读性和可维护性和准确率同等重要。<b>② 用「新人可读」当可维护性门槛</b>——如果一份策略连新人都读不懂，它对 AI 和对团队都难以长期维护;知识源要经得起「人能读、能改、能对齐」。第三条:对边缘性判断做二次复核（adjudicator），在「多报」与「漏报」之间找平衡，提召回同时控误伤。<span class="in-body-token">AI 知识源写成可读「示例 / 判例（precedents）」而非抽象条文;以「新人第一天可读懂」为可维护性门槛;判断依据可被人理解 / 审阅 / 维护（可读性 = 准确率同级）;边缘 case 做二次复核（adjudicator），平衡召回与误伤;多模型交叉互补（不同模型抓不同问题）;策略即「团队与 AI 共读的威胁模型」，保持对齐。</span></div>
-    </div>
-
-    <div class="insight-card">
-      <div class="in-num">Insight · 05</div>
       <div class="in-trigger">↗ Claude 语音模式 · 可选模型 + 可接工具</div>
       <div class="in-title">语音别做「简化版助手」，能力与授权都要与文字端拉齐</div>
       <div class="in-body">Claude 把语音模式从「只能用 Haiku 的轻量入口」升级为可选 Opus / Sonnet / Haiku、可接 Gmail / 日历 / Slack 等工具，且默认继承文字端选择、对话中可随时切换、动用工具前逐次征询许可:<b>① 语音是完整的思考媒介，不该被默认降级为快捷玩具</b>——过去语音常被绑定最快最轻的模型，等于告诉用户「认真的事别用语音」;让顶级模型也能进语音，是承认它值得承载复杂任务。<b>② 「选模型」应从一次性设置变成随任务调节的旋钮</b>——默认继承 + 对话中可切换，把「用多强的脑子」交给用户按当前难度即时决定;凡多档能力的产品，档位切换都该轻到「随手可调」。第三条:语音交互更快更口语，动用敏感工具前越要逐次确认——交互越顺滑，关键动作越要留一道「明确同意」的闸。<span class="in-body-token">语音与文字端能力拉齐（可选 Opus / Sonnet，非只给最轻模型）;「选模型」从一次性设置变随任务即时切换的旋钮;语音默认继承文字端选择，降低重复配置成本;语音调用敏感工具前逐次征询许可（顺滑 ≠ 免确认）;能力分档清晰（Free = Haiku + 1 工具 / 付费 = 全模型 + 全工具）;把语音视为完整思考媒介，而非快捷问答玩具。</span></div>
-    </div>
-
-    <div class="insight-card">
-      <div class="in-num">Insight · 06</div>
-      <div class="in-trigger">↗ Bedrock AgentCore + Claude Opus 5 ZDR</div>
-      <div class="in-title">Agent 可观测性要「一处可查」，治理要「默认安全」</div>
-      <div class="in-body">同一周，AWS 把 AgentCore 的 trace / prompt / 日志收进同一 log group，Claude Opus 5 上 Bedrock 则默认开启零数据保留（ZDR）——两条线合起来给 Agent 平台两条底层原则:<b>① Agent 的可观测性要「一处可查」</b>——Agent 的问题横跨「想了什么（prompt）、做了什么（trace）、系统发生了什么（logs）」，放进同源等于把调试从「跨面板拼图」变成「顺时间线读」;可观测性是「敢把关键流程交给 Agent」的前提，不是附属功能。<b>② 数据治理要做成「默认安全」而非「可选加固」</b>——ZDR 默认开、集中观测同时配 fine-grained access control + CMK 加密，意味着最保守选项被预置给用户;凡涉及企业数据去向，默认应偏保守，让「更安全」成为不作为时的结果。<span class="in-body-token">Agent 可观测性一处可查:prompt + trace + logs 同源;调试从「跨面板拼图」变「顺时间线读」;可观测性是「敢交付关键流程」的前提，非附属功能;数据治理「默认安全」（如 ZDR 默认开）而非可选加固;集中观测同时配 fine-grained access control + CMK（集中 ≠ 失控）;企业数据去向默认偏保守，治理承诺可验证可审计。</span></div>
     </div>
 
   </div>
