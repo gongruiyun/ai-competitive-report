@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品 UX 观察报告 · 2026.07~08 第十二期</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --canvas:        #fffaf0;
+  --surface-soft:  #faf5e8;
+  --surface-card:  #f5f0e0;
+  --surface-strong:#ebe6d6;
+  --ink:           #0a0a0a;
+  --body:          #3a3a3a;
+  --body-strong:   #1a1a1a;
+  --muted:         #6a6a6a;
+  --muted-soft:    #9a9a9a;
+  --hairline:      #e5e5e5;
+  --on-dark:       #ffffff;
+  --teal:          #1a3a3a;
+  --ochre:         #e8b94a;
+  --font-display:  "Inter", -apple-system, "PingFang SC", sans-serif;
+  --font-body:     "Inter", -apple-system, "PingFang SC", sans-serif;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero { max-width: 1200px; margin: 0 auto; padding: 56px 48px 40px; }
+
+.report-selector { position: relative; display: inline-block; margin-bottom: 20px; }
+.report-selector__trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-card); color: var(--muted);
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  border-radius: 9999px; padding: 6px 14px 6px 16px;
+  cursor: pointer; border: none; font-family: var(--font-body);
+  transition: background 0.15s, color 0.15s; user-select: none;
+}
+.report-selector__trigger:hover { background: var(--surface-strong); color: var(--body); }
+.report-selector__trigger.open  { background: var(--surface-strong); color: var(--body-strong); }
+.report-selector__chevron { width: 14px; height: 14px; opacity: 0.5; transition: transform 0.2s; flex-shrink: 0; }
+.report-selector__trigger.open .report-selector__chevron { transform: rotate(180deg); opacity: 0.8; }
+.report-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 300px; background: #fff;
+  border: 1px solid var(--hairline); border-radius: 16px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10); z-index: 100;
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.report-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.report-dropdown__section-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-soft); padding: 6px 10px 4px; }
+.report-dropdown__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none;
+  color: var(--body); transition: background 0.12s;
+}
+.report-dropdown__item:hover { background: var(--surface-soft); }
+.report-dropdown__item--active { background: var(--surface-card); color: var(--body-strong); }
+.report-dropdown__item-left { display: flex; flex-direction: column; gap: 2px; }
+.report-dropdown__item-label { font-size: 13px; font-weight: 600; letter-spacing: -0.2px; }
+.report-dropdown__item-period { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.report-dropdown__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; background: var(--teal); color: #fff; border-radius: 9999px; padding: 2px 8px; flex-shrink: 0; }
+
+.hero h1 { font-size: clamp(52px, 7vw, 80px); font-weight: 500; letter-spacing: -2.5px; line-height: 1; color: var(--ink); max-width: 720px; margin-bottom: 16px; }
+.hero-sub { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+.section { padding: 48px 0 0; }
+.section-label { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); margin-bottom: 16px; }
+.section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; color: var(--ink); margin-bottom: 24px; }
+.section-note { font-size: 13px; color: var(--muted); margin-bottom: 0; }
+
+.flash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.flash-card { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px; min-height: 210px; }
+.flash-card:nth-child(1) { background: var(--teal);  color: var(--on-dark); }
+.flash-card:nth-child(2) { background: #d4e8e3;      color: var(--ink); }
+.flash-card:nth-child(3) { background: #d8eef8;      color: var(--ink); }
+.flash-card:nth-child(4) { background: #ece8f8;      color: var(--ink); }
+.flash-card:nth-child(5) { background: #faf3d8;      color: var(--ink); }
+.flash-card:nth-child(6) { background: var(--surface-card); color: var(--ink); }
+.flash-card-num { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; }
+.flash-card-body { font-size: 15px; line-height: 1.6; flex: 1; }
+.flash-card-body strong { font-weight: 600; }
+.flash-card-src { font-size: 12px; opacity: 0.5; }
+.flash-card-src a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+.flash-card-chip { display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); color: inherit; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 9999px; padding: 4px 12px; align-self: flex-start; }
+
+.track { margin-top: 52px; }
+.track-label { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.track-pill { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 9999px; padding: 6px 16px; background: var(--surface-card); color: var(--muted); white-space: nowrap; }
+.track-label-line { flex: 1; height: 1px; background: var(--hairline); }
+.track-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.product-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: 16px; padding: 28px; transition: box-shadow 0.15s; }
+.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.product-card.wide { grid-column: span 2; }
+.product-card.empty { border-style: dashed; background: var(--surface-soft); }
+.pc-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.pc-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--ink); }
+.pc-sub  { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-soft); }
+.pc-date { margin-left: auto; font-size: 12px; color: var(--muted-soft); background: var(--surface-card); border-radius: 9999px; padding: 3px 12px; white-space: nowrap; }
+.pc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pc-list li { font-size: 14px; color: var(--body); line-height: 1.6; padding-left: 18px; position: relative; }
+.pc-list li::before { content: '·'; position: absolute; left: 4px; color: var(--muted-soft); font-size: 18px; line-height: 1.3; }
+.pc-list b { color: var(--body-strong); font-weight: 600; }
+.pc-src { margin-top: 14px; font-size: 12px; color: var(--muted-soft); }
+.pc-src a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.pc-src a:hover { color: var(--ink); border-color: var(--ink); }
+.pc-ux { margin-top: 14px; padding: 10px 12px; background: rgba(232,185,74,0.10); border-radius: 8px; border-left: 3px solid var(--ochre); font-size: 13px; color: var(--body); line-height: 1.55; }
+.pc-ux::before { content: "设计视角 · "; font-weight: 700; color: #b8860b; }
+.pc-ux-token { display: block; margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(184,134,11,0.35); font-size: 11px; letter-spacing: 0.2px; color: var(--muted); line-height: 1.6; }
+.pc-ux-token::before { content: "Token · "; font-weight: 700; color: #b8860b; opacity: 0.7; }
+.band-teal .pc-ux-token { color: rgba(255,255,255,0.5); border-top-color: rgba(232,185,74,0.35); }
+.pc-empty-note { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+.color-band { margin: 80px 0 0; padding: 64px 48px; border-radius: 24px; }
+.band-teal  { background: var(--teal); }
+.band-teal .section-label { color: rgba(255,255,255,0.4); }
+.band-teal .section-title { color: var(--on-dark); }
+.band-teal .section-note { color: rgba(255,255,255,0.4); }
+.band-teal .track-pill { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.band-teal .track-label-line { background: rgba(255,255,255,0.1); }
+.band-teal .track-desc { color: rgba(255,255,255,0.35); }
+.band-teal .product-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+.band-teal .product-card.empty { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+.band-teal .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.band-teal .pc-name  { color: var(--on-dark); }
+.band-teal .pc-sub, .band-teal .pc-date { color: rgba(255,255,255,0.35); }
+.band-teal .pc-date  { background: rgba(255,255,255,0.08); }
+.band-teal .pc-list li { color: rgba(255,255,255,0.6); }
+.band-teal .pc-list b  { color: rgba(255,255,255,0.9); }
+.band-teal .pc-src     { color: rgba(255,255,255,0.3); }
+.band-teal .pc-src a   { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.15); }
+.band-teal .pc-src a:hover { color: var(--on-dark); }
+.band-teal .pc-ux { background: rgba(232,185,74,0.08); border-left-color: var(--ochre); color: rgba(255,255,255,0.75); }
+.band-teal .pc-ux::before { color: var(--ochre); }
+.band-teal .pc-empty-note { color: rgba(255,255,255,0.4); }
+
+.band-surface { background: var(--surface-soft); border-radius: 24px; margin: 80px 0 0; padding: 64px 48px; }
+.band-surface .product-card { background: var(--canvas); }
+
+.insight-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 40px; }
+.insight-card { border-radius: 24px; padding: 32px; color: var(--ink); }
+.insight-card:nth-child(1) { background: #d4e8e3; }
+.insight-card:nth-child(2) { background: #d8eef8; }
+.insight-card:nth-child(3) { background: #ece8f8; }
+.insight-card:nth-child(4) { background: #faf3d8; }
+.in-num   { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45; margin-bottom: 20px; }
+.in-trigger { font-size: 12px; font-weight: 600; letter-spacing: 1px; opacity: 0.5; margin-bottom: 12px; }
+.in-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 14px; }
+.in-body  { font-size: 13px; line-height: 1.7; opacity: 0.7; }
+.in-body-token { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(0,0,0,0.15); font-size: 11px; letter-spacing: 0.2px; opacity: 0.6; line-height: 1.6; }
+.in-body-token::before { content: "Token · "; font-weight: 700; opacity: 0.7; }
+
+.cta-band { background: var(--surface-soft); border-radius: 24px; margin: 80px 0; padding: 80px 64px; display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.cta-band h2 { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.1; max-width: 480px; margin-bottom: 12px; }
+.cta-band p  { font-size: 16px; color: var(--muted); }
+.cta-band-meta { text-align: right; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+footer { background: var(--surface-soft); padding: 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+
+@media (max-width: 960px) {
+  .flash-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: 1fr; }
+  .product-card.wide { grid-column: span 1; }
+  .insight-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero, .wrap { padding-left: 24px; padding-right: 24px; }
+  .flash-grid { grid-template-columns: 1fr; }
+  .color-band, .band-surface { padding: 40px 24px; }
+  footer, .cta-band { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="report-selector" id="reportSelector">
+    <button class="report-selector__trigger" id="reportTrigger" aria-haspopup="listbox" aria-expanded="false">
+      <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.07~08 第十二期</span>
+      <svg class="report-selector__chevron" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="report-dropdown" id="reportDropdown" role="listbox">
+      <div class="report-dropdown__section-title">选择期次</div>
+      <a class="report-dropdown__item report-dropdown__item--active" href="#" role="option" aria-selected="true">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07~08 第十二期</span>
+          <span class="report-dropdown__item-period">2026-07-30 ~ 2026-08-05</span>
+        </div>
+        <span class="report-dropdown__badge">最新</span>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-07-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第十一期</span>
+          <span class="report-dropdown__item-period">2026-07-23 ~ 2026-07-29</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-07-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第十期</span>
+          <span class="report-dropdown__item-period">2026-07-16 ~ 2026-07-22</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-07-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.07 第九期</span>
+          <span class="report-dropdown__item-period">2026-07-09 ~ 2026-07-15</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06~07 第八期</span>
+          <span class="report-dropdown__item-period">2026-06-25 ~ 2026-07-08</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第七期</span>
+          <span class="report-dropdown__item-period">2026-06-18 ~ 2026-06-24</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-06.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第六期</span>
+          <span class="report-dropdown__item-period">2026-06-11 ~ 2026-06-17</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第五期</span>
+          <span class="report-dropdown__item-period">2026-06-04 ~ 2026-06-10</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w4.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.06 第四期</span>
+          <span class="report-dropdown__item-period">2026-05-28 ~ 2026-06-03</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w3.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第三期</span>
+          <span class="report-dropdown__item-period">2026-05-21 ~ 2026-05-27</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w2.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第二期</span>
+          <span class="report-dropdown__item-period">2026-05-14 ~ 2026-05-20</span>
+        </div>
+      </a>
+      <a class="report-dropdown__item" href="ai-competitive-report-2026-05-w1.html" role="option" aria-selected="false">
+        <div class="report-dropdown__item-left">
+          <span class="report-dropdown__item-label">2026.05 第一期</span>
+          <span class="report-dropdown__item-period">2026-04-29 ~ 2026-05-13</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <h1>AI 产品 UX 观察报告</h1>
+  <p class="hero-sub">覆盖窗口：2026-07-30 ~ 2026-08-05｜阅读时长：约 6 分钟｜范围：消费级 AI · 企业级 AI · 云厂商 · 设计工具 · 设计启示｜单周版</p>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 板块一 · 本期速览 ═══ -->
+<section class="section" id="s1">
+  <div class="section-label">板块一</div>
+  <div class="section-title">本期速览</div>
+
+  <div class="flash-grid">
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · 桌面端 26.727</span>
+      <div class="flash-card-num">01</div>
+      <div class="flash-card-body"><strong>ChatGPT 桌面端更新内置浏览器、多仓库审阅与图像编辑</strong>（07.30）——官方 changelog 记录：内置浏览器地址栏可回访历史 / 无匹配时转 Google 搜索，Chrome 扩展可 @提及标签页或带入高亮文本、对 YouTube 视频问答，多仓库项目可一处看各仓 diff、无需切换审阅视图，生成图进 expanded viewer 支持 Focused/Canvas 视图与跨图评论。</div>
+      <div class="flash-card-src">来源：<a href="https://learn.chatgpt.com/docs/changelog" target="_blank">learn.chatgpt.com · Changelog 2026-07-30</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">DEEPSEEK · V4-FLASH-0731</span>
+      <div class="flash-card-num">02</div>
+      <div class="flash-card-body"><strong>DeepSeek-V4-Flash 正式版 API 公测，原生适配 Codex</strong>（07.31）——官方 updates 记录调用方式不变（model 名设为 <code>deepseek-v4-flash</code>），Agent 能力大幅反超 V4-Pro-Preview（Terminal Bench 2.1 = 82.7、DeepSWE = 54.4），原生支持 Responses API 格式并专门适配 Codex；与 Preview 版同架构同尺寸、仅重新后训练。</div>
+      <div class="flash-card-src">来源：<a href="https://api-docs.deepseek.com/updates/" target="_blank">api-docs.deepseek.com · News</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">AWS BEDROCK · WEB SEARCH GA</span>
+      <div class="flash-card-num">03</div>
+      <div class="flash-card-body"><strong>Web Search on Amazon Bedrock 正式可用（GA）</strong>（08.04）——AWS ML Blog 记录 grounding 成为 Bedrock 原生 server-side 工具：无需接第三方检索商 / 外部 API / 额外安全审查，在 OpenAI 兼容 API 里加一个 <code>web_search</code> 参数即可启用，默认零数据外泄、返回带 <code>url_citation</code> 引用注解。</div>
+      <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/machine-learning/introducing-web-search-on-amazon-bedrock-for-foundation-model-grounding/" target="_blank">aws.amazon.com · Web Search on Amazon Bedrock</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">AWS BEDROCK · 自动推理策略</span>
+      <div class="flash-card-num">04</div>
+      <div class="flash-card-body"><strong>Amazon Bedrock 自动推理策略「自动优化」上线</strong>（08.03）——AWS ML Blog 记录 refinement engine 会诊断失败的测试、提出 formal-logic 修复（规则问题走 Iterative、语言歧义走 Ambiguous Variable），但每一项改动生效前都要经过「Review policy changes」界面由人工 Accept / Discard。</div>
+      <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/machine-learning/automated-reasoning-policy-refinement-in-amazon-bedrock/" target="_blank">aws.amazon.com · Automated Reasoning policy refinement</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">AMAZON QUICK · AGENTIC CATALOG</span>
+      <div class="flash-card-num">05</div>
+      <div class="flash-card-body"><strong>Amazon Quick 推出 Agentic Catalog Experience（预览）</strong>（07.31）——AWS ML Blog 记录 data curator 可用自然语言描述数据需求、由 Quick Agent 借上游元数据浮现相关表，并批量创建继承语义（表 / 列定义进 Datasets、主外键关系进 Topics）的资产；预览覆盖 AWS Glue Data Catalog 与 Databricks Unity Catalog。</div>
+      <div class="flash-card-src">来源：<a href="https://aws.amazon.com/blogs/machine-learning/announcing-the-agentic-catalog-experience-in-amazon-quick/" target="_blank">aws.amazon.com · Agentic Catalog Experience in Amazon Quick</a></div>
+    </div>
+
+    <div class="flash-card">
+      <span class="flash-card-chip">CHATGPT · 大段粘贴转附件</span>
+      <div class="flash-card-num">06</div>
+      <div class="flash-card-body"><strong>ChatGPT 大段粘贴自动转为附件（全量铺开）</strong>（08.04）——官方 release notes 记录：向输入框粘贴超 10k 字符会自动转成附件，保持 composer 干净、避免大段文本吞噬 context window；此前已对其它档位开放，本次覆盖 Enterprise 与 Education，用户可点「Show in text field」把内容还原回消息。</div>
+      <div class="flash-card-src">来源：<a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com · ChatGPT release notes</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 产品动态 · 消费级 ═══ -->
+<section class="section" id="s2">
+  <div class="section-label">板块二</div>
+  <div class="section-title">产品动态</div>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">AI 消费级产品</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">ChatGPT · Claude · Gemini · Kimi · DeepSeek · MiniMax — UX 变化与功能发布</p>
+    <div class="product-grid">
+
+      <!-- ChatGPT 桌面端 -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT · 桌面端 26.727</span>
+          <span class="pc-sub">OpenAI</span>
+          <span class="pc-date">2026.07.30</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>内置浏览器地址栏「历史回访 + 无匹配转搜索」</b>（07.30）—— 官方 changelog 记录：在内置浏览器地址栏输入即可回访浏览历史中的页面，无匹配时转 Google 搜索；浏览历史可在 Settings 管理，并可让 ChatGPT 在需要时检索这段历史帮你找回访问过的页面。</li>
+          <li><b>Chrome 扩展把「当前上下文」带进对话</b>（07.30）—— 扩展支持 @提及打开的标签页、把页面高亮文本带入侧边 chat，还能对任意 YouTube 视频提问并秒级作答，网页右键即可「Ask ChatGPT」;把浏览器里的现成上下文低成本喂给助手。</li>
+          <li><b>多仓库审阅：一处看各仓 diff，不再切视图</b>（07.30）—— 在 multi-folder 项目里可看到所有仓库及各自改动的行，点 Review 即可跨仓库审阅 diff，不必在多个独立 review 视图间来回切换。</li>
+          <li><b>生成图编辑：Focused / Canvas 双视图 + 跨图评论</b>（07.30）—— 生成图可在 expanded viewer 中打开、在 Focused view 与 Canvas view 间切换，跨多张图加评论、挑出想要的，并在不离开对话的前提下发出 targeted edits;侧栏还新增 Activity view（Cmd/Ctrl+Opt+U）汇总近期需关注的会话。</li>
+        </ul>
+        <div class="pc-ux">这次桌面端更新看似是「浏览器 + 代码 + 图像」三件事的拼盘，但底层是同一条 UX 主张——<b>让 AI 助手贴着用户已有的工作现场，而不是把人拽进一个新界面</b>，提炼三条:<b>① 上下文要「就地带入」，别让用户复制粘贴搬运</b>——@提及标签页、带入高亮文本、右键 Ask ChatGPT，本质都是把「用户眼前正在看的东西」一键喂给助手;凡是要用户手动搬运上下文的地方，都是一个可被「就地带入」替代的摩擦点。<b>② 多目标操作要「一处纵览」，消灭视图切换</b>——多仓库 diff 收进一个 Review、生成图进一个 expanded viewer 跨图评论，都是把原本分散在多个面板的动作收敛到一屏;审阅 / 批处理类场景，「不用切来切去」本身就是核心体验。<b>③ 编辑要「不离开主流程」</b>——targeted edits 不离开对话、图像调整就地完成，减少「跳出去改完再回来」的断点;让修改发生在原地，是保持心流的关键。<span class="pc-ux-token">上下文「就地带入」优先（@提及 / 带入高亮 / 右键唤起），减少手动搬运;多目标操作「一处纵览」（多仓库 diff 收进一个 Review），消灭视图切换;编辑「不离开主流程」（targeted edits 就地完成），保持心流;浏览历史可管理、可被助手按需检索（历史即上下文源）;近期需关注会话汇总为 Activity view，降低「找回对话」成本;助手贴合用户已有工作现场，而非另造新界面。</span></div>
+        <div class="pc-src">来源：<a href="https://learn.chatgpt.com/docs/changelog" target="_blank">learn.chatgpt.com · Changelog 2026-07-30 · Browser upgrades, multi-repository review, and image editing 26.727</a></div>
+      </div>
+
+      <!-- DeepSeek -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">DeepSeek-V4-Flash · 正式版 API</span>
+          <span class="pc-sub">DeepSeek</span>
+          <span class="pc-date">2026.07.31</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>调用方式「零改动」升级，只换模型名</b>（07.31）—— 官方 updates 记录正式版 API 进入公测，调用方式保持不变，只需把 model 名设为 <code>deepseek-v4-flash</code>;把「用上新能力」的迁移成本压到近乎为零。</li>
+          <li><b>Agent 能力大幅反超前代 Preview</b>（07.31）—— 多项 benchmark 远超 V4-Pro-Preview:Terminal Bench 2.1 = 82.7、Cybergym = 76.7、DeepSWE = 54.4、Toolathlon verified = 70.3、DSBench-FullStack = 68.7;定位明确指向 Agent / 编程类任务。</li>
+          <li><b>原生支持 Responses API 格式，专门适配 Codex</b>（07.31）—— 原生对齐 Responses API 并针对 Codex 做适配（官方给出 Codex 集成配置文档）;把「接进现有 Agent 工具链」作为一等诉求。</li>
+          <li><b>与 Preview 同架构同尺寸，仅重新后训练</b>（07.31）—— 明确说明 0731 版与 V4-Flash-Preview 同架构同尺寸、仅重新做了后训练;本次只升级 V4-Flash API，V4-Pro API 与 APP/WEB 未变，V4-Pro 正式版将随后发布。</li>
+        </ul>
+        <div class="pc-ux">DeepSeek 这次「只升级 Flash 一条线、调用零改动」，对做平台 / API 型产品的团队有两条可迁移原则:<b>① 能力升级要做成「零迁移成本」，让老代码原地享受新能力</b>——保持调用方式不变、只换模型名，等于把「要不要升级」的决策摩擦降到最低;凡是让用户为了新版本改代码 / 重配置的升级，都会拖慢采用速度。<b>② 与生态既有工具链对齐，比自定义协议更重要</b>——原生支持 Responses API、专门适配 Codex，是承认用户已经站在某套 Agent 工具链上，主动去接对方而非要求对方来接自己;做开发者产品，「接得进现有工作流」的价值高于「协议更优雅」。第三条:分线升级要讲清「什么变了、什么没变」——明确「只升级 Flash、Pro 与 APP/WEB 不变、同架构同尺寸仅重训」，让用户精确评估影响面，而非笼统说「模型更新了」。<span class="pc-ux-token">能力升级做成「零迁移成本」（调用不变 / 只换模型名），降低采用摩擦;主动对齐生态既有工具链（Responses API / Codex），而非自造协议;分线升级讲清「变了什么 / 没变什么」（只升 Flash、Pro 不变、同架构仅重训）;面向 Agent / 编程场景明确定位，benchmark 与用途对齐;迁移文档就位（Codex 集成配置），让「接进现有工作流」有路径;正式版与 Preview 关系透明，便于用户评估影响面。</span></div>
+        <div class="pc-src">来源：<a href="https://api-docs.deepseek.com/updates/" target="_blank">api-docs.deepseek.com · News · DeepSeek-V4-Flash 正式版 API 公测</a></div>
+      </div>
+
+      <!-- Gemini -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">Gemini</span>
+          <span class="pc-sub">Google</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.30 ~ 08.05），blog.google 无面向 Gemini 消费端、可核实的一手交互层更新公告。围绕 Gemini in Classroom 扩龄、Back-to-School 的 Guided Learning / Flash Cards / Study Guides / Quizzes 2.0 等一批学习功能，其官方发布时间为 08.06 及之后（越出本期窗口右界），另有部分仅见于二手转述、未见 blog.google 一手直链;按「仅采信官方一手来源 + 严格落在窗口内」的约束，本期不予收录，留待下期核实后处理，特此说明以免越窗或采信二手。</p>
+      </div>
+
+      <!-- DeepSeek APP / MiniMax / Kimi -->
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Kimi · MiniMax · DeepSeek（APP / WEB）</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内，Moonshot、MiniMax 官方渠道均无面向 C 端的显著交互层更新公告。DeepSeek 本周一手动作集中在 V4-Flash 正式版 API（见上卡），官方明确 APP / WEB 端模型未变，故 C 端无新的一手可核实条目。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 板块二 · 企业级 AI ═══ -->
+<div class="color-band band-teal">
+  <div class="section-label">板块二（续）</div>
+  <div class="section-title">企业级 AI 产品</div>
+  <p class="section-note">ChatGPT Enterprise · Claude on Bedrock · Amazon Bedrock — UX 变化与团队协作 / 数据治理</p>
+
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">企业级 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <div class="product-grid">
+
+      <!-- ChatGPT 大段粘贴转附件 -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">ChatGPT · 大段粘贴转附件</span>
+          <span class="pc-sub">OpenAI（Enterprise &amp; Education）</span>
+          <span class="pc-date">2026.08.04</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>粘贴超 10k 字符自动转附件</b>（08.04）—— 官方 release notes 记录:向 composer 粘贴超过 10k 字符的内容会自动转换为附件，让输入框保持干净、避免大段文本把 context window 吃掉。</li>
+          <li><b>本次覆盖 Enterprise 与 Education</b>（08.04）—— 该行为此前已对其它档位开放，本次补齐到 ChatGPT Enterprise 与 Education;把一个已被验证的体验默认扩展到企业 / 教育场景。</li>
+          <li><b>可一键还原回消息</b>（08.04）—— 用户仍可把内容通过「Show in text field」移回消息正文;自动化转换是默认优化，但不剥夺用户「我就要粘成正文」的选择权。</li>
+        </ul>
+        <div class="pc-ux">一个「粘贴超 10k 字符自动转附件」的小改动，藏着三条对做输入 / 编辑器类产品普适的 UX 原则:<b>① 用默认行为替用户挡掉「隐性代价」</b>——大段粘贴会悄悄吞掉 context window、拖累后续回答质量，普通用户根本感知不到;把它默认转成附件，是产品替用户挡下了一个看不见的坑。好的默认，应主动规避用户意识不到的负面后果。<b>② 自动化必须留「一键还原」的退路</b>——「Show in text field」保证自动转换不会变成强制;凡是替用户做决定的自动行为，都要配一个低成本的撤销 / 还原入口，让「智能」不等于「霸道」。<b>③ 被验证的体验应「默认扩展」到高价值场景</b>——先在其它档位跑通，再补齐到 Enterprise / Education，是把好体验一致地推给最需要治理 context 的企业用户;体验的一致性本身就是企业级信任的一部分。<span class="pc-ux-token">默认行为替用户挡掉「隐性代价」（大段粘贴吞 context window 不可感知）;自动化必配「一键还原」退路（Show in text field），智能 ≠ 霸道;被验证的体验「默认扩展」到高价值 / 强治理场景（Enterprise / Education）;输入区保持干净，长内容降级为可折叠附件;阈值清晰可预期（&gt;10k 字符触发），行为不玄学;跨档位体验一致性作为企业级信任的一部分。</span></div>
+        <div class="pc-src">来源：<a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank">help.openai.com · ChatGPT release notes · 2026-08-04</a></div>
+      </div>
+
+      <!-- Claude empty -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">Claude · Enterprise / Bedrock</span>
+          <span class="pc-sub">Anthropic</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.30 ~ 08.05），claude.com/blog 与 anthropic.com/news 无面向企业协作 / 数据治理的交互层更新公告;platform.claude.com 的 release notes 窗口内仅见 08.01「Dreams（research preview）支持 Opus 5」这一 API 侧条目，交互层相关度低。此前流传的「Claude Code Auto Mode 在主要云厂商 GA（08.04）」经核对官方 release notes 并无对应条目（Auto Mode 扩展记录在更早的 05.28），仅见于二手转述，按约束不予收录，特此说明以免采信二手。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">云厂商 AI 平台</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Amazon Bedrock · Amazon Quick · Azure AI — 云厂商 AI / 开发者入口 UX 更新</p>
+    <div class="product-grid">
+
+      <!-- AWS Web Search on Bedrock -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Amazon Bedrock · Web Search（GA）</span>
+          <span class="pc-sub">AWS</span>
+          <span class="pc-date">2026.08.04</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>把 grounding 变成平台原生的 server-side 工具</b>（08.04）—— AWS ML Blog 记录 Web Search 正式可用:模型识别到需要实时网络知识时，由 Bedrock 在服务端发起检索、把结果注入 context，全程无需客户端 tool-use 循环、外部 API 解析或重试。</li>
+          <li><b>「加一个参数」即启用，免去供应商上手</b>（08.04）—— 在既有 OpenAI 兼容 API 调用里加 <code>tools=[{"type": "web_search"}]</code> 即可开启，不需要 vendor onboarding、API key、编排层或独立 SDK;把「接搜索」这件重活收敛成一个参数。</li>
+          <li><b>默认零数据外泄 + 结果自带引用</b>（08.04）—— 检索全程在 Bedrock 基础设施内完成、默认零数据外泄以满足合规;返回结果带 <code>url_citation</code> 结构化引用注解（含标题与 URL），并接入 CloudTrail 审计（不记录查询文本 / URL / 原始网页内容）。</li>
+        </ul>
+        <div class="pc-ux">Web Search on Bedrock 把一件「人人都要自己拼」的脏活收编为平台能力，给做基础设施 / API 产品三条启示:<b>① 把高频的「胶水活」收敛成一等能力，替用户消灭集成负担</b>——过去接检索要选供应商、管 API key、写编排、处理重试与限流;Bedrock 把这些压成「加一个参数」，本质是识别到「几乎所有人都在重复造同一段胶水代码」，于是把它做进平台。找平台级功能，先看用户在反复自己拼什么。<b>② 复用既有 API 形态，别让用户学新协议</b>——直接嵌进 OpenAI 兼容 API 的 tools 参数，让已有代码近乎无改动就能用;能力再强，若要用户改协议 / 换 SDK，采用曲线就会陡峭。<b>③ 结果要「自带可信凭据」，把可验证性做进返回值</b>——强制回带 url_citation 引用注解，让「答案从哪来」可追溯;涉及事实性输出的能力，引用与审计不是附加项，而是能不能被企业采用的前提。<span class="pc-ux-token">把高频「胶水活」收敛成一等平台能力（接搜索 = 加一个参数）;复用既有 API 形态（OpenAI 兼容 tools 参数），不逼用户学新协议;结果「自带可信凭据」（url_citation 引用注解），可验证性做进返回值;默认零数据外泄 + CloudTrail 审计，合规作为默认交付;server-side 闭环，消除客户端 tool-use 循环 / 重试 / 限流负担;能力启用「单参数化」，把集成成本压到最低。</span></div>
+        <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/machine-learning/introducing-web-search-on-amazon-bedrock-for-foundation-model-grounding/" target="_blank">aws.amazon.com · Introducing Web Search on Amazon Bedrock for foundation model grounding</a></div>
+      </div>
+
+      <!-- AWS Automated Reasoning refinement -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Amazon Bedrock · 自动推理策略优化</span>
+          <span class="pc-sub">AWS</span>
+          <span class="pc-date">2026.08.03</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>把「诊断—修复」循环自动化</b>（08.03）—— AWS ML Blog 记录:过去优化自动推理策略要手动诊断、手改、重测，现在 refinement engine 会自动诊断失败的测试并提出 formal-logic 修复，内部反复模拟直到收敛。</li>
+          <li><b>两种模式对准两类问题</b>（08.03）—— Iterative Refinement 处理「规则问题」（逻辑不对，提出增 / 改 / 删规则或变量）;Ambiguous Variable Refinement 处理「语言问题」（自然语言到 formal logic 的翻译有歧义，提出更清晰的变量描述）。</li>
+          <li><b>每一项改动生效前都要人工 Accept</b>（08.03）—— 引擎收敛后弹出「Review policy changes」界面，用户可 Accept 或 Discard，接受后才写入 DRAFT 策略;诊断与修复自动化，但「改不改」的最终决定权留在人手里。</li>
+        </ul>
+        <div class="pc-ux">这次更新是「AI 帮你改 AI 的规则」，恰好给「AI 参与关键决策」立了一条清晰的边界原则:<b>① 自动化负责「诊断 + 提案」，人类保留「批准」这最后一道闸</b>——引擎可以自己跑测试、模拟、收敛出一版修复，但每一项改动都要经过「Review policy changes」由人 Accept / Discard 才生效;凡是改动会影响系统行为边界（策略 / 权限 / 规则）的场景，AI 都应止步于「建议」，把「拍板」留给人。<b>② 把问题「归类」再给方案，让人看得懂 AI 在改什么</b>——区分「规则问题（逻辑错）」与「语言问题（翻译有歧义）」两种模式，等于先告诉人「这是哪一类毛病」再给修复;可解释的前提是可归类，别把一堆改动混成一锅让人无从判断。<b>③ 改动写进 DRAFT 而非直接上线，给一个「可反悔」的暂存态</b>——接受后先落到草稿，是在自动化与生产之间留一层缓冲;高影响改动应默认经过「暂存 → 复核 → 发布」而非一步到位。<span class="pc-ux-token">自动化止于「诊断 + 提案」，人类保留「批准」最后一道闸（影响行为边界的改动尤其）;把问题先「归类」再给方案（规则问题 / 语言歧义），可解释建立在可归类之上;改动先写 DRAFT 草稿、非直接上线，留「可反悔」暂存态;每项变更逐条 Accept / Discard，而非整包接受;引擎内部反复模拟至收敛，只把结果交给人评审（降低人的认知负担）;高影响操作走「暂存 → 复核 → 发布」而非一步到位。</span></div>
+        <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/machine-learning/automated-reasoning-policy-refinement-in-amazon-bedrock/" target="_blank">aws.amazon.com · Automated Reasoning policy refinement in Amazon Bedrock</a></div>
+      </div>
+
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Azure AI</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.30 ~ 08.05），azure.microsoft.com/blog 未出现面向 Azure AI / 控制台 / 开发者 UX 的一手更新公告。本期云厂商可核实的一手条目集中在 AWS 侧:Web Search on Bedrock GA（08.04）与自动推理策略优化（08.03，见上两卡），以及面向数据侧的 Amazon Quick Agentic Catalog（07.31，见板块三下方标注）。为遵守「严格落在窗口内 + 仅采信官方一手」，本期不收录越窗或二手的 Azure 条目。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块三 · 设计工具动态 ═══ -->
+<div class="band-surface">
+  <div class="section-label">板块三</div>
+  <div class="section-title">设计工具动态</div>
+
+  <!-- 设计主力工具 -->
+  <div class="track">
+    <div class="track-label">
+      <span class="track-pill">设计主力工具</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Figma · Tencent Design Miora · Adobe CC — AI 功能迭代与新交互范式</p>
+    <div class="product-grid">
+
+      <!-- Figma -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">Figma</span>
+          <span class="pc-sub">Figma</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.30 ~ 08.05），figma.com 的 What's New 与 Blog 无落在窗口内、可核实的一手更新公告（最近一批 What's New 条目停在更早日期）。上一期（第十一期）收录的「用 Agent 守护代码安全」工程实践发生在 07.24，属上一窗口，本期不重复收录，特此说明以免越窗。</p>
+      </div>
+
+      <!-- Tencent Design Miora -->
+      <div class="product-card empty wide">
+        <div class="pc-head">
+          <span class="pc-name">Tencent Design Miora</span>
+          <span class="pc-sub">Tencent Design</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内（07.30 ~ 08.05），miora.design 与腾讯官方渠道无新的一手交互层更新公告。Miora 的「全量上线」报道发生在 07.22（第十期窗口内，已收录并给出 UX 洞察），按「严格落在窗口内」的约束，本期不重复收录该条，特此说明。</p>
+      </div>
+
+      <!-- Adobe -->
+      <div class="product-card empty" style="grid-column: span 2;">
+        <div class="pc-head">
+          <span class="pc-name">Adobe Firefly · Creative Cloud</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内，Adobe 官方渠道无面向设计师的独立交互层更新公告。本期设计工具主力厂商（Figma / Miora / Adobe）均无落在 07.30 ~ 08.05 窗口内的一手条目，故整体以 empty 卡诚实记录，不以二手或越窗内容填充。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AI 原生入口 -->
+  <div class="track" style="margin-top: 48px;">
+    <div class="track-label">
+      <span class="track-pill">AI 原生入口 · 数据侧</span>
+      <div class="track-label-line"></div>
+    </div>
+    <p class="track-desc">Amazon Quick · 数据到分析的自然语言入口 — 从「找数据」到「问数据」的入口重构</p>
+    <div class="product-grid">
+
+      <!-- Amazon Quick Agentic Catalog -->
+      <div class="product-card wide">
+        <div class="pc-head">
+          <span class="pc-name">Amazon Quick · Agentic Catalog Experience</span>
+          <span class="pc-sub">AWS（预览）</span>
+          <span class="pc-date">2026.07.31</span>
+        </div>
+        <ul class="pc-list">
+          <li><b>用自然语言「描述需求」代替「翻目录找表」</b>（07.31）—— AWS ML Blog 记录:data curator 可用自然语言描述数据需求，Quick Agent 借上游全部元数据浮现相关表;把「在庞杂 catalog 里逐层找表」的活变成「说清楚我要什么」。</li>
+          <li><b>批量创建资产，并自动继承上游语义</b>（07.31）—— Agent 规模化创建 Catalog-Generated Datasets:表 / 列的业务与技术描述继承进 Datasets，主外键关系继承进 Topics（预置 join 的多数据集构造）;上游 catalog 仍是唯一事实源（DirectQuery、只读元数据）。</li>
+          <li><b>预览覆盖 Glue 与 Databricks Unity Catalog</b>（07.31）—— 当前预览支持 AWS Glue Data Catalog 与 Databricks Unity Catalog;Amazon Quick 定位为上游元数据的「消费方」而非又一个 catalog，不复制数据、只消费上下文（自动同步在路线图上）。</li>
+        </ul>
+        <div class="pc-ux">Agentic Catalog 把「数据资产的分发入口」从「翻目录」重构为「问需求」，给做工具 / 平台入口三条启示:<b>① 让用户「描述目标」而非「操作路径」，把检索负担交给 Agent</b>——curator 说清要什么、Agent 借元数据浮现相关表，等于把「在层层目录里找」的认知负担转移给系统;凡是要用户熟悉复杂结构才能上手的入口，都值得用「自然语言描述目标」重做一遍。<b>② 复用上游既有语义，别让用户重新标注一遍</b>——表 / 列描述、主外键关系直接继承进 Datasets 与 Topics，是承认「上游 catalog 已经沉淀了大量语义」，接过来用而不是从零再造;好入口是「站在既有资产上」的，不是另起炉灶。<b>③ 明确「谁是事实源」，消费而不复制</b>——上游 catalog 保持唯一事实源、Quick 只读消费，避免数据 / 语义的多副本漂移;跨系统协作时，先讲清「谁拥有真相」，是可信度的地基。<span class="pc-ux-token">让用户「描述目标」而非「操作路径」，检索负担交给 Agent;复用上游既有语义（表 / 列定义、主外键关系）继承进资产，不重复标注;明确唯一事实源、只读消费不复制，避免多副本语义漂移;高频「找数据」重构为「问数据」的自然语言入口;资产可批量生成（Datasets / Topics 预置 join），降低起步成本;定位为上游元数据「消费方」而非又一个 catalog，减少生态重复。</span></div>
+        <div class="pc-src">来源：<a href="https://aws.amazon.com/blogs/machine-learning/announcing-the-agentic-catalog-experience-in-amazon-quick/" target="_blank">aws.amazon.com · Announcing the Agentic Catalog Experience in Amazon Quick</a></div>
+      </div>
+
+      <!-- empty -->
+      <div class="product-card empty">
+        <div class="pc-head">
+          <span class="pc-name">其它 AI 原生入口</span>
+        </div>
+        <p class="pc-empty-note">本期窗口内无来自官方渠道的其它显著入口层一手更新公告。AI 原生入口的官方主线本周由 Amazon Quick 的「自然语言数据入口」动作占据（见左卡）。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 板块四 · 对我们的启示 ═══ -->
+<section class="section" id="s4" style="padding-bottom: 0;">
+  <div class="section-label">板块四</div>
+  <div class="section-title">对我们的启示</div>
+  <p class="section-note">从 07.30 ~ 08.05 这一周产品动态中提炼的 4 条具体、可执行的设计建议</p>
+
+  <div class="insight-grid">
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 01</div>
+      <div class="in-trigger">↗ ChatGPT 桌面端 · 上下文就地带入</div>
+      <div class="in-title">让上下文「就地带入」，别让用户搬运</div>
+      <div class="in-body">ChatGPT 桌面端这次的浏览器 / 多仓库 / 图像编辑更新，底层是同一条主张——助手贴着用户已有的工作现场，而不是把人拽进新界面:<b>① 凡是要用户手动复制粘贴搬运上下文的地方，都是可被「就地带入」替代的摩擦点</b>——@提及标签页、带入高亮文本、右键 Ask ChatGPT，都是把「眼前正在看的东西」一键喂给助手。<b>② 多目标操作要「一处纵览」，消灭视图切换</b>——多仓库 diff 收进一个 Review、生成图进一个 viewer 跨图评论，让审阅 / 批处理场景不用切来切去。<b>③ 编辑要「不离开主流程」</b>——targeted edits 就地完成，减少「跳出去改完再回来」的断点，保持心流。<span class="in-body-token">上下文「就地带入」优先（@提及 / 带入高亮 / 右键唤起），减少手动搬运;多目标操作「一处纵览」消灭视图切换（多仓库 diff / 跨图评论收进一屏）;编辑「不离开主流程」（targeted edits 就地完成），保持心流;浏览历史等既有信息可被助手按需检索，历史即上下文源;近期需关注项汇总为 Activity view，降低找回成本;助手贴合既有工作现场，而非另造新界面。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 02</div>
+      <div class="in-trigger">↗ AWS 自动推理策略 · 人类保留批准闸</div>
+      <div class="in-title">AI 负责诊断与提案，把「批准」留给人</div>
+      <div class="in-body">Bedrock 自动推理策略优化把「诊断—修复」循环自动化，但每一项改动生效前都要在「Review policy changes」界面由人 Accept / Discard:<b>① 凡是改动会影响系统行为边界（策略 / 权限 / 规则）的场景，AI 都应止步于「建议」，把「拍板」留给人</b>——引擎可以自己跑测试、模拟、收敛出修复，但不越过审批这道闸。<b>② 把问题先「归类」再给方案，让人看得懂 AI 在改什么</b>——区分「规则问题（逻辑错）」与「语言问题（翻译歧义）」，可解释的前提是可归类，别把一堆改动混成一锅。<b>③ 改动先写 DRAFT 草稿而非直接上线</b>——在自动化与生产之间留一层「可反悔」的暂存态，高影响改动走「暂存 → 复核 → 发布」而非一步到位。<span class="in-body-token">自动化止于「诊断 + 提案」，人类保留「批准」最后一道闸;影响行为边界（策略 / 权限 / 规则）的改动尤其不可越审批;问题先「归类」再给方案，可解释建立在可归类之上;改动先写 DRAFT 草稿、非直接上线，留「可反悔」暂存;逐条 Accept / Discard，而非整包接受;高影响操作走「暂存 → 复核 → 发布」。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 03</div>
+      <div class="in-trigger">↗ Web Search on Bedrock · 胶水活收敛为一等能力</div>
+      <div class="in-title">把用户反复自拼的「胶水活」收编成平台能力</div>
+      <div class="in-body">Web Search on Bedrock 把「接检索」这件人人都要自己拼的脏活——选供应商、管 key、写编排、处理重试限流——压成「加一个参数」:<b>① 找平台级功能，先看用户在反复自己拼什么</b>——当几乎所有人都在重复造同一段胶水代码，就该把它做进平台，替用户消灭集成负担。<b>② 复用既有 API 形态，别逼用户学新协议</b>——直接嵌进 OpenAI 兼容 API 的 tools 参数，让已有代码近乎无改动就能用;能力再强，若要改协议 / 换 SDK，采用曲线就会陡峭。<b>③ 结果要「自带可信凭据」</b>——强制回带 url_citation 引用注解 + CloudTrail 审计，让「答案从哪来」可追溯;涉及事实性输出的能力，引用与审计是能否被企业采用的前提，而非附加项。<span class="in-body-token">把高频「胶水活」收敛成一等平台能力（接搜索 = 加一个参数）;复用既有 API 形态（OpenAI 兼容 tools 参数），不逼用户学新协议;结果「自带可信凭据」（url_citation 引用注解），可验证性做进返回值;默认零数据外泄 + 审计，合规作为默认交付;server-side 闭环，消除客户端重试 / 限流负担;能力启用「单参数化」，把集成成本压到最低。</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="in-num">Insight · 04</div>
+      <div class="in-trigger">↗ ChatGPT 大段粘贴 · 默认替用户挡隐性代价</div>
+      <div class="in-title">好的默认，主动规避用户意识不到的负面后果</div>
+      <div class="in-body">ChatGPT 把「粘贴超 10k 字符」默认转为附件，替用户挡下一个看不见的坑——大段文本会悄悄吞掉 context window、拖累回答质量，而普通用户根本感知不到:<b>① 好的默认应主动规避用户意识不到的隐性代价</b>——不是等用户踩坑再补救，而是在默认行为里就把负面后果消化掉。<b>② 自动化必须留「一键还原」的退路</b>——「Show in text field」保证自动转换不是强制;凡替用户做决定的自动行为，都要配一个低成本的撤销 / 还原入口，让「智能」不等于「霸道」。<b>③ 被验证的体验应「默认扩展」到高价值场景</b>——先在其它档位跑通、再补齐到 Enterprise / Education;体验的一致性本身就是企业级信任的一部分。<span class="in-body-token">好默认主动规避「隐性代价」（大段粘贴吞 context window 不可感知）;自动化必配「一键还原」退路，智能 ≠ 霸道;被验证体验「默认扩展」到高价值 / 强治理场景;触发阈值清晰可预期（&gt;10k 字符），行为不玄学;长内容降级为可折叠附件，保持输入区干净;跨档位体验一致性作为企业级信任的一部分。</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-band">
+  <div>
+    <h2>下期预告</h2>
+    <p>覆盖窗口：2026-08-06 ~ 2026-08-12 · 下周三发布</p>
+  </div>
+  <div class="cta-band-meta">
+    云基础 &amp; VnE 团队<br>
+    AI 产品 UX 观察报告 · 第十二期<br>
+    仅供设计大团队内部参考
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>云基础 &amp; VnE 团队 · AI 产品 UX 观察报告 · 2026.07~08 第十二期</span>
+  <span>仅供设计大团队内部参考</span>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger = document.getElementById('reportTrigger');
+  var dropdown = document.getElementById('reportDropdown');
+  var selector = document.getElementById('reportSelector');
+  function open() { trigger.classList.add('open'); dropdown.classList.add('open'); trigger.setAttribute('aria-expanded','true'); }
+  function close() { trigger.classList.remove('open'); dropdown.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); }
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); dropdown.classList.contains('open') ? close() : open(); });
+  dropdown.querySelectorAll('.report-dropdown__item').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      var href = item.getAttribute('href');
+      if (href && href !== '#') { e.preventDefault(); window.location.href = href; } else { close(); }
+    });
+  });
+  document.addEventListener('click', function(e) { if (!selector.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+});
+</script>
+</body>
+</html>
